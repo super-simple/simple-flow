@@ -9,10 +9,11 @@ import java.util.concurrent.TimeUnit;
 
 public class SimpleFlowWorkDispatcherImpl implements SimpleFlowWorkDispatcher {
 
-    private ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(10, 100, 60, TimeUnit.SECONDS, new SynchronousQueue<>());
+    private final ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(10, 100, 60, TimeUnit.SECONDS, new SynchronousQueue<>());
 
     @Override
     public ExecutorService getWorkDispatcher() {
         return threadPoolExecutor;
     }
+
 }

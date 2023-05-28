@@ -1,26 +1,34 @@
 package org.ss.simpleflow.core.impl;
 
-import org.ss.simpleflow.core.*;
+import org.ss.simpleflow.core.SimpleFlowExecutionIdGenerator;
+import org.ss.simpleflow.core.SimpleFlowProcessEngine;
+import org.ss.simpleflow.core.SimpleFlowWorkDispatcher;
+import org.ss.simpleflow.core.constant.SimpleFlowBuiltInEventCodeConstant;
+import org.ss.simpleflow.core.constant.SimpleFlowNodeTypeConstant;
+import org.ss.simpleflow.core.impl.exceptional.*;
+import org.ss.simpleflow.core.line.SimpleFlowLineConfig;
+import org.ss.simpleflow.core.node.SimpleFlowAbstractNode;
+import org.ss.simpleflow.core.node.SimpleFlowNodeConfig;
+import org.ss.simpleflow.core.processconfig.SimpleFlowProcessConfig;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
-import java.util.function.Supplier;
 
 public class SimpleFlowProcessEngineImpl implements SimpleFlowProcessEngine {
 
 
-    private SimpleFlowEventFactory eventFactory;
+    private final SimpleFlowEventFactory eventFactory;
 
-    private SimpleFlowNodeFactory nodeFactory;
+    private final SimpleFlowNodeFactory nodeFactory;
 
-    private SimpleFlowLineFactory lineFactory;
+    private final SimpleFlowLineFactory lineFactory;
 
-    private SimpleFlowWorkDispatcher workDispatcher;
+    private final SimpleFlowWorkDispatcher workDispatcher;
 
-    private SimpleFlowExecutionIdGenerator executionIdGenerator;
+    private final SimpleFlowExecutionIdGenerator executionIdGenerator;
 
     public SimpleFlowProcessEngineImpl(SimpleFlowEventFactory eventFactory, SimpleFlowNodeFactory nodeFactory, SimpleFlowLineFactory lineFactory, SimpleFlowWorkDispatcher workDispatcher, SimpleFlowExecutionIdGenerator executionIdGenerator) {
         this.eventFactory = eventFactory;
@@ -62,27 +70,28 @@ public class SimpleFlowProcessEngineImpl implements SimpleFlowProcessEngine {
 
         runNode(processConfig, startNodeConfig, nodeConfigMap, lineConfigFromMap, workDispatcher.getWorkDispatcher());
 
-        return executionIdGenerator.generateExecutionId(processConfig);
+        return executionIdGenerator.generateProcessExecutionId(processConfig, processConfig.getId(), processConfig.getCode());
     }
 
     private void runNode(SimpleFlowProcessConfig processConfig, SimpleFlowNodeConfig nodeConfig, Map<String, SimpleFlowNodeConfig> nodeConfigMap, Map<String, SimpleFlowLineConfig> lineConfigFromMap, ExecutorService executorService) {
         CompletableFuture<SimpleFlowLineConfig> runNodeCompletableFuture = CompletableFuture.supplyAsync(() -> {
             String processId = processConfig.getId();
             String nodeId = nodeConfig.getId();
+            String nodeCode = processConfig.getCode();
             String nodeType = nodeConfig.getNodeType();
             if (SimpleFlowNodeTypeConstant.NODE.equals(nodeType)) {
-                SimpleFlowEvent event = eventFactory.getEvent(processId, nodeId);
+                SimpleFlowAbstractEvent event = eventFactory.getEvent(processId, nodeId, nodeCode, nodeConfig);
                 try {
                     event.runEvent();
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    throw new SimpleFlowRunEventException(e);
                 }
             } else if (SimpleFlowNodeTypeConstant.EVENT.equals(nodeType)) {
-                SimpleFlowNode node = nodeFactory.getNode(processId, nodeId);
+                SimpleFlowAbstractNode node = nodeFactory.getNode(processId, nodeId, nodeCode, nodeConfig);
                 try {
                     node.runNode();
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    throw new SimpleFlowRunNodeException(e);
                 }
             } else {
                 throw new SimpleFlowProcessConfigException(SimpleFlowConfigExceptionCode.ERROR_NODE_TYPE);
@@ -99,16 +108,13 @@ public class SimpleFlowProcessEngineImpl implements SimpleFlowProcessEngine {
     }
 
     private void runLine(SimpleFlowProcessConfig processConfig, SimpleFlowLineConfig lineConfig, Map<String, SimpleFlowNodeConfig> nodeConfigMap, Map<String, SimpleFlowLineConfig> lineConfigFromMap, ExecutorService executorService) {
-        CompletableFuture<Boolean> runLineCompletableFuture = CompletableFuture.supplyAsync(new Supplier<Boolean>() {
-            @Override
-            public Boolean get() {
-                String lineId = lineConfig.getId();
-                SimpleFlowLine line = lineFactory.getLine(processConfig.getId(), lineId);
-                try {
-                    return line.runLine();
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
+        CompletableFuture<Boolean> runLineCompletableFuture = CompletableFuture.supplyAsync(() -> {
+            String lineId = lineConfig.getId();
+            SimpleFlowAbstractLine line = lineFactory.getLine(processConfig.getId(), lineId, lineConfig.getCode(), lineConfig);
+            try {
+                return line.runLine();
+            } catch (Exception e) {
+                throw new SimpleFlowRunLineException(e);
             }
         }, executorService);
         runLineCompletableFuture.whenCompleteAsync((runLine, throwable) -> {
