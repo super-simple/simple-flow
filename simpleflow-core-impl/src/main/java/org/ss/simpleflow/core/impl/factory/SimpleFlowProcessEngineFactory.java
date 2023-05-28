@@ -1,11 +1,8 @@
-package org.ss.simpleflow.core.impl;
+package org.ss.simpleflow.core.impl.factory;
 
 import org.ss.simpleflow.core.SimpleFlowExecutionIdGenerator;
 import org.ss.simpleflow.core.SimpleFlowProcessEngine;
 import org.ss.simpleflow.core.SimpleFlowWorkDispatcher;
-import org.ss.simpleflow.core.impl.factory.SimpleFlowEventFactory;
-import org.ss.simpleflow.core.impl.factory.SimpleFlowLineFactory;
-import org.ss.simpleflow.core.impl.factory.SimpleFlowNodeFactory;
 
 public interface SimpleFlowProcessEngineFactory {
 
