@@ -6,7 +6,7 @@ public class SimpleFlowTrueLineImpl extends SimpleFlowAbstractComponentImpl impl
 
     @Override
     public Boolean runLine() throws Exception {
-        System.out.println("line:" + getId());
+        System.out.println(Thread.currentThread().getName() + "-line:" + getId());
         return Boolean.TRUE;
     }
 }

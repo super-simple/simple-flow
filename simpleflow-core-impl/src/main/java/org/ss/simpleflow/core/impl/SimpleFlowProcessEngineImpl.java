@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.BiConsumer;
+import java.util.concurrent.ExecutorService;
 import java.util.function.Supplier;
 
 public class SimpleFlowProcessEngineImpl implements SimpleFlowProcessEngine {
@@ -60,51 +60,45 @@ public class SimpleFlowProcessEngineImpl implements SimpleFlowProcessEngine {
             lineConfigFromMap.put(lineConfig.getFromNodeId(), lineConfig);
         }
 
-        runNode(processConfig, startNodeConfig, nodeConfigMap, lineConfigFromMap);
+        runNode(processConfig, startNodeConfig, nodeConfigMap, lineConfigFromMap, workDispatcher.getWorkDispatcher());
 
         return executionIdGenerator.generateExecutionId(processConfig);
     }
 
-    private void runNode(SimpleFlowProcessConfig processConfig, SimpleFlowNodeConfig nodeConfig, Map<String, SimpleFlowNodeConfig> nodeConfigMap, Map<String, SimpleFlowLineConfig> lineConfigFromMap) {
-        CompletableFuture<SimpleFlowLineConfig> runNodeCompletableFuture = CompletableFuture.supplyAsync(new Supplier<SimpleFlowLineConfig>() {
-            @Override
-            public SimpleFlowLineConfig get() {
-                String processId = processConfig.getId();
-                String nodeId = nodeConfig.getId();
-                String nodeType = nodeConfig.getNodeType();
-                if (SimpleFlowNodeTypeConstant.NODE.equals(nodeType)) {
-                    SimpleFlowEvent event = eventFactory.getEvent(processId, nodeId);
-                    try {
-                        event.runEvent();
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                } else if (SimpleFlowNodeTypeConstant.EVENT.equals(nodeType)) {
-                    SimpleFlowNode node = nodeFactory.getNode(processId, nodeId);
-                    try {
-                        node.runNode();
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                } else {
-                    throw new SimpleFlowProcessConfigException(SimpleFlowConfigExceptionCode.ERROR_NODE_TYPE);
+    private void runNode(SimpleFlowProcessConfig processConfig, SimpleFlowNodeConfig nodeConfig, Map<String, SimpleFlowNodeConfig> nodeConfigMap, Map<String, SimpleFlowLineConfig> lineConfigFromMap, ExecutorService executorService) {
+        CompletableFuture<SimpleFlowLineConfig> runNodeCompletableFuture = CompletableFuture.supplyAsync(() -> {
+            String processId = processConfig.getId();
+            String nodeId = nodeConfig.getId();
+            String nodeType = nodeConfig.getNodeType();
+            if (SimpleFlowNodeTypeConstant.NODE.equals(nodeType)) {
+                SimpleFlowEvent event = eventFactory.getEvent(processId, nodeId);
+                try {
+                    event.runEvent();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
                 }
-                return lineConfigFromMap.get(nodeId);
+            } else if (SimpleFlowNodeTypeConstant.EVENT.equals(nodeType)) {
+                SimpleFlowNode node = nodeFactory.getNode(processId, nodeId);
+                try {
+                    node.runNode();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            } else {
+                throw new SimpleFlowProcessConfigException(SimpleFlowConfigExceptionCode.ERROR_NODE_TYPE);
             }
-        }, workDispatcher.getWorkDispatcher());
+            return lineConfigFromMap.get(nodeId);
+        }, executorService);
 
-        runNodeCompletableFuture.whenComplete(new BiConsumer<SimpleFlowLineConfig, Throwable>() {
-            @Override
-            public void accept(SimpleFlowLineConfig lineConfig, Throwable throwable) {
-                if (lineConfig != null) {
-                    runLine(processConfig, lineConfig, nodeConfigMap, lineConfigFromMap);
-                }
+        runNodeCompletableFuture.whenCompleteAsync((lineConfig, throwable) -> {
+            if (lineConfig != null) {
+                runLine(processConfig, lineConfig, nodeConfigMap, lineConfigFromMap, executorService);
             }
-        });
+        }, executorService);
 
     }
 
-    private void runLine(SimpleFlowProcessConfig processConfig, SimpleFlowLineConfig lineConfig, Map<String, SimpleFlowNodeConfig> nodeConfigMap, Map<String, SimpleFlowLineConfig> lineConfigFromMap) {
+    private void runLine(SimpleFlowProcessConfig processConfig, SimpleFlowLineConfig lineConfig, Map<String, SimpleFlowNodeConfig> nodeConfigMap, Map<String, SimpleFlowLineConfig> lineConfigFromMap, ExecutorService executorService) {
         CompletableFuture<Boolean> runLineCompletableFuture = CompletableFuture.supplyAsync(new Supplier<Boolean>() {
             @Override
             public Boolean get() {
@@ -116,17 +110,14 @@ public class SimpleFlowProcessEngineImpl implements SimpleFlowProcessEngine {
                     throw new RuntimeException(e);
                 }
             }
-        }, workDispatcher.getWorkDispatcher());
-        runLineCompletableFuture.whenComplete(new BiConsumer<Boolean, Throwable>() {
-            @Override
-            public void accept(Boolean runLine, Throwable throwable) {
-                if (runLine) {
-                    String toNodeId = lineConfig.getToNodeId();
-                    SimpleFlowNodeConfig toNodeConfig = nodeConfigMap.get(toNodeId);
-                    runNode(processConfig, toNodeConfig, nodeConfigMap, lineConfigFromMap);
-                }
+        }, executorService);
+        runLineCompletableFuture.whenCompleteAsync((runLine, throwable) -> {
+            if (runLine) {
+                String toNodeId = lineConfig.getToNodeId();
+                SimpleFlowNodeConfig toNodeConfig = nodeConfigMap.get(toNodeId);
+                runNode(processConfig, toNodeConfig, nodeConfigMap, lineConfigFromMap, executorService);
             }
-        });
+        }, executorService);
     }
 
 }
