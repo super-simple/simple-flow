@@ -24,7 +24,6 @@ public class MainTest1 {
         SimpleFlowExecutionIdGeneratorUUIDImpl executionIdGenerator = new SimpleFlowExecutionIdGeneratorUUIDImpl();
         SimpleFlowProcessEngine simpleFlowProcessEngine = simpleFlowProcessEngineFactory.buildProcessEngine(eventFactory, nodeFactory, lineFactory, workDispatcher, executionIdGenerator);
         String executionId = simpleFlowProcessEngine.runProcess(processConfig);
-        System.out.println(executionId);
         TimeUnit.DAYS.sleep(1);
     }
 }

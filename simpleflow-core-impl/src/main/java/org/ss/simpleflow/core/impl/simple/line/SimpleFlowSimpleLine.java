@@ -7,7 +7,7 @@ public class SimpleFlowSimpleLine extends SimpleFlowAbstractLine implements Simp
 
     @Override
     public Boolean runLine() throws Exception {
-        System.out.println(Thread.currentThread().getName() + "-line:" + getId());
+        System.out.println("type:line" + ",Thread:" + Thread.currentThread().getName() + ",id:" + getId());
         return Boolean.TRUE;
     }
 }

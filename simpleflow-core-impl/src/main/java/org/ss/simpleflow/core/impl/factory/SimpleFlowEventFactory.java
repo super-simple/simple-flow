@@ -1,5 +1,6 @@
-package org.ss.simpleflow.core.impl;
+package org.ss.simpleflow.core.impl.factory;
 
+import org.ss.simpleflow.core.impl.SimpleFlowAbstractEvent;
 import org.ss.simpleflow.core.node.SimpleFlowNodeConfig;
 
 public interface SimpleFlowEventFactory {

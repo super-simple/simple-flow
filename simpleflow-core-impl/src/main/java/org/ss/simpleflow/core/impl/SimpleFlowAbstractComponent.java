@@ -1,6 +1,7 @@
-package org.ss.simpleflow.core.component;
+package org.ss.simpleflow.core.impl;
 
 import org.ss.simpleflow.core.SimpleFlowContext;
+import org.ss.simpleflow.core.component.SimpleFlowComponent;
 
 public abstract class SimpleFlowAbstractComponent implements SimpleFlowComponent {
 
@@ -11,8 +12,6 @@ public abstract class SimpleFlowAbstractComponent implements SimpleFlowComponent
     protected String name;
 
     protected String description;
-
-    protected SimpleFlowComponentConfig config;
 
     protected SimpleFlowContext context;
 
@@ -30,10 +29,6 @@ public abstract class SimpleFlowAbstractComponent implements SimpleFlowComponent
 
     void setDescription(String description) {
         this.description = description;
-    }
-
-    void setConfig(SimpleFlowComponentConfig config) {
-        this.config = config;
     }
 
     void setContext(SimpleFlowContext context) {
@@ -60,10 +55,6 @@ public abstract class SimpleFlowAbstractComponent implements SimpleFlowComponent
         return description;
     }
 
-    @Override
-    public SimpleFlowComponentConfig getConfig() {
-        return config;
-    }
 
     @Override
     public SimpleFlowContext getContext() {

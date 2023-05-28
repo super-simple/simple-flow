@@ -6,9 +6,11 @@ import org.ss.simpleflow.core.SimpleFlowWorkDispatcher;
 import org.ss.simpleflow.core.constant.SimpleFlowBuiltInEventCodeConstant;
 import org.ss.simpleflow.core.constant.SimpleFlowNodeTypeConstant;
 import org.ss.simpleflow.core.impl.exceptional.*;
-import org.ss.simpleflow.core.line.SimpleFlowLineConfig;
-import org.ss.simpleflow.core.node.SimpleFlowAbstractNode;
-import org.ss.simpleflow.core.node.SimpleFlowNodeConfig;
+import org.ss.simpleflow.core.impl.factory.SimpleFlowEventFactory;
+import org.ss.simpleflow.core.impl.factory.SimpleFlowLineFactory;
+import org.ss.simpleflow.core.impl.factory.SimpleFlowNodeFactory;
+import org.ss.simpleflow.core.line.SimpleFlowAbstractLineConfig;
+import org.ss.simpleflow.core.node.SimpleFlowAbstractNodeConfig;
 import org.ss.simpleflow.core.processconfig.SimpleFlowProcessConfig;
 
 import java.util.HashMap;
@@ -40,9 +42,9 @@ public class SimpleFlowProcessEngineImpl implements SimpleFlowProcessEngine {
 
     @Override
     public String runProcess(SimpleFlowProcessConfig processConfig) {
-        Set<? extends SimpleFlowNodeConfig> nodeConfigSet = processConfig.getNodeConfigSet();
-        SimpleFlowNodeConfig startNodeConfig = null;
-        for (SimpleFlowNodeConfig nodeConfig : nodeConfigSet) {
+        Set<? extends SimpleFlowAbstractNodeConfig> nodeConfigSet = processConfig.getNodeConfigSet();
+        SimpleFlowAbstractNodeConfig startNodeConfig = null;
+        for (SimpleFlowAbstractNodeConfig nodeConfig : nodeConfigSet) {
             String nodeType = nodeConfig.getNodeType();
             if (SimpleFlowNodeTypeConstant.EVENT.equals(nodeType)) {
                 String eventCode = nodeConfig.getEventCode();
@@ -55,16 +57,16 @@ public class SimpleFlowProcessEngineImpl implements SimpleFlowProcessEngine {
         if (startNodeConfig == null) {
             throw new SimpleFlowProcessConfigException(SimpleFlowConfigExceptionCode.NO_START_EVENT);
         }
-        Map<String, SimpleFlowNodeConfig> nodeConfigMap = new HashMap<>();
+        Map<String, SimpleFlowAbstractNodeConfig> nodeConfigMap = new HashMap<>();
 
-        for (SimpleFlowNodeConfig nodeConfig : nodeConfigSet) {
+        for (SimpleFlowAbstractNodeConfig nodeConfig : nodeConfigSet) {
             nodeConfigMap.put(nodeConfig.getId(), nodeConfig);
         }
 
-        Set<? extends SimpleFlowLineConfig> lineConfigSet = processConfig.getLineConfigSet();
+        Set<? extends SimpleFlowAbstractLineConfig> lineConfigSet = processConfig.getLineConfigSet();
 
-        Map<String, SimpleFlowLineConfig> lineConfigFromMap = new HashMap<>();
-        for (SimpleFlowLineConfig lineConfig : lineConfigSet) {
+        Map<String, SimpleFlowAbstractLineConfig> lineConfigFromMap = new HashMap<>();
+        for (SimpleFlowAbstractLineConfig lineConfig : lineConfigSet) {
             lineConfigFromMap.put(lineConfig.getFromNodeId(), lineConfig);
         }
 
@@ -73,25 +75,35 @@ public class SimpleFlowProcessEngineImpl implements SimpleFlowProcessEngine {
         return executionIdGenerator.generateProcessExecutionId(processConfig, processConfig.getId(), processConfig.getCode());
     }
 
-    private void runNode(SimpleFlowProcessConfig processConfig, SimpleFlowNodeConfig nodeConfig, Map<String, SimpleFlowNodeConfig> nodeConfigMap, Map<String, SimpleFlowLineConfig> lineConfigFromMap, ExecutorService executorService) {
-        CompletableFuture<SimpleFlowLineConfig> runNodeCompletableFuture = CompletableFuture.supplyAsync(() -> {
+    private void runNode(SimpleFlowProcessConfig processConfig, SimpleFlowAbstractNodeConfig nodeConfig, Map<String, SimpleFlowAbstractNodeConfig> nodeConfigMap, Map<String, SimpleFlowAbstractLineConfig> lineConfigFromMap, ExecutorService executorService) {
+        CompletableFuture<SimpleFlowAbstractLineConfig> runNodeCompletableFuture = CompletableFuture.supplyAsync(() -> {
             String processId = processConfig.getId();
             String nodeId = nodeConfig.getId();
             String nodeCode = processConfig.getCode();
             String nodeType = nodeConfig.getNodeType();
             if (SimpleFlowNodeTypeConstant.NODE.equals(nodeType)) {
-                SimpleFlowAbstractEvent event = eventFactory.getEvent(processId, nodeId, nodeCode, nodeConfig);
-                try {
-                    event.runEvent();
-                } catch (Exception e) {
-                    throw new SimpleFlowRunEventException(e);
-                }
-            } else if (SimpleFlowNodeTypeConstant.EVENT.equals(nodeType)) {
                 SimpleFlowAbstractNode node = nodeFactory.getNode(processId, nodeId, nodeCode, nodeConfig);
+                node.setId(nodeId);
+                node.setCode(nodeCode);
+                node.setName(nodeConfig.getName());
+                node.setDescription(nodeConfig.getDescription());
+                node.setConfig(nodeConfig);
                 try {
                     node.runNode();
                 } catch (Exception e) {
                     throw new SimpleFlowRunNodeException(e);
+                }
+            } else if (SimpleFlowNodeTypeConstant.EVENT.equals(nodeType)) {
+                SimpleFlowAbstractEvent event = eventFactory.getEvent(processId, nodeId, nodeCode, nodeConfig);
+                event.setId(nodeId);
+                event.setCode(nodeCode);
+                event.setName(nodeConfig.getName());
+                event.setDescription(nodeConfig.getDescription());
+                event.setConfig(nodeConfig);
+                try {
+                    event.runEvent();
+                } catch (Exception e) {
+                    throw new SimpleFlowRunEventException(e);
                 }
             } else {
                 throw new SimpleFlowProcessConfigException(SimpleFlowConfigExceptionCode.ERROR_NODE_TYPE);
@@ -107,10 +119,16 @@ public class SimpleFlowProcessEngineImpl implements SimpleFlowProcessEngine {
 
     }
 
-    private void runLine(SimpleFlowProcessConfig processConfig, SimpleFlowLineConfig lineConfig, Map<String, SimpleFlowNodeConfig> nodeConfigMap, Map<String, SimpleFlowLineConfig> lineConfigFromMap, ExecutorService executorService) {
+    private void runLine(SimpleFlowProcessConfig processConfig, SimpleFlowAbstractLineConfig lineConfig, Map<String, SimpleFlowAbstractNodeConfig> nodeConfigMap, Map<String, SimpleFlowAbstractLineConfig> lineConfigFromMap, ExecutorService executorService) {
         CompletableFuture<Boolean> runLineCompletableFuture = CompletableFuture.supplyAsync(() -> {
             String lineId = lineConfig.getId();
-            SimpleFlowAbstractLine line = lineFactory.getLine(processConfig.getId(), lineId, lineConfig.getCode(), lineConfig);
+            String lineCode = lineConfig.getCode();
+            SimpleFlowAbstractLine line = lineFactory.getLine(processConfig.getId(), lineId, lineCode, lineConfig);
+            line.setId(lineId);
+            line.setCode(lineCode);
+            line.setName(lineConfig.getName());
+            line.setDescription(lineConfig.getDescription());
+            line.setConfig(lineConfig);
             try {
                 return line.runLine();
             } catch (Exception e) {
@@ -120,7 +138,7 @@ public class SimpleFlowProcessEngineImpl implements SimpleFlowProcessEngine {
         runLineCompletableFuture.whenCompleteAsync((runLine, throwable) -> {
             if (runLine) {
                 String toNodeId = lineConfig.getToNodeId();
-                SimpleFlowNodeConfig toNodeConfig = nodeConfigMap.get(toNodeId);
+                SimpleFlowAbstractNodeConfig toNodeConfig = nodeConfigMap.get(toNodeId);
                 runNode(processConfig, toNodeConfig, nodeConfigMap, lineConfigFromMap, executorService);
             }
         }, executorService);

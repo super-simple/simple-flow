@@ -1,6 +1,6 @@
-package org.ss.simpleflow.core.impl;
+package org.ss.simpleflow.core.impl.factory;
 
-import org.ss.simpleflow.core.node.SimpleFlowAbstractNode;
+import org.ss.simpleflow.core.impl.SimpleFlowAbstractNode;
 import org.ss.simpleflow.core.node.SimpleFlowNodeConfig;
 
 public interface SimpleFlowNodeFactory {

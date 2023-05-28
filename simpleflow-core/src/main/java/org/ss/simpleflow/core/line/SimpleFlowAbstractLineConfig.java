@@ -2,7 +2,7 @@ package org.ss.simpleflow.core.line;
 
 import org.ss.simpleflow.core.component.SimpleFlowAbstractComponentConfig;
 
-public abstract class SimpleFlowAbstractAbstractLineConfig extends SimpleFlowAbstractComponentConfig implements SimpleFlowLineConfig {
+public abstract class SimpleFlowAbstractLineConfig extends SimpleFlowAbstractComponentConfig implements SimpleFlowLineConfig {
 
     protected String fromId;
 

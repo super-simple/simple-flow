@@ -1,5 +1,6 @@
-package org.ss.simpleflow.core.impl;
+package org.ss.simpleflow.core.impl.factory;
 
+import org.ss.simpleflow.core.impl.SimpleFlowAbstractLine;
 import org.ss.simpleflow.core.line.SimpleFlowLineConfig;
 
 public interface SimpleFlowLineFactory {

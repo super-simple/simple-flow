@@ -1,9 +1,8 @@
-package org.ss.simpleflow.core.impl;
+package org.ss.simpleflow.core.node;
 
 import org.ss.simpleflow.core.component.SimpleFlowAbstractComponentConfig;
-import org.ss.simpleflow.core.node.SimpleFlowNodeConfig;
 
-public abstract class SimpleFlowAbstractAbstractNodeConfig extends SimpleFlowAbstractComponentConfig implements SimpleFlowNodeConfig {
+public abstract class SimpleFlowAbstractNodeConfig extends SimpleFlowAbstractComponentConfig implements SimpleFlowNodeConfig {
 
     protected String nodeType;
 

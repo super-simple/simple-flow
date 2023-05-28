@@ -11,7 +11,5 @@ public interface SimpleFlowComponent {
 
     String getDescription();
 
-    SimpleFlowComponentConfig getConfig();
-
     SimpleFlowContext getContext();
 }
