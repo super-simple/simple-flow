@@ -1,8 +1,9 @@
 package org.ss.simpleflow.core.impl;
 
+import org.jetbrains.annotations.NotNull;
 import org.ss.simpleflow.core.SimpleFlowComponentConfig;
 
-public abstract class SimpleFlowComponentConfigImpl implements SimpleFlowComponentConfig {
+public abstract class SimpleFlowComponentConfigImpl implements SimpleFlowComponentConfig, Comparable<SimpleFlowComponentConfigImpl> {
 
     private String id;
 
@@ -46,5 +47,25 @@ public abstract class SimpleFlowComponentConfigImpl implements SimpleFlowCompone
     @Override
     public String getDescription() {
         return description;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        SimpleFlowComponentConfigImpl that = (SimpleFlowComponentConfigImpl) o;
+
+        return id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
+
+    @Override
+    public int compareTo(@NotNull SimpleFlowComponentConfigImpl o) {
+        return this.id.compareTo(o.id);
     }
 }

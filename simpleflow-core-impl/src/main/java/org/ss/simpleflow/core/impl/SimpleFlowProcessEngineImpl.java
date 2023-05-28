@@ -18,21 +18,21 @@ public class SimpleFlowProcessEngineImpl implements SimpleFlowProcessEngine {
 
     private SimpleFlowLineFactory lineFactory;
 
-    private SimpleFlowWorkDispatcher simpleFlowWorkDispatcher;
+    private SimpleFlowWorkDispatcher workDispatcher;
 
     private SimpleFlowExecutionIdGenerator executionIdGenerator;
 
-    public SimpleFlowProcessEngineImpl(SimpleFlowEventFactory eventFactory, SimpleFlowNodeFactory nodeFactory, SimpleFlowLineFactory lineFactory, SimpleFlowWorkDispatcher simpleFlowWorkDispatcher, SimpleFlowExecutionIdGenerator executionIdGenerator) {
+    public SimpleFlowProcessEngineImpl(SimpleFlowEventFactory eventFactory, SimpleFlowNodeFactory nodeFactory, SimpleFlowLineFactory lineFactory, SimpleFlowWorkDispatcher workDispatcher, SimpleFlowExecutionIdGenerator executionIdGenerator) {
         this.eventFactory = eventFactory;
         this.nodeFactory = nodeFactory;
         this.lineFactory = lineFactory;
-        this.simpleFlowWorkDispatcher = simpleFlowWorkDispatcher;
+        this.workDispatcher = workDispatcher;
         this.executionIdGenerator = executionIdGenerator;
     }
 
     @Override
     public String runProcess(SimpleFlowProcessConfig processConfig) {
-        Set<SimpleFlowNodeConfig> nodeConfigSet = processConfig.getNodeConfigSet();
+        Set<? extends SimpleFlowNodeConfig> nodeConfigSet = processConfig.getNodeConfigSet();
         SimpleFlowNodeConfig startNodeConfig = null;
         for (SimpleFlowNodeConfig nodeConfig : nodeConfigSet) {
             String nodeType = nodeConfig.getNodeType();
@@ -53,7 +53,7 @@ public class SimpleFlowProcessEngineImpl implements SimpleFlowProcessEngine {
             nodeConfigMap.put(nodeConfig.getId(), nodeConfig);
         }
 
-        Set<SimpleFlowLineConfig> lineConfigSet = processConfig.getLineConfigSet();
+        Set<? extends SimpleFlowLineConfig> lineConfigSet = processConfig.getLineConfigSet();
 
         Map<String, SimpleFlowLineConfig> lineConfigFromMap = new HashMap<>();
         for (SimpleFlowLineConfig lineConfig : lineConfigSet) {
@@ -91,7 +91,7 @@ public class SimpleFlowProcessEngineImpl implements SimpleFlowProcessEngine {
                 }
                 return lineConfigFromMap.get(nodeId);
             }
-        }, simpleFlowWorkDispatcher.getWorkDispatcher());
+        }, workDispatcher.getWorkDispatcher());
 
         runNodeCompletableFuture.whenComplete(new BiConsumer<SimpleFlowLineConfig, Throwable>() {
             @Override
@@ -116,7 +116,7 @@ public class SimpleFlowProcessEngineImpl implements SimpleFlowProcessEngine {
                     throw new RuntimeException(e);
                 }
             }
-        }, simpleFlowWorkDispatcher.getWorkDispatcher());
+        }, workDispatcher.getWorkDispatcher());
         runLineCompletableFuture.whenComplete(new BiConsumer<Boolean, Throwable>() {
             @Override
             public void accept(Boolean runLine, Throwable throwable) {

@@ -2,7 +2,7 @@
   "id": "basic1",
   "name": "basic1",
   "description": "basic1",
-  "eventAndNodeConfigSet": [
+  "nodeConfigSet": [
     {
       "id": "startEvent1",
       "nodeType": "EVENT",

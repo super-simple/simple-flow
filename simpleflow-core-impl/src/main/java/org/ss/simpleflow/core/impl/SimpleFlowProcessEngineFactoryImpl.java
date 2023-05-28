@@ -5,10 +5,10 @@ import org.ss.simpleflow.core.*;
 public class SimpleFlowProcessEngineFactoryImpl implements SimpleFlowProcessEngineFactory {
 
     @Override
-    public SimpleFlowProcessEngine getProcessEngine(
+    public SimpleFlowProcessEngine buildProcessEngine(
             SimpleFlowEventFactory eventFactory, SimpleFlowNodeFactory nodeFactory, SimpleFlowLineFactory lineFactory,
-            SimpleFlowWorkDispatcher workThreadPool, SimpleFlowExecutionIdGenerator executionIdGenerator) {
-        return new SimpleFlowProcessEngineImpl(eventFactory, nodeFactory, lineFactory, workThreadPool, executionIdGenerator);
+            SimpleFlowWorkDispatcher workDispatcher, SimpleFlowExecutionIdGenerator executionIdGenerator) {
+        return new SimpleFlowProcessEngineImpl(eventFactory, nodeFactory, lineFactory, workDispatcher, executionIdGenerator);
     }
 
 }

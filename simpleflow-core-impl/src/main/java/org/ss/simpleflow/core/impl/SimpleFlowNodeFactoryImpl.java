@@ -7,7 +7,7 @@ public class SimpleFlowNodeFactoryImpl implements SimpleFlowNodeFactory {
 
     @Override
     public SimpleFlowNode getNode(String processId, String nodeId) {
-        return new SimpleFlowAbstractNodePrintLnImpl();
+        return new SimpleFlowNodePrintlnImpl();
     }
 
 }

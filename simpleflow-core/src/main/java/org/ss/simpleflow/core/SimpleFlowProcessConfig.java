@@ -10,8 +10,8 @@ public interface SimpleFlowProcessConfig {
 
     String getDescription();
 
-    Set<SimpleFlowNodeConfig> getNodeConfigSet();
+    Set<? extends SimpleFlowNodeConfig> getNodeConfigSet();
 
-    Set<SimpleFlowLineConfig> getLineConfigSet();
+    Set<? extends SimpleFlowLineConfig> getLineConfigSet();
 
 }
