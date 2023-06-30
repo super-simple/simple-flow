@@ -8,6 +8,14 @@ import java.util.function.Function;
 
 public class MapUtils {
 
+    public static <K, V> boolean isNullOrEmpty(Map<K, V> map) {
+        return map == null || map.size() == 0;
+    }
+
+    public static <K, V> boolean isNotEmpty(Map<K, V> map) {
+        return map != null && map.size() > 0;
+    }
+
     public static <K, V> Map<K, V> uniqueIndex(Collection<V> values, Function<? super V, K> keyFunction) {
         if (CollectionUtils.isNullOrEmpty(values)) {
             return Collections.emptyMap();

@@ -1,9 +1,9 @@
 package org.ss.simpleflow.core.processconfig;
 
-import org.ss.simpleflow.core.line.SimpleFlowAbstractLineConfig;
-import org.ss.simpleflow.core.node.SimpleFlowAbstractNodeConfig;
+import org.ss.simpleflow.core.line.SimpleFlowLineConfig;
+import org.ss.simpleflow.core.node.SimpleFlowNodeConfig;
 
-import java.util.Set;
+import java.util.List;
 
 public interface SimpleFlowProcessConfig {
 
@@ -15,8 +15,10 @@ public interface SimpleFlowProcessConfig {
 
     String getDescription();
 
-    Set<? extends SimpleFlowAbstractNodeConfig> getNodeConfigSet();
+    int getVersion();
 
-    Set<? extends SimpleFlowAbstractLineConfig> getLineConfigSet();
+    List<SimpleFlowNodeConfig> getNodeConfigList();
+
+    List<SimpleFlowLineConfig> getLineConfigList();
 
 }

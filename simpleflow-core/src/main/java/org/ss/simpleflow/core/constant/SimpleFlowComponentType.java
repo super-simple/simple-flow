@@ -4,10 +4,11 @@ public enum SimpleFlowComponentType {
     NODE(SimpleFlowNodeTypeConstant.NODE),
 
     EVENT(SimpleFlowNodeTypeConstant.EVENT),
+    GATEWAY(SimpleFlowNodeTypeConstant.GATEWAY),
 
     PROCESS(SimpleFlowNodeTypeConstant.PROCESS),
 
-    LINE(SimpleFlowComponentTypeConstant.LINE);
+    LINE(SimpleFlowLineTypeConstant.LINE);
 
     private final String typeName;
 
