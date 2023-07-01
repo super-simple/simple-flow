@@ -9,4 +9,8 @@ public class SimpleFlowProcessConfigException extends RuntimeException {
         this.configExceptionCode = configExceptionCode;
     }
 
+    @Override
+    public String toString() {
+        return configExceptionCode.getMsg();
+    }
 }

@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class SimpleFlowContextImpl implements SimpleFlowContext {
 
-    private Map<String, Object> contextMap = new ConcurrentHashMap<>();
+    private final Map<String, Object> contextMap = new ConcurrentHashMap<>();
 
     @Override
     public void putVariable(String variableName, Object value) {

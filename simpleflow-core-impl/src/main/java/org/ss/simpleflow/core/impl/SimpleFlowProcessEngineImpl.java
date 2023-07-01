@@ -2,6 +2,7 @@ package org.ss.simpleflow.core.impl;
 
 import org.ss.simpleflow.core.SimpleFlowExecutionIdGenerator;
 import org.ss.simpleflow.core.SimpleFlowProcessEngine;
+import org.ss.simpleflow.core.SimpleFlowValidateAndPreprocess;
 import org.ss.simpleflow.core.SimpleFlowWorkDispatcher;
 import org.ss.simpleflow.core.constant.SimpleFlowBuiltInEventCodeConstant;
 import org.ss.simpleflow.core.constant.SimpleFlowNodeTypeConstant;
@@ -21,6 +22,7 @@ import java.util.concurrent.ExecutorService;
 
 public class SimpleFlowProcessEngineImpl implements SimpleFlowProcessEngine {
 
+    private final SimpleFlowValidateAndPreprocess validateAndPreprocess;
 
     private final SimpleFlowEventFactory eventFactory;
 
@@ -32,7 +34,30 @@ public class SimpleFlowProcessEngineImpl implements SimpleFlowProcessEngine {
 
     private final SimpleFlowExecutionIdGenerator executionIdGenerator;
 
-    public SimpleFlowProcessEngineImpl(SimpleFlowEventFactory eventFactory, SimpleFlowNodeFactory nodeFactory, SimpleFlowLineFactory lineFactory, SimpleFlowWorkDispatcher workDispatcher, SimpleFlowExecutionIdGenerator executionIdGenerator) {
+    SimpleFlowProcessEngineImpl(SimpleFlowValidateAndPreprocess validateAndPreprocess, SimpleFlowEventFactory eventFactory,
+                                SimpleFlowNodeFactory nodeFactory,
+                                SimpleFlowLineFactory lineFactory,
+                                SimpleFlowWorkDispatcher workDispatcher,
+                                SimpleFlowExecutionIdGenerator executionIdGenerator) {
+        if (validateAndPreprocess == null) {
+            throw new IllegalArgumentException();
+        }
+        if (eventFactory == null) {
+            throw new IllegalArgumentException();
+        }
+        if (nodeFactory == null) {
+            throw new IllegalArgumentException();
+        }
+        if (lineFactory == null) {
+            throw new IllegalArgumentException();
+        }
+        if (workDispatcher == null) {
+            throw new IllegalArgumentException();
+        }
+        if (executionIdGenerator == null) {
+            throw new IllegalArgumentException();
+        }
+        this.validateAndPreprocess = validateAndPreprocess;
         this.eventFactory = eventFactory;
         this.nodeFactory = nodeFactory;
         this.lineFactory = lineFactory;
@@ -42,6 +67,9 @@ public class SimpleFlowProcessEngineImpl implements SimpleFlowProcessEngine {
 
     @Override
     public String runProcess(SimpleFlowProcessConfig processConfig) {
+
+        validateAndPreprocess.validateAndPreprocess(processConfig);
+
         Set<? extends SimpleFlowAbstractNodeConfig> nodeConfigSet = processConfig.getNodeConfigSet();
         SimpleFlowAbstractNodeConfig startNodeConfig = null;
         for (SimpleFlowAbstractNodeConfig nodeConfig : nodeConfigSet) {

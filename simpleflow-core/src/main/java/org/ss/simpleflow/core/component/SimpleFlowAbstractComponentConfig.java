@@ -35,7 +35,7 @@ public abstract class SimpleFlowAbstractComponentConfig implements SimpleFlowCom
 
     @Override
     public String getCode() {
-        return null;
+        return code;
     }
 
     @Override

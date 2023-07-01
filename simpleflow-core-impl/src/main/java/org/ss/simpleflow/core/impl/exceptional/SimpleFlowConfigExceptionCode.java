@@ -1,6 +1,8 @@
 package org.ss.simpleflow.core.impl.exceptional;
 
 public enum SimpleFlowConfigExceptionCode {
+    NO_ID("NO_ID", "no id"),
+    ID_REPEAT("ID_REPEAT", "id repeat"),
     NO_START_EVENT("NO_START_EVENT", "no start event"),
     MULTI_START_EVENT("MULTI_START_EVENT", "multi start event"),
     ERROR_NODE_TYPE("ERROR_NODE_TYPE", "error node type"),
