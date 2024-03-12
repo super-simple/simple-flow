@@ -9,7 +9,7 @@ import java.util.function.Function;
 public class MapUtils {
 
     public static <K, V> Map<K, V> uniqueIndex(Collection<V> values, Function<? super V, K> keyFunction) {
-        if (CollectionUtils.isEmptyOrNull(values)) {
+        if (CollectionUtils.isNullOrEmpty(values)) {
             return Collections.emptyMap();
         }
         Map<K, V> result = new HashMap<>();

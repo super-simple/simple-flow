@@ -1,8 +1,11 @@
 package org.ss.simpleflow.core.impl;
 
+import org.ss.simpleflow.common.CollectionUtils;
 import org.ss.simpleflow.common.MapUtils;
 import org.ss.simpleflow.common.MultiMapUtils;
 import org.ss.simpleflow.common.StringUtils;
+import org.ss.simpleflow.core.SimpleFlowPreprocessData;
+import org.ss.simpleflow.core.SimpleFlowPreprocessNodeData;
 import org.ss.simpleflow.core.SimpleFlowValidateAndPreprocess;
 import org.ss.simpleflow.core.constant.SimpleFlowBuiltInEventCodeConstant;
 import org.ss.simpleflow.core.constant.SimpleFlowNodeTypeConstant;
@@ -12,10 +15,7 @@ import org.ss.simpleflow.core.line.SimpleFlowAbstractLineConfig;
 import org.ss.simpleflow.core.node.SimpleFlowAbstractNodeConfig;
 import org.ss.simpleflow.core.processconfig.SimpleFlowProcessConfig;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class SimpleFlowUniqueValidateAndPreprocess implements SimpleFlowValidateAndPreprocess {
 
@@ -36,7 +36,8 @@ public class SimpleFlowUniqueValidateAndPreprocess implements SimpleFlowValidate
     }
 
     @Override
-    public void validateAndPreprocess(SimpleFlowProcessConfig processConfig) {
+    public SimpleFlowPreprocessData validateAndPreprocess(SimpleFlowProcessConfig processConfig) {
+        SimpleFlowPreprocessData preprocessData = new SimpleFlowPreprocessData();
         Set<? extends SimpleFlowAbstractNodeConfig> nodeConfigSet = processConfig.getNodeConfigSet();
         Set<? extends SimpleFlowAbstractLineConfig> lineConfigSet = processConfig.getLineConfigSet();
 
@@ -61,15 +62,27 @@ public class SimpleFlowUniqueValidateAndPreprocess implements SimpleFlowValidate
         if (startNodeConfig == null) {
             throw new SimpleFlowProcessConfigException(SimpleFlowConfigExceptionCode.NO_START_EVENT);
         }
+        preprocessData.setStartNodeConfig(startNodeConfig);
 
         //准备数据结构
         Map<String, ? extends SimpleFlowAbstractNodeConfig> nodeConfigMap = MapUtils.uniqueIndex(nodeConfigSet, SimpleFlowAbstractNodeConfig::getId);
+        preprocessData.setNodeConfigMap(nodeConfigMap);
 
         Map<String, ? extends List<? extends SimpleFlowAbstractLineConfig>> lineConfigFromMap = MultiMapUtils.index(lineConfigSet, SimpleFlowAbstractLineConfig::getFromNodeId);
+        preprocessData.setLineConfigFromMap(lineConfigFromMap);
 
-        Set<String> lineSet = new HashSet<>();
+        Map<String, SimpleFlowPreprocessNodeData> preprocessNodeDataMap = new HashMap<>();
+        preprocessData.setPreprocessNodeDataMap(preprocessNodeDataMap);
+        SimpleFlowPreprocessNodeData preprocessNodeData = new SimpleFlowPreprocessNodeData();
+        Set<String> parentSet = new HashSet<>();
+        String startNodeId = startNodeConfig.getId();
+        parentSet.add(startNodeId);
+        preprocessNodeData.setParentSet(parentSet);
+        preprocessNodeDataMap.put(startNodeId, preprocessNodeData);
+
         //遍历,预处理,并且检验结束节点
-        runNode(startNodeConfig, lineSet, nodeConfigMap, lineConfigFromMap);
+        runNode(startNodeConfig, startNodeConfig, new HashSet<>(), nodeConfigMap, lineConfigFromMap, preprocessNodeDataMap);
+        return preprocessData;
     }
 
     private static void validateIdRepeat(Set<? extends SimpleFlowAbstractNodeConfig> nodeConfigSet) {
@@ -87,30 +100,46 @@ public class SimpleFlowUniqueValidateAndPreprocess implements SimpleFlowValidate
         }
     }
 
-    private void runNode(SimpleFlowAbstractNodeConfig fromNode, Set<String> lineSet, Map<String, ? extends SimpleFlowAbstractNodeConfig> nodeConfigMap, Map<String, ? extends List<? extends SimpleFlowAbstractLineConfig>> lineConfigFromMap) {
+    private void runNode(SimpleFlowAbstractNodeConfig lastFromNode, SimpleFlowAbstractNodeConfig fromNode,
+                         Set<String> lineSet,
+                         Map<String, ? extends SimpleFlowAbstractNodeConfig> nodeConfigMap,
+                         Map<String, ? extends List<? extends SimpleFlowAbstractLineConfig>> lineConfigFromMap,
+                         Map<String, SimpleFlowPreprocessNodeData> preprocessNodeDataMap) {
+        String lastFromNodeId = lastFromNode.getId();
         String fromNodeId = fromNode.getId();
         List<? extends SimpleFlowAbstractLineConfig> lineConfigList;
         do {
             lineConfigList = lineConfigFromMap.get(fromNodeId);
-            int size = lineConfigList.size();
-            if (size == 1) {
-                SimpleFlowAbstractLineConfig simpleFlowAbstractLineConfig = lineConfigList.get(0);
-                String toNodeId = simpleFlowAbstractLineConfig.getToNodeId();
-                lineConfigList = lineConfigFromMap.get(toNodeId);
-            } else {
-                for (SimpleFlowAbstractLineConfig simpleFlowAbstractLineConfig : lineConfigList) {
-                    String lineId = simpleFlowAbstractLineConfig.getId();
-                    if (lineSet.contains(lineId)) {
-                        return;
-                    } else {
-                        lineSet.add(lineId);
-                    }
+            if (CollectionUtils.isNotEmpty(lineConfigList)) {
+                int size = lineConfigList.size();
+
+                SimpleFlowPreprocessNodeData lastPreprocessNodeData = preprocessNodeDataMap.get(lastFromNodeId);
+                SimpleFlowPreprocessNodeData currentPreprocessNodeData = new SimpleFlowPreprocessNodeData();
+                currentPreprocessNodeData.setParentSet(lastPreprocessNodeData.getParentSet());
+                preprocessNodeDataMap.put(fromNodeId, currentPreprocessNodeData);
+
+                if (size == 1) {
+                    SimpleFlowAbstractLineConfig simpleFlowAbstractLineConfig = lineConfigList.get(0);
                     String toNodeId = simpleFlowAbstractLineConfig.getToNodeId();
-                    SimpleFlowAbstractNodeConfig toNode = nodeConfigMap.get(toNodeId);
-                    runNode(toNode, lineSet, nodeConfigMap, lineConfigFromMap);
+                    lineConfigList = lineConfigFromMap.get(toNodeId);
+                    lastFromNodeId = fromNodeId;
+                    fromNodeId = toNodeId;
+                } else {
+                    for (SimpleFlowAbstractLineConfig simpleFlowAbstractLineConfig : lineConfigList) {
+                        String lineId = simpleFlowAbstractLineConfig.getId();
+                        if (lineSet.contains(lineId)) {
+                            return;
+                        } else {
+                            lineSet.add(lineId);
+                        }
+
+                        String toNodeId = simpleFlowAbstractLineConfig.getToNodeId();
+                        SimpleFlowAbstractNodeConfig toNode = nodeConfigMap.get(toNodeId);
+                        runNode(fromNode, toNode, lineSet, nodeConfigMap, lineConfigFromMap, preprocessNodeDataMap);
+                    }
                 }
             }
-        } while (lineConfigList != null);
+        } while (lineConfigList != null && lineConfigList.size() == 1);
     }
 
 }
