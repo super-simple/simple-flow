@@ -7,4 +7,6 @@ public interface SimpleFlowBuiltInEventCodeConstant {
     String END = "END";
 
     String ERROR = "ERROR";
+
+    String BREAK = "BREAK";
 }
