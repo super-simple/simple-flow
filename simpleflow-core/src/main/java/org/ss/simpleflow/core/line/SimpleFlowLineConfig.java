@@ -1,11 +1,16 @@
 package org.ss.simpleflow.core.line;
 
-import org.ss.simpleflow.core.component.SimpleFlowComponentConfig;
+public interface SimpleFlowLineConfig {
 
-public interface SimpleFlowLineConfig extends SimpleFlowComponentConfig {
+    String getId();
 
     String getFromNodeId();
 
     String getToNodeId();
 
+    String getLineType();
+
+    String getFromParameterName();
+
+    String getToParameterName();
 }

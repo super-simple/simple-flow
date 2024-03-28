@@ -1,12 +1,23 @@
 package org.ss.simpleflow.core.node;
 
-import org.ss.simpleflow.core.component.SimpleFlowComponentConfig;
+import java.util.Map;
+import java.util.Set;
 
-public interface SimpleFlowNodeConfig extends SimpleFlowComponentConfig {
+public interface SimpleFlowNodeConfig {
+
+    String getId();
 
     String getNodeType();
 
     String getEventCode();
 
     String getEventType();
+
+    long getMaxLoopCount();
+
+    Map<String, SimpleFlowNodeParameter> getParameterMap();
+
+    Map<String, SimpleFlowNodeResult> getResultMap();
+
+    Set<String> getGatewayEnumSet();
 }
