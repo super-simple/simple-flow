@@ -1,5 +1,5 @@
 package org.ss.simpleflow.core.constant;
 
-public class SimpleFlowIteratorConstant {
+public interface SimpleFlowIteratorConstant {
     String ITERATOR = "ITERATOR";
 }

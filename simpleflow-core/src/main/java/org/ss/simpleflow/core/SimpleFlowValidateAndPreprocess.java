@@ -5,4 +5,10 @@ package org.ss.simpleflow.core;
  */
 public interface SimpleFlowValidateAndPreprocess {
 
+    void validateNodeConfig();
+
+    void validateLineConfig();
+
+    void validateGraphAndBusiness();
+
 }

@@ -15,6 +15,8 @@ public interface SimpleFlowNodeConfig {
 
     long getMaxLoopCount();
 
+    boolean resultNode();
+
     Map<String, SimpleFlowNodeParameter> getParameterMap();
 
     Map<String, SimpleFlowNodeResult> getResultMap();
