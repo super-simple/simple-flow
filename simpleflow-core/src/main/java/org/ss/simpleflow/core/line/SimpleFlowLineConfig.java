@@ -10,6 +10,8 @@ public interface SimpleFlowLineConfig {
 
     String getLineType();
 
+    boolean isDefaultLine();
+
     String getFromParameterName();
 
     String getToParameterName();

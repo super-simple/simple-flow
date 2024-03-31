@@ -6,6 +6,9 @@ import org.ss.simpleflow.core.node.SimpleFlowNodeConfig;
 import java.util.List;
 
 public interface SimpleFlowProcessConfig {
+
+    String getId();
+
     List<SimpleFlowNodeConfig> getNodeConfigList();
 
     List<SimpleFlowLineConfig> getLineConfigList();

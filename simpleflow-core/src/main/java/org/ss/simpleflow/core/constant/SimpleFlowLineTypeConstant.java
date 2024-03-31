@@ -1,8 +1,8 @@
 package org.ss.simpleflow.core.constant;
 
 public interface SimpleFlowLineTypeConstant {
-    String LINE = "LINE";
+    String RUN = "RUN";
 
-    String NODE = "NODE";
+    String DATA = "DATA";
 
 }
