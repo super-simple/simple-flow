@@ -12,4 +12,6 @@ public interface SimpleFlowProcessConfig {
     List<SimpleFlowNodeConfig> getNodeConfigList();
 
     List<SimpleFlowLineConfig> getLineConfigList();
+
+    List<SimpleFlowProcessConfig> getProcessConfigList();
 }

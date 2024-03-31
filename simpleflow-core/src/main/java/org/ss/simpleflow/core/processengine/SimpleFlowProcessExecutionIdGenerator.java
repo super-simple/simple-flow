@@ -1,4 +1,4 @@
-package org.ss.simpleflow.core;
+package org.ss.simpleflow.core.processengine;
 
 import org.ss.simpleflow.core.processconfig.SimpleFlowProcessConfig;
 
