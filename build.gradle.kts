@@ -13,7 +13,9 @@ allprojects {
     apply(plugin = "java-library")
 
     repositories {
-        mavenCentral()
+        maven {
+            url = uri("https://maven.aliyun.com/repository/public/")
+        }
     }
 
     idea {
