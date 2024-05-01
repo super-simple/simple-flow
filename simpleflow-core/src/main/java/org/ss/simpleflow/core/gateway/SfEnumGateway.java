@@ -1,7 +1,7 @@
-package org.ss.simpleflow.core.enumgateway;
+package org.ss.simpleflow.core.gateway;
 
 import org.ss.simpleflow.core.component.SfComponent;
-import org.ss.simpleflow.core.node.SfNodeContext;
+import org.ss.simpleflow.core.context.SfNodeContext;
 
 import java.util.Map;
 

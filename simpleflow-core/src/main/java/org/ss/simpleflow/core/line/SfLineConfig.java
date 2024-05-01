@@ -1,6 +1,8 @@
 package org.ss.simpleflow.core.line;
 
-public interface SfLineConfig {
+import org.ss.simpleflow.core.component.SfComponentConfig;
+
+public interface SfLineConfig extends SfComponentConfig {
 
     String getId();
 
@@ -9,8 +11,6 @@ public interface SfLineConfig {
     String getToNodeId();
 
     String getLineType();
-
-    boolean isDefaultLine();
 
     String getFromParameterName();
 

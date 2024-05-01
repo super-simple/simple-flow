@@ -1,15 +1,15 @@
 package org.ss.simpleflow.core.constant;
 
-public interface SflowOwnershipConstant {
+public interface SfOwnershipConstant {
 
     String OWNERSHIP_ITERATOR = SfIteratorConstant.ITERATOR;
     String OWNERSHIP_MAIN = "MAIN";
 
-    static boolean isMainOwnership(String ownership) {
+    static boolean isMain(String ownership) {
         return OWNERSHIP_MAIN.equalsIgnoreCase(ownership);
     }
 
-    static boolean isIteratorOwnership(String ownership) {
+    static boolean isIterator(String ownership) {
         return OWNERSHIP_ITERATOR.equalsIgnoreCase(ownership);
     }
 }

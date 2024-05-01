@@ -1,6 +1,7 @@
 package org.ss.simpleflow.core.node;
 
 import org.ss.simpleflow.core.component.SfComponent;
+import org.ss.simpleflow.core.context.SfNodeContext;
 
 import java.util.Map;
 

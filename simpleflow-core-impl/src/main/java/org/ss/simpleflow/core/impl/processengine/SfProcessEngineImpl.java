@@ -14,7 +14,7 @@ public class SfProcessEngineImpl implements SfProcessEngine {
     private final SfNodeFactory nodeFactory;
     private final SfLineFactory lineFactory;
     private final SfEnumGatewayFactory enumGatewayFactory;
-    private final SfIteratorFactory iteratorFactory;
+    private final SfStreamIteratorFactory iteratorFactory;
     private final SfGatewayFactory gatewayFactory;
     private final SfTrimProcessConfig trimProcessConfig;
     private final SfValidateManager validateManager;
@@ -24,7 +24,7 @@ public class SfProcessEngineImpl implements SfProcessEngine {
                                SfNodeFactory nodeFactory,
                                SfLineFactory lineFactory,
                                SfEnumGatewayFactory enumGatewayFactory,
-                               SfIteratorFactory iteratorFactory,
+                               SfStreamIteratorFactory iteratorFactory,
                                SfGatewayFactory gatewayFactory,
                                SfTrimProcessConfig trimProcessConfig,
                                SfValidateManager validateManager) {

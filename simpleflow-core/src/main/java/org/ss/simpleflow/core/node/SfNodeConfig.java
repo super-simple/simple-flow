@@ -1,9 +1,11 @@
 package org.ss.simpleflow.core.node;
 
+import org.ss.simpleflow.core.component.SfComponentConfig;
+
 import java.util.Map;
 import java.util.Set;
 
-public interface SfNodeConfig {
+public interface SfNodeConfig extends SfComponentConfig {
 
     String getId();
 
@@ -13,9 +15,9 @@ public interface SfNodeConfig {
 
     String getEventType();
 
-    long getMaxLoopCount();
+    Long getMaxLoopCount();
 
-    boolean resultNode();
+    Boolean resultNode();
 
     Map<String, SfNodeParameter> getParameterMap();
 

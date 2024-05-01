@@ -1,4 +1,4 @@
 package org.ss.simpleflow.core.factory;
 
-public interface SfIteratorFactory {
+public interface SfAroundIteratorFactory {
 }
