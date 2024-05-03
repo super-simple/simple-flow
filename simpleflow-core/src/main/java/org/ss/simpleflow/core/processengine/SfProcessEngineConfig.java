@@ -6,6 +6,5 @@ public interface SfProcessEngineConfig {
 
     long maxLoopCount();
 
-    String contextSchema();
-
+    boolean throwExceptionWithConfig();
 }
