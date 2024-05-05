@@ -12,7 +12,7 @@ public interface SfLineConfig extends SfComponentConfig {
 
     String getLineType();
 
-    String getFromParameterName();
+    String getFromResultKey();
 
-    String getToParameterName();
+    String getToParameterKey();
 }

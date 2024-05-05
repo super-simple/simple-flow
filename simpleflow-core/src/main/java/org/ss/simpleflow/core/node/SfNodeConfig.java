@@ -24,4 +24,6 @@ public interface SfNodeConfig extends SfComponentConfig {
     Map<String, SfNodeResult> getResultMap();
 
     Set<String> getGatewayEnumSet();
+
+    String getProcessId();
 }
