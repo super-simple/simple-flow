@@ -4,8 +4,9 @@ import org.ss.simpleflow.core.factory.*;
 import org.ss.simpleflow.core.processconfig.SfProcessConfig;
 import org.ss.simpleflow.core.processengine.SfProcessEngine;
 import org.ss.simpleflow.core.processengine.SfProcessEngineConfig;
-import org.ss.simpleflow.core.validate.SfTrimProcessConfig;
 import org.ss.simpleflow.core.validate.SfValidateManager;
+
+import java.util.Map;
 
 public class SfProcessEngineImpl implements SfProcessEngine {
 
@@ -16,7 +17,6 @@ public class SfProcessEngineImpl implements SfProcessEngine {
     private final SfEnumGatewayFactory enumGatewayFactory;
     private final SfStreamIteratorFactory iteratorFactory;
     private final SfGatewayFactory gatewayFactory;
-    private final SfTrimProcessConfig trimProcessConfig;
     private final SfValidateManager validateManager;
 
     public SfProcessEngineImpl(SfProcessEngineConfig processEngineConfig,
@@ -26,7 +26,6 @@ public class SfProcessEngineImpl implements SfProcessEngine {
                                SfEnumGatewayFactory enumGatewayFactory,
                                SfStreamIteratorFactory iteratorFactory,
                                SfGatewayFactory gatewayFactory,
-                               SfTrimProcessConfig trimProcessConfig,
                                SfValidateManager validateManager) {
         this.processEngineConfig = processEngineConfig;
         this.eventFactory = eventFactory;
@@ -35,21 +34,24 @@ public class SfProcessEngineImpl implements SfProcessEngine {
         this.enumGatewayFactory = enumGatewayFactory;
         this.iteratorFactory = iteratorFactory;
         this.gatewayFactory = gatewayFactory;
-        this.trimProcessConfig = trimProcessConfig;
         this.validateManager = validateManager;
     }
 
     @Override
-    public String runProcess(SfProcessConfig processConfig) {
-        validateManager.basicValidate(processConfig);
-        boolean trim = processEngineConfig.enableTrim();
-        SfProcessConfig realProcessConfig;
-        if (trim) {
-            realProcessConfig = trimProcessConfig.trim(processConfig);
-        } else {
-            realProcessConfig = processConfig;
-        }
+    public String runProcess(SfProcessConfig processConfig,
+                             String executionId,
+                             Map<String, Object> params,
+                             Map<String, Object> env) {
+        return null;
+    }
 
+    @Override
+    public String runProcess(SfProcessConfig processConfig, Map<String, Object> params, Map<String, Object> env) {
+        return null;
+    }
+
+    @Override
+    public String runProcess(SfProcessConfig processConfig, Map<String, Object> params) {
         return null;
     }
 }

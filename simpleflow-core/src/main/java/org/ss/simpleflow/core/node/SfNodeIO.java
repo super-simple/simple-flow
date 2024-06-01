@@ -1,6 +1,8 @@
 package org.ss.simpleflow.core.node;
 
-public interface SfNodeIO {
+import java.io.Serializable;
+
+public interface SfNodeIO extends Serializable {
     boolean isNotNull();
 
     String getOwnership();

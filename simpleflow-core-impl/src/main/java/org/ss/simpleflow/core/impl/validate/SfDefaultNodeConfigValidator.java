@@ -7,12 +7,10 @@ import org.ss.simpleflow.core.constant.SimpleFlowNodeTypeConstant;
 import org.ss.simpleflow.core.impl.exceptional.SfNodeConfigException;
 import org.ss.simpleflow.core.impl.exceptional.SfNodeConfigExceptionCode;
 import org.ss.simpleflow.core.node.SfNodeConfig;
-import org.ss.simpleflow.core.validate.SfNodeConfigValidator;
 
 import java.util.Set;
 
-public class SfDefaultNodeConfigValidator implements SfNodeConfigValidator {
-    @Override
+public class SfDefaultNodeConfigValidator {
     public void validateSingleNodeConfig(SfNodeConfig nodeConfig) {
         String id = nodeConfig.getId();
         if (StringUtils.isNullOrEmpty(id)) {
