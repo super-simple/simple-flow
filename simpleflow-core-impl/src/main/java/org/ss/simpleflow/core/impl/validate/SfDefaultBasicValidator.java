@@ -1,5 +1,9 @@
 package org.ss.simpleflow.core.impl.validate;
 
+import org.ss.simpleflow.core.impl.exceptional.SfLineConfigException;
+import org.ss.simpleflow.core.impl.exceptional.SfLineConfigExceptionCode;
+import org.ss.simpleflow.core.impl.exceptional.SfNodeConfigException;
+import org.ss.simpleflow.core.impl.exceptional.SfNodeConfigExceptionCode;
 import org.ss.simpleflow.core.line.SfLineConfig;
 import org.ss.simpleflow.core.node.SfNodeConfig;
 import org.ss.simpleflow.core.processconfig.SfProcessConfig;
@@ -27,6 +31,12 @@ public class SfDefaultBasicValidator {
         List<SfLineConfig> lineConfigList = processConfig.getLineConfigList();
         Set<String> lineIdSet = new HashSet<>(lineConfigList.size());
         for (SfLineConfig lineConfig : lineConfigList) {
+            String lineId = lineConfig.getId();
+            if (lineIdSet.contains(lineId)) {
+                throw new SfLineConfigException(SfLineConfigExceptionCode.ID_REPEAT, lineConfig);
+            }
+            lineIdSet.add(lineId);
+
             lineConfigValidator.validateSingleLineConfig(lineConfig);
             if (lineConfigCustomValidator != null) {
                 lineConfigCustomValidator.validateSingleLineConfig(lineConfig);
@@ -34,7 +44,14 @@ public class SfDefaultBasicValidator {
         }
 
         List<SfNodeConfig> nodeConfigList = processConfig.getNodeConfigList();
+        Set<String> nodeIdSet = new HashSet<>(nodeConfigList.size());
         for (SfNodeConfig nodeConfig : nodeConfigList) {
+            String nodeId = nodeConfig.getId();
+            if (nodeIdSet.contains(nodeId)) {
+                throw new SfNodeConfigException(SfNodeConfigExceptionCode.ID_REPEAT, nodeConfig);
+            }
+            nodeIdSet.add(nodeId);
+
             nodeConfigValidator.validateSingleNodeConfig(nodeConfig);
             if (nodeConfigCustomValidator != null) {
                 nodeConfigCustomValidator.validateSingleNodeConfig(nodeConfig);

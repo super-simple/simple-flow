@@ -4,15 +4,15 @@ import org.ss.simpleflow.core.line.SfLineConfig;
 import org.ss.simpleflow.core.node.SfNodeConfig;
 
 import java.io.Serializable;
-import java.util.Set;
+import java.util.List;
 
 public interface SfProcessConfig extends Serializable {
 
     String getId();
 
-    Set<SfNodeConfig> getNodeConfigList();
+    List<SfNodeConfig> getNodeConfigList();
 
-    Set<SfLineConfig> getLineConfigList();
+    List<SfLineConfig> getLineConfigList();
 
-    Set<SfSubProcessConfig> getSubProcessConfigList();
+    List<SfSubProcessConfig> getSubProcessConfigList();
 }

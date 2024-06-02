@@ -8,5 +8,5 @@ public interface SfProcessEngineConfig extends Serializable {
 
     long maxLoopCount();
 
-    boolean throwExceptionWithConfig();
+    String developMode();
 }
