@@ -7,6 +7,6 @@ import java.util.Map;
 
 public interface SfGateway extends SfComponent {
 
-    Map<String, Object> runGateway(Map<String, Object> params,
-                                   SfNodeContext context) throws Exception;
+    Map<String, Object> executeGateway(Map<String, Object> params,
+                                       SfNodeContext context) throws Exception;
 }

@@ -1,5 +1,12 @@
 package org.ss.simpleflow.core.factory;
 
-public interface SfNodeFactory {
+import org.ss.simpleflow.core.context.SfNodeContext;
+import org.ss.simpleflow.core.node.SfNode;
+import org.ss.simpleflow.core.node.SfNodeConfig;
+import org.ss.simpleflow.core.processconfig.SfProcessConfigGraph;
 
+public interface SfNodeFactory {
+    SfNode createNode(SfProcessConfigGraph processConfigGraph,
+                      SfNodeConfig nodeConfig,
+                      SfNodeContext nodeContext);
 }

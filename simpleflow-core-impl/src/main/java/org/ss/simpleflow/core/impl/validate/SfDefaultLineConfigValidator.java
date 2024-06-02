@@ -29,7 +29,7 @@ public class SfDefaultLineConfigValidator {
 
         String lineTypeUpperCase = lineType.toUpperCase();
         switch (lineTypeUpperCase) {
-            case (SfLineTypeConstant.RUN): {
+            case (SfLineTypeConstant.CONTROL): {
                 break;
             }
             case (SfLineTypeConstant.DATA): {

@@ -1,6 +1,6 @@
 package org.ss.simpleflow.core.constant;
 
-public interface SfRunLineTypeConstant {
+public interface SfControlLineTypeConstant {
     String DEFAULT = "DEFAULT";
 
 }

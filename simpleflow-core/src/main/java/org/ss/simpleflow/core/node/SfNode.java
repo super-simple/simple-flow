@@ -7,5 +7,5 @@ import java.util.Map;
 
 public interface SfNode extends SfComponent {
 
-    Map<String, Object> runNode(Map<String, Object> params, SfNodeContext context) throws Exception;
+    Map<String, Object> executeNode(Map<String, Object> params, SfNodeContext context) throws Exception;
 }

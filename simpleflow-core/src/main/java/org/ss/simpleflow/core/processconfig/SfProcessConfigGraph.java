@@ -6,7 +6,7 @@ import org.ss.simpleflow.core.node.SfNodeConfig;
 import java.io.Serializable;
 import java.util.List;
 
-public interface SfSubProcessConfig extends Serializable {
+public interface SfProcessConfigGraph extends Serializable {
 
     String getId();
 

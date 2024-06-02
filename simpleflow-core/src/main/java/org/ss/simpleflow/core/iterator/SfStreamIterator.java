@@ -11,7 +11,7 @@ public interface SfStreamIterator extends SfComponent {
     List<Map<String, Object>> map(Map<String, Object> params,
                                   SfNodeContext context) throws Exception;
 
-    default void collect(Map<String, Object> params,
+    default void collect(Map<String, Object> params, Map<String, Object> resultMap,
                          SfNodeContext context) throws Exception {
     }
 

@@ -7,6 +7,6 @@ import java.util.Map;
 
 public interface SfAroundIterator extends SfComponent {
 
-    Map<String, Object> runGateway(Map<String, Object> params,
-                                   SfNodeContext context) throws Exception;
+    Map<String, Object> executeAroundIterator(Map<String, Object> params,
+                                              SfNodeContext context) throws Exception;
 }

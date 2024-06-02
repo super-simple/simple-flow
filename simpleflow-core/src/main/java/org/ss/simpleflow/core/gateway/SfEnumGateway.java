@@ -7,6 +7,6 @@ import java.util.Map;
 
 public interface SfEnumGateway extends SfComponent {
 
-    String runGateway(Map<String, Object> params,
-                      SfNodeContext context) throws Exception;
+    String executeEnumGateway(Map<String, Object> params,
+                              SfNodeContext context) throws Exception;
 }

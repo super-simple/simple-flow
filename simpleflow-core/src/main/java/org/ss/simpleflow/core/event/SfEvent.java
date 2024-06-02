@@ -7,6 +7,6 @@ import java.util.Map;
 
 public interface SfEvent extends SfComponent {
 
-    Map<String, Object> runEvent(Map<String, Object> params,
-                                 SfNodeContext context) throws Exception;
+    Map<String, Object> executeEvent(Map<String, Object> params,
+                                     SfNodeContext context) throws Exception;
 }

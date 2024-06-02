@@ -4,7 +4,7 @@ import org.ss.simpleflow.core.line.SfLineConfig;
 
 import java.io.Serializable;
 
-public interface SfLineContext extends Serializable {
+public interface SfControlLineContext extends Serializable {
 
     SfLineConfig getConfig();
 

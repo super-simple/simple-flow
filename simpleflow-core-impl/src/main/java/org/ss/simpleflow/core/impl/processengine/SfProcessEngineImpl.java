@@ -11,29 +11,35 @@ import java.util.Map;
 public class SfProcessEngineImpl implements SfProcessEngine {
 
     private final SfProcessEngineConfig processEngineConfig;
+    private final SfControlLineFactory controlLineFactory;
+    private final SfDataLineFactory dataLineFactory;
     private final SfEventFactory eventFactory;
     private final SfNodeFactory nodeFactory;
-    private final SfLineFactory lineFactory;
     private final SfEnumGatewayFactory enumGatewayFactory;
-    private final SfStreamIteratorFactory iteratorFactory;
+    private final SfStreamIteratorFactory streamIteratorFactory;
     private final SfGatewayFactory gatewayFactory;
+    private final SfAroundIteratorFactory aroundIteratorFactory;
     private final SfValidateManager validateManager;
 
-    public SfProcessEngineImpl(SfProcessEngineConfig processEngineConfig,
-                               SfEventFactory eventFactory,
-                               SfNodeFactory nodeFactory,
-                               SfLineFactory lineFactory,
-                               SfEnumGatewayFactory enumGatewayFactory,
-                               SfStreamIteratorFactory iteratorFactory,
-                               SfGatewayFactory gatewayFactory,
-                               SfValidateManager validateManager) {
+    SfProcessEngineImpl(SfProcessEngineConfig processEngineConfig,
+                        SfControlLineFactory controlLineFactory,
+                        SfDataLineFactory dataLineFactory,
+                        SfEventFactory eventFactory,
+                        SfNodeFactory nodeFactory,
+                        SfEnumGatewayFactory enumGatewayFactory,
+                        SfStreamIteratorFactory streamIteratorFactory,
+                        SfGatewayFactory gatewayFactory,
+                        SfAroundIteratorFactory aroundIteratorFactory,
+                        SfValidateManager validateManager) {
         this.processEngineConfig = processEngineConfig;
         this.eventFactory = eventFactory;
         this.nodeFactory = nodeFactory;
-        this.lineFactory = lineFactory;
+        this.controlLineFactory = controlLineFactory;
+        this.dataLineFactory = dataLineFactory;
         this.enumGatewayFactory = enumGatewayFactory;
-        this.iteratorFactory = iteratorFactory;
+        this.streamIteratorFactory = streamIteratorFactory;
         this.gatewayFactory = gatewayFactory;
+        this.aroundIteratorFactory = aroundIteratorFactory;
         this.validateManager = validateManager;
     }
 
