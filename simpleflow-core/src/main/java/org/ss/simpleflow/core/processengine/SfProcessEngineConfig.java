@@ -2,11 +2,24 @@ package org.ss.simpleflow.core.processengine;
 
 import java.io.Serializable;
 
-public interface SfProcessEngineConfig extends Serializable {
+public class SfProcessEngineConfig implements Serializable {
 
-    boolean enableTrim();
+    private boolean trim;
+    private long maxLoopCount = 0;
 
-    long maxLoopCount();
+    public boolean isTrim() {
+        return trim;
+    }
 
-    String developMode();
+    public void setTrim(boolean trim) {
+        this.trim = trim;
+    }
+
+    public long getMaxLoopCount() {
+        return maxLoopCount;
+    }
+
+    public void setMaxLoopCount(long maxLoopCount) {
+        this.maxLoopCount = maxLoopCount;
+    }
 }

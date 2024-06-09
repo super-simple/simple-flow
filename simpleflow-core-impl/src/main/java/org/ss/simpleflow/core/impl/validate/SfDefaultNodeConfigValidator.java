@@ -6,14 +6,14 @@ import org.ss.simpleflow.core.constant.SfEventTypeConstant;
 import org.ss.simpleflow.core.constant.SimpleFlowNodeTypeConstant;
 import org.ss.simpleflow.core.impl.exceptional.SfNodeConfigException;
 import org.ss.simpleflow.core.impl.exceptional.SfNodeConfigExceptionCode;
-import org.ss.simpleflow.core.node.SfNodeConfig;
+import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
 
 import java.util.Set;
 
-public class SfDefaultNodeConfigValidator {
-    public void validateSingleNodeConfig(SfNodeConfig nodeConfig) {
-        String id = nodeConfig.getId();
-        if (StringUtils.isNullOrEmpty(id)) {
+public class SfDefaultNodeConfigValidator<NODE_ID, PROCESS_CONFIG_ID, NODE_CONFIG extends SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID>> {
+    public void validateSingleNodeConfig(NODE_CONFIG nodeConfig) {
+        NODE_ID id = nodeConfig.getId();
+        if (id != null) {
             throw new SfNodeConfigException(SfNodeConfigExceptionCode.NO_NODE_ID, nodeConfig);
         }
 
@@ -36,15 +36,15 @@ public class SfDefaultNodeConfigValidator {
                 break;
             }
             case SimpleFlowNodeTypeConstant.ENUM_GATEWAY: {
-                Set<String> gatewayEnumSet = nodeConfig.getGatewayEnumSet();
+                Set<String> gatewayEnumSet = nodeConfig.getEnumGatewayEnumSet();
                 if (CollectionUtils.isNullOrEmpty(gatewayEnumSet)) {
                     throw new SfNodeConfigException(SfNodeConfigExceptionCode.NO_GATEWAY_ENUM_SET, nodeConfig);
                 }
                 break;
             }
             case SimpleFlowNodeTypeConstant.PROCESS: {
-                String processId = nodeConfig.getProcessId();
-                if (StringUtils.isNullOrEmpty(processId)) {
+                PROCESS_CONFIG_ID processId = nodeConfig.getProcessId();
+                if (processId != null) {
                     throw new SfNodeConfigException(SfNodeConfigExceptionCode.NO_PROCESS_ID, nodeConfig);
                 }
                 break;

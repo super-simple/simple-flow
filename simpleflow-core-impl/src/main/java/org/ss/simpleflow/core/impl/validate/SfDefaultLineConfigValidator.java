@@ -6,10 +6,10 @@ import org.ss.simpleflow.core.impl.exceptional.SfLineConfigException;
 import org.ss.simpleflow.core.impl.exceptional.SfLineConfigExceptionCode;
 import org.ss.simpleflow.core.line.SfLineConfig;
 
-public class SfDefaultLineConfigValidator {
-    public void validateSingleLineConfig(SfLineConfig lineConfig) {
-        String id = lineConfig.getId();
-        if (StringUtils.isNullOrEmpty(id)) {
+public class SfDefaultLineConfigValidator<NODE_ID, LINE_ID, LINE_CONFIG extends SfLineConfig<LINE_ID, NODE_ID>> {
+    public void validateSingleLineConfig(LINE_CONFIG lineConfig) {
+        LINE_ID id = lineConfig.getId();
+        if (id != null) {
             throw new SfLineConfigException(SfLineConfigExceptionCode.NO_LINE_ID, lineConfig);
         }
 
@@ -18,12 +18,12 @@ public class SfDefaultLineConfigValidator {
             throw new SfLineConfigException(SfLineConfigExceptionCode.NO_LINE_TYPE, lineConfig);
         }
 
-        String fromNodeId = lineConfig.getFromNodeId();
-        if (StringUtils.isNullOrEmpty(fromNodeId)) {
+        NODE_ID fromNodeId = lineConfig.getFromNodeId();
+        if (fromNodeId != null) {
             throw new SfLineConfigException(SfLineConfigExceptionCode.NO_FROM_NODE_ID, lineConfig);
         }
-        String toNodeId = lineConfig.getToNodeId();
-        if (StringUtils.isNullOrEmpty(toNodeId)) {
+        NODE_ID toNodeId = lineConfig.getToNodeId();
+        if (toNodeId != null) {
             throw new SfLineConfigException(SfLineConfigExceptionCode.NO_TO_NODE_ID, lineConfig);
         }
 

@@ -2,17 +2,19 @@ package org.ss.simpleflow.core.line;
 
 import org.ss.simpleflow.core.component.SfComponentConfig;
 
-public interface SfLineConfig extends SfComponentConfig {
+public interface SfLineConfig<LINE_ID, NODE_ID> extends SfComponentConfig {
 
-    String getId();
+    LINE_ID getId();
 
-    String getFromNodeId();
+    NODE_ID getFromNodeId();
 
-    String getToNodeId();
+    NODE_ID getToNodeId();
 
     String getLineType();
 
     String getFromResultKey();
 
     String getToParameterKey();
+
+    SfLineIndexEntry getLineIndexEntry();
 }

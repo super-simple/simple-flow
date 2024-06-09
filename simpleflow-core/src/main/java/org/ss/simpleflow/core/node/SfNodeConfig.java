@@ -5,9 +5,9 @@ import org.ss.simpleflow.core.component.SfComponentConfig;
 import java.util.Map;
 import java.util.Set;
 
-public interface SfNodeConfig extends SfComponentConfig {
+public interface SfNodeConfig<NODE_ID, PROCESS_CONFIG_ID> extends SfComponentConfig {
 
-    String getId();
+    NODE_ID getId();
 
     String getNodeType();
 
@@ -15,13 +15,17 @@ public interface SfNodeConfig extends SfComponentConfig {
 
     String getEventType();
 
-    Long getMaxLoopCount();
+    long getMaxLoopCount();
 
-    Boolean resultNode();
+    boolean isResultNode();
 
     Map<String, SfNodeParameter> getParameterMap();
 
     Map<String, SfNodeResult> getResultMap();
 
-    Set<String> getGatewayEnumSet();
+    Set<String> getEnumGatewayEnumSet();
+
+    SfNodeIndexEntry getNodeIndexEntry();
+
+    PROCESS_CONFIG_ID getProcessId();
 }
