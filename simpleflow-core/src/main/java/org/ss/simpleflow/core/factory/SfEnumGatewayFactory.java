@@ -7,7 +7,7 @@ import org.ss.simpleflow.core.processconfig.SfProcessConfigGraph;
 
 public interface SfEnumGatewayFactory {
 
-    SfEnumGateway createEnumGateway(SfProcessConfigGraph processConfigGraph,
-                                    SfNodeConfig enumGatewayConfig,
+    SfEnumGateway createEnumGateway(SfNodeConfig enumGatewayConfig,
+                                    SfProcessConfigGraph processConfigGraph,
                                     SfNodeContext nodeContext);
 }

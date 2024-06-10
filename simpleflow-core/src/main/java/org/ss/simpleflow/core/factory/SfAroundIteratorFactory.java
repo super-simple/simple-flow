@@ -7,7 +7,7 @@ import org.ss.simpleflow.core.processconfig.SfProcessConfigGraph;
 
 public interface SfAroundIteratorFactory {
 
-    SfAroundIterator createAroundIterator(SfProcessConfigGraph processConfigGraph,
-                                          SfNodeConfig eventConfig,
+    SfAroundIterator createAroundIterator(SfNodeConfig aroundIteratorConfig,
+                                          SfProcessConfigGraph processConfigGraph,
                                           SfNodeContext nodeContext);
 }

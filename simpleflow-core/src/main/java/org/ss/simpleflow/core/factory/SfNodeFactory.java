@@ -6,7 +6,7 @@ import org.ss.simpleflow.core.node.SfNodeConfig;
 import org.ss.simpleflow.core.processconfig.SfProcessConfigGraph;
 
 public interface SfNodeFactory {
-    SfNode createNode(SfProcessConfigGraph processConfigGraph,
-                      SfNodeConfig nodeConfig,
+    SfNode createNode(SfNodeConfig nodeConfig,
+                      SfProcessConfigGraph processConfigGraph,
                       SfNodeContext nodeContext);
 }

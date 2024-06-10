@@ -7,8 +7,8 @@ import org.ss.simpleflow.core.processconfig.SfProcessConfigGraph;
 
 public interface SfStreamIteratorFactory {
 
-    SfStreamIterator createStreamIterator(SfProcessConfigGraph processConfigGraph,
-                                          SfNodeConfig streamIteratorConfig,
+    SfStreamIterator createStreamIterator(SfNodeConfig streamIteratorConfig,
+                                          SfProcessConfigGraph processConfigGraph,
                                           SfNodeContext nodeContext);
 
 }

@@ -7,8 +7,8 @@ import org.ss.simpleflow.core.processconfig.SfProcessConfigGraph;
 
 public interface SfEventFactory {
 
-    SfEvent createEvent(SfProcessConfigGraph processConfigGraph,
-                        SfNodeConfig eventConfig,
+    SfEvent createEvent(SfNodeConfig eventConfig,
+                        SfProcessConfigGraph processConfigGraph,
                         SfNodeContext nodeContext);
 
 }

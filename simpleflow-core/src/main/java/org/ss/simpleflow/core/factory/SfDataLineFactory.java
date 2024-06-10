@@ -7,8 +7,8 @@ import org.ss.simpleflow.core.processconfig.SfProcessConfigGraph;
 
 public interface SfDataLineFactory {
 
-    SfDataLine createDataLine(SfProcessConfigGraph processConfigGraph,
-                              SfLineConfig gatewayConfig,
+    SfDataLine createDataLine(SfLineConfig dataLineConfig,
+                              SfProcessConfigGraph processConfigGraph,
                               SfControlLineContext lineContext);
 
 }
