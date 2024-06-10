@@ -17,7 +17,7 @@ import java.util.Set;
 public class SfDefaultBasicValidator<NODE_ID, LINE_ID, PROCESS_CONFIG_ID,
         NODE_CONFIG extends SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID>,
         LINE_CONFIG extends SfAbstractLineConfig<LINE_ID, NODE_ID>,
-        PROCESS_CONFIG extends SfProcessConfigGraph<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG>> {
+        PROCESS_CONFIG_GRAPH extends SfProcessConfigGraph<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG>> {
 
     private final SfDefaultNodeConfigValidator<NODE_ID, PROCESS_CONFIG_ID, NODE_CONFIG> nodeConfigValidator = new SfDefaultNodeConfigValidator<>();
     private final SfDefaultLineConfigValidator<NODE_ID, LINE_ID, LINE_CONFIG> lineConfigValidator = new SfDefaultLineConfigValidator<>();
@@ -30,7 +30,7 @@ public class SfDefaultBasicValidator<NODE_ID, LINE_ID, PROCESS_CONFIG_ID,
         this.lineConfigCustomValidator = lineConfigCustomValidator;
     }
 
-    public void basicValidate(PROCESS_CONFIG processConfig) {
+    public void basicValidate(PROCESS_CONFIG_GRAPH processConfig) {
         List<LINE_CONFIG> lineConfigList = processConfig.getLineConfigList();
         Set<LINE_ID> lineIdSet = new HashSet<>(lineConfigList.size());
         for (LINE_CONFIG lineConfig : lineConfigList) {

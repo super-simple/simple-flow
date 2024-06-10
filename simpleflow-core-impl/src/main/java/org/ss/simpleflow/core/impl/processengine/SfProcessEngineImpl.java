@@ -3,6 +3,7 @@ package org.ss.simpleflow.core.impl.processengine;
 import org.ss.simpleflow.core.factory.*;
 import org.ss.simpleflow.core.line.SfAbstractLineConfig;
 import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
+import org.ss.simpleflow.core.processconfig.SfProcessConfig;
 import org.ss.simpleflow.core.processconfig.SfProcessConfigGraph;
 import org.ss.simpleflow.core.processengine.SfProcessEngine;
 import org.ss.simpleflow.core.processengine.SfProcessEngineConfig;
@@ -13,8 +14,9 @@ import java.util.Map;
 public class SfProcessEngineImpl<NODE_ID, LINE_ID, PROCESS_CONFIG_ID,
         NODE_CONFIG extends SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID>,
         LINE_CONFIG extends SfAbstractLineConfig<LINE_ID, NODE_ID>,
-        PROCESS_CONFIG extends SfProcessConfigGraph<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG>>
-        implements SfProcessEngine<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG> {
+        PROCESS_CONFIG_GRAPH extends SfProcessConfigGraph<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG>,
+        PROCESS_CONFIG extends SfProcessConfig<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH>>
+        implements SfProcessEngine<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG> {
 
     private final SfProcessEngineConfig processEngineConfig;
     private final SfControlLineFactory controlLineFactory;
