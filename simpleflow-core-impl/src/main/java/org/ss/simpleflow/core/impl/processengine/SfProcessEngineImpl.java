@@ -19,26 +19,26 @@ public class SfProcessEngineImpl<NODE_ID, LINE_ID, PROCESS_CONFIG_ID,
         implements SfProcessEngine<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG> {
 
     private final SfProcessEngineConfig processEngineConfig;
-    private final SfControlLineFactory controlLineFactory;
-    private final SfDataLineFactory dataLineFactory;
-    private final SfEventFactory eventFactory;
-    private final SfNodeFactory nodeFactory;
-    private final SfEnumGatewayFactory enumGatewayFactory;
-    private final SfStreamIteratorFactory streamIteratorFactory;
-    private final SfGatewayFactory gatewayFactory;
-    private final SfAroundIteratorFactory aroundIteratorFactory;
-    private final SfValidateManager<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG> validateManager;
+    private final SfControlLineFactory<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH> controlLineFactory;
+    private final SfDataLineFactory<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH> dataLineFactory;
+    private final SfEventFactory<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH> eventFactory;
+    private final SfNodeFactory<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH> nodeFactory;
+    private final SfEnumGatewayFactory<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH> enumGatewayFactory;
+    private final SfStreamIteratorFactory<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH> streamIteratorFactory;
+    private final SfGatewayFactory<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH> gatewayFactory;
+    private final SfAroundIteratorFactory<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH> aroundIteratorFactory;
+    private final SfValidateManager<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH> validateManager;
 
     SfProcessEngineImpl(SfProcessEngineConfig processEngineConfig,
-                        SfControlLineFactory controlLineFactory,
-                        SfDataLineFactory dataLineFactory,
-                        SfEventFactory eventFactory,
-                        SfNodeFactory nodeFactory,
-                        SfEnumGatewayFactory enumGatewayFactory,
-                        SfStreamIteratorFactory streamIteratorFactory,
-                        SfGatewayFactory gatewayFactory,
-                        SfAroundIteratorFactory aroundIteratorFactory,
-                        SfValidateManager<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG> validateManager) {
+                        SfControlLineFactory<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH> controlLineFactory,
+                        SfDataLineFactory<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH> dataLineFactory,
+                        SfEventFactory<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH> eventFactory,
+                        SfNodeFactory<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH> nodeFactory,
+                        SfEnumGatewayFactory<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH> enumGatewayFactory,
+                        SfStreamIteratorFactory<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH> streamIteratorFactory,
+                        SfGatewayFactory<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH> gatewayFactory,
+                        SfAroundIteratorFactory<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH> aroundIteratorFactory,
+                        SfValidateManager<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH> validateManager) {
         this.processEngineConfig = processEngineConfig;
         this.eventFactory = eventFactory;
         this.nodeFactory = nodeFactory;
