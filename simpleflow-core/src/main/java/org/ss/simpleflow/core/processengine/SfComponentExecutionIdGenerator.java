@@ -1,11 +1,13 @@
 package org.ss.simpleflow.core.processengine;
 
-import org.ss.simpleflow.core.line.SfLineConfig;
-import org.ss.simpleflow.core.node.SfNodeConfig;
+import org.ss.simpleflow.core.line.SfAbstractLineConfig;
+import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
 
-public interface SfComponentExecutionIdGenerator {
+public interface SfComponentExecutionIdGenerator<NODE_ID, LINE_ID, PROCESS_CONFIG_ID,
+        NODE_CONFIG extends SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID>,
+        LINE_CONFIG extends SfAbstractLineConfig<LINE_ID, NODE_ID>> {
 
-    String generateNodeExecutionId(SfNodeConfig nodeConfig);
+    String generateNodeExecutionId(NODE_CONFIG nodeConfig);
 
-    String generateLineExecutionId(SfLineConfig lineConfig);
+    String generateLineExecutionId(LINE_CONFIG lineConfig);
 }
