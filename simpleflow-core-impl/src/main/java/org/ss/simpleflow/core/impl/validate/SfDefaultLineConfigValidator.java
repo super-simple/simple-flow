@@ -6,7 +6,8 @@ import org.ss.simpleflow.core.impl.exceptional.SfLineConfigException;
 import org.ss.simpleflow.core.impl.exceptional.SfLineConfigExceptionCode;
 import org.ss.simpleflow.core.line.SfLineConfig;
 
-public class SfDefaultLineConfigValidator<NODE_ID, LINE_ID, LINE_CONFIG extends SfLineConfig<LINE_ID, NODE_ID>> {
+public class SfDefaultLineConfigValidator
+        <NODE_ID, LINE_ID, LINE_CONFIG extends SfLineConfig<LINE_ID, NODE_ID>> {
     public void validateSingleLineConfig(LINE_CONFIG lineConfig) {
         LINE_ID id = lineConfig.getId();
         if (id != null) {

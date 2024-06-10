@@ -10,7 +10,8 @@ import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
 
 import java.util.Set;
 
-public class SfDefaultNodeConfigValidator<NODE_ID, PROCESS_CONFIG_ID, NODE_CONFIG extends SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID>> {
+public class SfDefaultNodeConfigValidator
+        <NODE_ID, PROCESS_CONFIG_ID, NODE_CONFIG extends SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID>> {
     public void validateSingleNodeConfig(NODE_CONFIG nodeConfig) {
         NODE_ID id = nodeConfig.getId();
         if (id != null) {
