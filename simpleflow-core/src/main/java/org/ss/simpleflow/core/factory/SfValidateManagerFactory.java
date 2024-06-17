@@ -13,8 +13,9 @@ public interface SfValidateManagerFactory<NODE_ID, LINE_ID, PROCESS_CONFIG_ID,
         LINE_CONFIG extends SfAbstractLineConfig<LINE_ID, NODE_ID>,
         PROCESS_CONFIG_GRAPH extends SfProcessConfigGraph<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG>> {
 
-    SfValidateManager buildValidateManager(SfNodeConfigCustomValidator nodeConfigCustomValidator,
-                                           SfLineConfigCustomValidator lineConfigCustomValidator,
-                                           SfProcessConfigCustomValidate processConfigCustomValidate);
+    SfValidateManager<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH>
+    buildValidateManager(SfNodeConfigCustomValidator<NODE_ID, PROCESS_CONFIG_ID, NODE_CONFIG> nodeConfigCustomValidator,
+                         SfLineConfigCustomValidator<NODE_ID, LINE_ID, LINE_CONFIG> lineConfigCustomValidator,
+                         SfProcessConfigCustomValidate<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH> processConfigCustomValidate);
 
 }
