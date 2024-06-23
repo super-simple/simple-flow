@@ -1,5 +1,6 @@
 package org.ss.simpleflow.core.processengine;
 
+import org.ss.simpleflow.core.context.SfProcessContext;
 import org.ss.simpleflow.core.line.SfAbstractLineConfig;
 import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
 import org.ss.simpleflow.core.processconfig.SfProcessConfigGraph;
@@ -10,5 +11,6 @@ public interface SfProcessExecutionIdGenerator<NODE_ID, LINE_ID, PROCESS_CONFIG_
         PROCESS_CONFIG_GRAPH extends SfProcessConfigGraph<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG>,
         PROCESS_EXECUTION_ID> {
 
-    PROCESS_EXECUTION_ID generateProcessExecutionId(PROCESS_CONFIG_GRAPH processConfig);
+    PROCESS_EXECUTION_ID generateProcessExecutionId(PROCESS_CONFIG_GRAPH processConfig,
+                                                    SfProcessContext processContext);
 }
