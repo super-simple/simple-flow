@@ -9,10 +9,11 @@ import org.ss.simpleflow.core.processconfig.SfProcessConfigGraph;
 public interface SfEnumGatewayFactory<NODE_ID, LINE_ID, PROCESS_CONFIG_ID,
         NODE_CONFIG extends SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID>,
         LINE_CONFIG extends SfAbstractLineConfig<LINE_ID, NODE_ID>,
-        PROCESS_CONFIG_GRAPH extends SfProcessConfigGraph<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG>> {
+        PROCESS_CONFIG_GRAPH extends SfProcessConfigGraph<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG>,
+        NODE_EXECUTION_ID> {
 
-    SfEnumGateway<NODE_ID, PROCESS_CONFIG_ID, NODE_CONFIG>
+    SfEnumGateway<NODE_ID, PROCESS_CONFIG_ID, NODE_EXECUTION_ID, NODE_CONFIG>
     createEnumGateway(NODE_CONFIG enumGatewayConfig,
                       PROCESS_CONFIG_GRAPH processConfigGraph,
-                      SfNodeContext<NODE_ID, PROCESS_CONFIG_ID, NODE_CONFIG> nodeContext);
+                      SfNodeContext<NODE_ID, PROCESS_CONFIG_ID, NODE_EXECUTION_ID, NODE_CONFIG> nodeContext);
 }

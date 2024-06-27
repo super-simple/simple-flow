@@ -6,9 +6,9 @@ import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
 
 import java.util.Map;
 
-public interface SfEvent<NODE_ID, PROCESS_CONFIG_ID,
+public interface SfEvent<NODE_ID, PROCESS_CONFIG_ID, NODE_EXECUTION_ID,
         NODE_CONFIG extends SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID>> extends SfComponent {
 
     Map<String, Object> executeEvent(Map<String, Object> params,
-                                     SfNodeContext<NODE_ID, PROCESS_CONFIG_ID, NODE_CONFIG> context) throws Exception;
+                                     SfNodeContext<NODE_ID, PROCESS_CONFIG_ID, NODE_EXECUTION_ID, NODE_CONFIG> context) throws Exception;
 }
