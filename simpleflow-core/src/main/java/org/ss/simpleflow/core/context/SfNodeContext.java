@@ -11,9 +11,11 @@ public interface SfNodeContext<NODE_ID, PROCESS_CONFIG_ID, NODE_EXECUTION_ID,
 
     NODE_EXECUTION_ID getExecutionId();
 
+    void setNodeConfig(NODE_CONFIG nodeConfig);
+
     NODE_CONFIG getNodeConfig();
 
-    void putVariable(String key, Object value);
+    void setVariable(String key, Object value);
 
     Object getVariable(String key);
 }

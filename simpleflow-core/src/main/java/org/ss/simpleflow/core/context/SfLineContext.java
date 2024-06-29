@@ -11,9 +11,11 @@ public interface SfLineContext<NODE_ID, LINE_ID, LINE_EXECUTION_ID,
 
     LINE_EXECUTION_ID getExecutionId();
 
+    void setLineConfig(LINE_CONFIG lineConfig);
+
     LINE_CONFIG getLineConfig();
 
-    void putVariable(String key, Object value);
+    void setVariable(String key, Object value);
 
     Object getVariable(String key);
 }
