@@ -8,11 +8,11 @@ import java.util.Map;
 public abstract class SfAbstractLineContext<NODE_ID, LINE_ID, LINE_EXECUTION_ID,
         LINE_CONFIG extends SfAbstractLineConfig<LINE_ID, NODE_ID>> implements SfLineContext<NODE_ID, LINE_ID, LINE_EXECUTION_ID, LINE_CONFIG> {
 
-    private LINE_EXECUTION_ID lineExecutionId;
+    protected LINE_EXECUTION_ID lineExecutionId;
 
-    private LINE_CONFIG lineConfig;
+    protected LINE_CONFIG lineConfig;
 
-    private Map<String, Object> variables;
+    protected Map<String, Object> variables;
 
     @Override
     public void setExecutionId(LINE_EXECUTION_ID lineExecutionId) {

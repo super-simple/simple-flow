@@ -8,11 +8,11 @@ import java.util.Map;
 public abstract class SfAbstractNodeContext<NODE_ID, PROCESS_CONFIG_ID, NODE_EXECUTION_ID,
         NODE_CONFIG extends SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID>> implements SfNodeContext<NODE_ID, PROCESS_CONFIG_ID, NODE_EXECUTION_ID, NODE_CONFIG> {
 
-    private NODE_EXECUTION_ID nodeExecutionId;
+    protected NODE_EXECUTION_ID nodeExecutionId;
 
-    private NODE_CONFIG nodeConfig;
+    protected NODE_CONFIG nodeConfig;
 
-    private Map<String, Object> variables;
+    protected Map<String, Object> variables;
 
     @Override
     public void setExecutionId(NODE_EXECUTION_ID nodeExecutionId) {

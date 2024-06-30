@@ -17,11 +17,11 @@ public abstract class SfAbstractProcessContext<NODE_ID, LINE_ID, PROCESS_CONFIG_
         implements SfProcessContext<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG,
         LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> {
 
-    private PROCESS_EXECUTION_ID processExecutionId;
+    protected PROCESS_EXECUTION_ID processExecutionId;
 
-    private PROCESS_CONFIG processConfig;
+    protected PROCESS_CONFIG processConfig;
 
-    private Map<String, Object> variables;
+    protected Map<String, Object> variables;
 
     @Override
     public void setExecutionId(PROCESS_EXECUTION_ID processExecutionId) {
