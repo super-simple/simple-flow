@@ -15,7 +15,7 @@ public interface SfProcessEngine<NODE_ID, LINE_ID, PROCESS_CONFIG_ID,
         NODE_EXECUTION_ID, LINE_EXECUTION_ID, PROCESS_EXECUTION_ID> {
 
     String runProcess(PROCESS_CONFIG processConfig,
-                      String executionId,
+                      PROCESS_EXECUTION_ID executionId,
                       Map<String, Object> params,
                       Map<String, Object> env);
 

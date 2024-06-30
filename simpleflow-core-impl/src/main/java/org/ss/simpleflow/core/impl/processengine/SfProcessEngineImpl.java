@@ -63,7 +63,7 @@ public class SfProcessEngineImpl<NODE_ID, LINE_ID, PROCESS_CONFIG_ID,
 
     @Override
     public String runProcess(PROCESS_CONFIG processConfig,
-                             String executionId,
+                             PROCESS_EXECUTION_ID executionId,
                              Map<String, Object> params,
                              Map<String, Object> env) {
         return null;

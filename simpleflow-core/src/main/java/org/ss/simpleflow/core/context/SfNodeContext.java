@@ -5,7 +5,8 @@ import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
 import java.io.Serializable;
 
 public interface SfNodeContext<NODE_ID, PROCESS_CONFIG_ID, NODE_EXECUTION_ID,
-        NODE_CONFIG extends SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID>> extends Serializable {
+        NODE_CONFIG extends SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID>>
+        extends SfVariableContext, Serializable {
 
     void setExecutionId(NODE_EXECUTION_ID executionId);
 
@@ -15,7 +16,4 @@ public interface SfNodeContext<NODE_ID, PROCESS_CONFIG_ID, NODE_EXECUTION_ID,
 
     NODE_CONFIG getNodeConfig();
 
-    void setVariable(String key, Object value);
-
-    Object getVariable(String key);
 }

@@ -2,17 +2,14 @@ package org.ss.simpleflow.core.context;
 
 import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public abstract class SfAbstractNodeContext<NODE_ID, PROCESS_CONFIG_ID, NODE_EXECUTION_ID,
-        NODE_CONFIG extends SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID>> implements SfNodeContext<NODE_ID, PROCESS_CONFIG_ID, NODE_EXECUTION_ID, NODE_CONFIG> {
+        NODE_CONFIG extends SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID>>
+        extends SfDefaultVariableContext
+        implements SfNodeContext<NODE_ID, PROCESS_CONFIG_ID, NODE_EXECUTION_ID, NODE_CONFIG> {
 
     protected NODE_EXECUTION_ID nodeExecutionId;
 
     protected NODE_CONFIG nodeConfig;
-
-    protected Map<String, Object> variables;
 
     @Override
     public void setExecutionId(NODE_EXECUTION_ID nodeExecutionId) {
@@ -34,20 +31,4 @@ public abstract class SfAbstractNodeContext<NODE_ID, PROCESS_CONFIG_ID, NODE_EXE
         return nodeConfig;
     }
 
-    @Override
-    public void setVariable(String key, Object value) {
-        if (variables == null) {
-            variables = new HashMap<>();
-        }
-        variables.put(key, value);
-    }
-
-    @Override
-    public Object getVariable(String key) {
-        if (variables == null) {
-            return null;
-        } else {
-            return variables.get(key);
-        }
-    }
 }

@@ -5,7 +5,8 @@ import org.ss.simpleflow.core.line.SfAbstractLineConfig;
 import java.io.Serializable;
 
 public interface SfLineContext<NODE_ID, LINE_ID, LINE_EXECUTION_ID,
-        LINE_CONFIG extends SfAbstractLineConfig<LINE_ID, NODE_ID>> extends Serializable {
+        LINE_CONFIG extends SfAbstractLineConfig<LINE_ID, NODE_ID>>
+        extends SfVariableContext, Serializable {
 
     void setExecutionId(LINE_EXECUTION_ID executionId);
 
@@ -15,7 +16,4 @@ public interface SfLineContext<NODE_ID, LINE_ID, LINE_EXECUTION_ID,
 
     LINE_CONFIG getLineConfig();
 
-    void setVariable(String key, Object value);
-
-    Object getVariable(String key);
 }
