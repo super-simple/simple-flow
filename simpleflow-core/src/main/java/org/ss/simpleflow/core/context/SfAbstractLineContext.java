@@ -12,12 +12,12 @@ public abstract class SfAbstractLineContext<NODE_ID, LINE_ID, LINE_EXECUTION_ID,
     protected LINE_CONFIG lineConfig;
 
     @Override
-    public void setExecutionId(LINE_EXECUTION_ID lineExecutionId) {
+    public void setLineExecutionId(LINE_EXECUTION_ID lineExecutionId) {
         this.lineExecutionId = lineExecutionId;
     }
 
     @Override
-    public LINE_EXECUTION_ID getExecutionId() {
+    public LINE_EXECUTION_ID getLineExecutionId() {
         return lineExecutionId;
     }
 

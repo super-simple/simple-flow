@@ -12,12 +12,12 @@ public abstract class SfAbstractNodeContext<NODE_ID, PROCESS_CONFIG_ID, NODE_EXE
     protected NODE_CONFIG nodeConfig;
 
     @Override
-    public void setExecutionId(NODE_EXECUTION_ID nodeExecutionId) {
+    public void setNodeExecutionId(NODE_EXECUTION_ID nodeExecutionId) {
         this.nodeExecutionId = nodeExecutionId;
     }
 
     @Override
-    public NODE_EXECUTION_ID getExecutionId() {
+    public NODE_EXECUTION_ID getNodeExecutionId() {
         return nodeExecutionId;
     }
 

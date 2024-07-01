@@ -8,9 +8,9 @@ public interface SfNodeContext<NODE_ID, PROCESS_CONFIG_ID, NODE_EXECUTION_ID,
         NODE_CONFIG extends SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID>>
         extends SfVariableContext, Serializable {
 
-    void setExecutionId(NODE_EXECUTION_ID executionId);
+    void setNodeExecutionId(NODE_EXECUTION_ID nodeExecutionId);
 
-    NODE_EXECUTION_ID getExecutionId();
+    NODE_EXECUTION_ID getNodeExecutionId();
 
     void setNodeConfig(NODE_CONFIG nodeConfig);
 
