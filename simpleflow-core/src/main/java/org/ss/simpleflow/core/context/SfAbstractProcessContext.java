@@ -15,20 +15,25 @@ public abstract class SfAbstractProcessContext<NODE_ID, LINE_ID, PROCESS_CONFIG_
         implements SfProcessContext<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG,
         LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> {
 
-    protected PROCESS_EXECUTION_ID parentProcessExecutionId;
-
+    protected SfProcessContext<NODE_ID, LINE_ID, PROCESS_CONFIG_ID,
+            NODE_CONFIG, LINE_CONFIG,
+            PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext;
     protected PROCESS_EXECUTION_ID processExecutionId;
 
     protected PROCESS_CONFIG processConfig;
 
     @Override
-    public void setParentProcessExecutionId(PROCESS_EXECUTION_ID parentProcessExecutionId) {
-        this.parentProcessExecutionId = parentProcessExecutionId;
+    public void setParentProcessContext(SfProcessContext<NODE_ID, LINE_ID, PROCESS_CONFIG_ID,
+            NODE_CONFIG, LINE_CONFIG,
+            PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext) {
+        this.processContext = processContext;
     }
 
     @Override
-    public PROCESS_EXECUTION_ID getParentProcessExecutionId() {
-        return parentProcessExecutionId;
+    public SfProcessContext<NODE_ID, LINE_ID, PROCESS_CONFIG_ID,
+            NODE_CONFIG, LINE_CONFIG,
+            PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> getParentProcessContext() {
+        return processContext;
     }
 
     @Override

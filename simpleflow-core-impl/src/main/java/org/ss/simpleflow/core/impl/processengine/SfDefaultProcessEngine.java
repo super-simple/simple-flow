@@ -1,8 +1,13 @@
 package org.ss.simpleflow.core.impl.processengine;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.ss.simpleflow.common.CollectionUtils;
 import org.ss.simpleflow.core.aspect.SfControlLineAspect;
 import org.ss.simpleflow.core.aspect.SfNodeAspect;
 import org.ss.simpleflow.core.aspect.SfProcessAspect;
+import org.ss.simpleflow.core.context.SfProcessContext;
+import org.ss.simpleflow.core.context.SfProcessReturn;
 import org.ss.simpleflow.core.factory.*;
 import org.ss.simpleflow.core.line.SfAbstractLineConfig;
 import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
@@ -26,6 +31,8 @@ public class SfDefaultProcessEngine<NODE_ID, LINE_ID, PROCESS_CONFIG_ID,
         implements SfProcessEngine<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH,
         PROCESS_CONFIG, NODE_EXECUTION_ID, LINE_EXECUTION_ID, PROCESS_EXECUTION_ID> {
 
+    private static final Logger LOG = LoggerFactory.getLogger(SfDefaultProcessEngine.class);
+
     private final SfProcessEngineConfig processEngineConfig;
 
     private final SfControlLineFactory<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, LINE_EXECUTION_ID, PROCESS_EXECUTION_ID> controlLineFactory;
@@ -37,7 +44,7 @@ public class SfDefaultProcessEngine<NODE_ID, LINE_ID, PROCESS_CONFIG_ID,
     private final SfGatewayFactory<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, PROCESS_EXECUTION_ID> gatewayFactory;
     private final SfAroundIteratorFactory<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, PROCESS_EXECUTION_ID> aroundIteratorFactory;
 
-    private final SfValidateManager<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH> validateManager;
+    private final SfValidateManager<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG> validateManager;
 
     private final SfComponentExecutionIdGenerator<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, LINE_EXECUTION_ID, PROCESS_EXECUTION_ID> componentExecutionIdGenerator;
     private final SfProcessExecutionIdGenerator<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processExecutionIdGenerator;
@@ -57,7 +64,7 @@ public class SfDefaultProcessEngine<NODE_ID, LINE_ID, PROCESS_CONFIG_ID,
                            SfStreamIteratorFactory<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, PROCESS_EXECUTION_ID> streamIteratorFactory,
                            SfGatewayFactory<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, PROCESS_EXECUTION_ID> gatewayFactory,
                            SfAroundIteratorFactory<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, PROCESS_EXECUTION_ID> aroundIteratorFactory,
-                           SfValidateManager<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH> validateManager,
+                           SfValidateManager<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG> validateManager,
                            SfComponentExecutionIdGenerator<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, LINE_EXECUTION_ID, PROCESS_EXECUTION_ID> componentExecutionIdGenerator,
                            SfProcessExecutionIdGenerator<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processExecutionIdGenerator,
                            SfContextFactory<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, LINE_EXECUTION_ID, PROCESS_EXECUTION_ID> contextFactory,
@@ -135,20 +142,47 @@ public class SfDefaultProcessEngine<NODE_ID, LINE_ID, PROCESS_CONFIG_ID,
     }
 
     @Override
-    public String runProcess(PROCESS_CONFIG processConfig,
-                             PROCESS_EXECUTION_ID executionId,
-                             Map<String, Object> params,
-                             Map<String, Object> env) {
+    public SfProcessReturn<PROCESS_EXECUTION_ID> runProcess(PROCESS_CONFIG processConfig,
+                                                            PROCESS_EXECUTION_ID executionId,
+                                                            Map<String, Object> params,
+                                                            Map<String, Object> env) {
+        SfProcessContext<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext = contextFactory.createProcessContext();
+        processContext.setProcessConfig(processConfig);
+
+        PROCESS_EXECUTION_ID actualExecutionId;
+        if (executionId != null) {
+            actualExecutionId = executionId;
+        } else {
+            actualExecutionId = processExecutionIdGenerator.generateProcessExecutionId(processContext);
+        }
+        processContext.setProcessExecutionId(actualExecutionId);
+
+        if (CollectionUtils.isNotEmpty(processAspectList)) {
+            for (SfProcessAspect<NODE_ID, LINE_ID, PROCESS_CONFIG_ID,
+                    NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH,
+                    PROCESS_CONFIG, PROCESS_EXECUTION_ID> processAspect : processAspectList) {
+                try {
+                    processAspect.before(params, processContext);
+                } catch (Exception e) {
+                    LOG.error("processAspect occur error", e);
+                }
+            }
+        }
+
+        validateManager.validate(processConfig, processEngineConfig);
+
         return null;
     }
 
     @Override
-    public String runProcess(PROCESS_CONFIG processConfig, Map<String, Object> params, Map<String, Object> env) {
+    public SfProcessReturn<PROCESS_EXECUTION_ID> runProcess(PROCESS_CONFIG processConfig,
+                                                            Map<String, Object> params,
+                                                            Map<String, Object> env) {
         return runProcess(processConfig, null, params, env);
     }
 
     @Override
-    public String runProcess(PROCESS_CONFIG processConfig, Map<String, Object> params) {
+    public SfProcessReturn<PROCESS_EXECUTION_ID> runProcess(PROCESS_CONFIG processConfig, Map<String, Object> params) {
         return runProcess(processConfig, params, null);
     }
 }

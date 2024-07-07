@@ -14,9 +14,13 @@ public interface SfProcessContext<NODE_ID, LINE_ID, PROCESS_CONFIG_ID,
         PROCESS_CONFIG extends SfProcessConfig<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH>,
         PROCESS_EXECUTION_ID> extends SfVariableContext, Serializable {
 
-    void setParentProcessExecutionId(PROCESS_EXECUTION_ID parentProcessExecutionId);
+    void setParentProcessContext(SfProcessContext<NODE_ID, LINE_ID, PROCESS_CONFIG_ID,
+            NODE_CONFIG, LINE_CONFIG,
+            PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext);
 
-    PROCESS_EXECUTION_ID getParentProcessExecutionId();
+    SfProcessContext<NODE_ID, LINE_ID, PROCESS_CONFIG_ID,
+            NODE_CONFIG, LINE_CONFIG,
+            PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> getParentProcessContext();
 
     void setProcessExecutionId(PROCESS_EXECUTION_ID processExecutionId);
 
