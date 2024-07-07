@@ -3,7 +3,7 @@ package org.ss.simpleflow.core.impl.validate;
 import org.ss.simpleflow.common.CollectionUtils;
 import org.ss.simpleflow.common.StringUtils;
 import org.ss.simpleflow.core.constant.SfEventTypeConstant;
-import org.ss.simpleflow.core.constant.SfNodeTypeConstant;
+import org.ss.simpleflow.core.constant.SimpleFlowNodeTypeConstant;
 import org.ss.simpleflow.core.impl.exceptional.SfNodeConfigException;
 import org.ss.simpleflow.core.impl.exceptional.SfNodeConfigExceptionCode;
 import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
@@ -25,7 +25,7 @@ public class SfDefaultNodeConfigValidator
 
         String nodeTypeUpperCase = nodeType.toUpperCase();
         switch (nodeTypeUpperCase) {
-            case SfNodeTypeConstant.EVENT: {
+            case SimpleFlowNodeTypeConstant.EVENT: {
                 String eventCode = nodeConfig.getEventCode();
                 if (StringUtils.isNullOrEmpty(eventCode)) {
                     throw new SfNodeConfigException(SfNodeConfigExceptionCode.NO_EVENT_CODE, nodeConfig);
@@ -36,24 +36,24 @@ public class SfDefaultNodeConfigValidator
                 }
                 break;
             }
-            case SfNodeTypeConstant.ENUM_GATEWAY: {
+            case SimpleFlowNodeTypeConstant.ENUM_GATEWAY: {
                 Set<String> gatewayEnumSet = nodeConfig.getEnumGatewayEnumSet();
                 if (CollectionUtils.isNullOrEmpty(gatewayEnumSet)) {
                     throw new SfNodeConfigException(SfNodeConfigExceptionCode.NO_GATEWAY_ENUM_SET, nodeConfig);
                 }
                 break;
             }
-            case SfNodeTypeConstant.PROCESS: {
+            case SimpleFlowNodeTypeConstant.PROCESS: {
                 PROCESS_CONFIG_ID processId = nodeConfig.getProcessId();
                 if (processId != null) {
                     throw new SfNodeConfigException(SfNodeConfigExceptionCode.NO_PROCESS_ID, nodeConfig);
                 }
                 break;
             }
-            case SfNodeTypeConstant.NODE:
-            case SfNodeTypeConstant.STREAM_ITERATOR:
-            case SfNodeTypeConstant.AROUND_ITERATOR:
-            case SfNodeTypeConstant.GATEWAY: {
+            case SimpleFlowNodeTypeConstant.NODE:
+            case SimpleFlowNodeTypeConstant.STREAM_ITERATOR:
+            case SimpleFlowNodeTypeConstant.AROUND_ITERATOR:
+            case SimpleFlowNodeTypeConstant.GATEWAY: {
                 break;
             }
             default: {
