@@ -4,15 +4,15 @@ import java.io.Serializable;
 
 public class SfProcessEngineConfig implements Serializable {
 
-    private boolean trim;
+    private boolean cleanOrphanNode = true;
     private long maxLoopCount = 0;
 
-    public boolean isTrim() {
-        return trim;
+    public boolean isCleanOrphanNode() {
+        return cleanOrphanNode;
     }
 
-    public void setTrim(boolean trim) {
-        this.trim = trim;
+    public void setCleanOrphanNode(boolean cleanOrphanNode) {
+        this.cleanOrphanNode = cleanOrphanNode;
     }
 
     public long getMaxLoopCount() {
