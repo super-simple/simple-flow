@@ -32,4 +32,6 @@ public interface SfContextFactory<NODE_ID, LINE_ID, PROCESS_CONFIG_ID,
     SfExecutionInternalContext<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG,
             PROCESS_CONFIG_GRAPH, PROCESS_CONFIG,
             NODE_EXECUTION_ID, LINE_EXECUTION_ID, PROCESS_EXECUTION_ID> createExecutionInternalContext();
+
+    SfProcessReturn<PROCESS_EXECUTION_ID> createProcessReturn();
 }
