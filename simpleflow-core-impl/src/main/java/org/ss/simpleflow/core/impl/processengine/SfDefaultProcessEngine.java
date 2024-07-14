@@ -152,6 +152,10 @@ public class SfDefaultProcessEngine<NODE_ID, LINE_ID, PROCESS_CONFIG_ID,
                                                             PROCESS_EXECUTION_ID executionId,
                                                             Map<String, Object> params,
                                                             Map<String, Object> env) {
+        if (processConfig == null) {
+            throw new NullPointerException("processConfig can not be null");
+        }
+
         SfProcessContext<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext = contextFactory.createProcessContext();
         processContext.setProcessConfig(processConfig);
 
@@ -174,6 +178,7 @@ public class SfDefaultProcessEngine<NODE_ID, LINE_ID, PROCESS_CONFIG_ID,
                 }
             }
         }
+        validateManager.preValidate(processConfig, processContext, processEngineConfig);
 
         orphanComponentCleaner.cleanOrphanProcess(processConfig);
         orphanComponentCleaner.cleanOrphanNode(processConfig);

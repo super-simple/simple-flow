@@ -9,6 +9,7 @@ import org.ss.simpleflow.core.processconfig.SfProcessConfigGraph;
 import org.ss.simpleflow.core.processengine.SfProcessEngineConfig;
 import org.ss.simpleflow.core.validate.SfLineConfigCustomValidator;
 import org.ss.simpleflow.core.validate.SfNodeConfigCustomValidator;
+import org.ss.simpleflow.core.validate.SfProcessConfigCustomValidate;
 import org.ss.simpleflow.core.validate.SfValidateManager;
 
 import java.util.List;
@@ -21,19 +22,21 @@ public class SfDefaultValidateManager<NODE_ID, LINE_ID, PROCESS_CONFIG_ID,
         PROCESS_EXECUTION_ID>
         implements SfValidateManager<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> {
 
-    private final SfDefaultBasicValidator<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH> basicValidator;
+    private final SfDefaultBasicValidator<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> basicValidator;
 
-    public SfDefaultValidateManager(SfNodeConfigCustomValidator<NODE_ID, PROCESS_CONFIG_ID, NODE_CONFIG> nodeConfigCustomValidator,
-                                    SfLineConfigCustomValidator<NODE_ID, LINE_ID, LINE_CONFIG> lineConfigCustomValidator) {
-        basicValidator = new SfDefaultBasicValidator<>(nodeConfigCustomValidator, lineConfigCustomValidator);
+    SfDefaultValidateManager(SfNodeConfigCustomValidator<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> nodeConfigCustomValidator,
+                             SfLineConfigCustomValidator<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> lineConfigCustomValidator,
+                             SfProcessConfigCustomValidate<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processConfigCustomValidate) {
+        basicValidator = new SfDefaultBasicValidator<>(nodeConfigCustomValidator,
+                                                       lineConfigCustomValidator,
+                                                       processConfigCustomValidate);
     }
-
 
     @Override
     public void preValidate(PROCESS_CONFIG processConfig,
                             SfProcessContext<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext,
                             SfProcessEngineConfig processEngineConfig) {
-
+        basicValidator.preValidate(processConfig, processContext, processEngineConfig);
     }
 
     @Override
@@ -42,6 +45,9 @@ public class SfDefaultValidateManager<NODE_ID, LINE_ID, PROCESS_CONFIG_ID,
                                  NODE_CONFIG, LINE_CONFIG,
                                  PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext,
                          SfProcessEngineConfig processEngineConfig) {
+
+        basicValidator.basicValidate(processConfig, processContext, processEngineConfig);
+
         List<NODE_CONFIG> nodeConfigList = processConfig.getNodeConfigList();
         List<LINE_CONFIG> lineConfigList = processConfig.getLineConfigList();
 

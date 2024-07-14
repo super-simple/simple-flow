@@ -22,6 +22,8 @@ public abstract class SfAbstractProcessContext<NODE_ID, LINE_ID, PROCESS_CONFIG_
 
     protected PROCESS_CONFIG processConfig;
 
+    protected PROCESS_CONFIG_ID processConfigId;
+
     @Override
     public void setParentProcessContext(SfProcessContext<NODE_ID, LINE_ID, PROCESS_CONFIG_ID,
             NODE_CONFIG, LINE_CONFIG,
@@ -56,4 +58,13 @@ public abstract class SfAbstractProcessContext<NODE_ID, LINE_ID, PROCESS_CONFIG_
         return processConfig;
     }
 
+    @Override
+    public void setProcessConfigId(PROCESS_CONFIG_ID processConfigId) {
+        this.processConfigId = processConfigId;
+    }
+
+    @Override
+    public PROCESS_CONFIG_ID getProcessConfigId() {
+        return processConfigId;
+    }
 }

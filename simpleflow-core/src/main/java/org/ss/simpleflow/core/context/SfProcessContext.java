@@ -30,4 +30,7 @@ public interface SfProcessContext<NODE_ID, LINE_ID, PROCESS_CONFIG_ID,
 
     PROCESS_CONFIG getProcessConfig();
 
+    void setProcessConfigId(PROCESS_CONFIG_ID processConfigId);
+
+    PROCESS_CONFIG_ID getProcessConfigId();
 }
