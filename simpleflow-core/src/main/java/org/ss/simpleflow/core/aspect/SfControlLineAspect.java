@@ -18,7 +18,9 @@ public interface SfControlLineAspect<NODE_ID, LINE_ID, PROCESS_CONFIG_ID,
 
     void before(Map<String, Object> params,
                 SfLineContext<NODE_ID, LINE_ID, LINE_EXECUTION_ID, LINE_CONFIG> lineContext,
-                SfProcessContext<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext);
+                SfProcessContext<NODE_ID, LINE_ID, PROCESS_CONFIG_ID,
+                        NODE_CONFIG, LINE_CONFIG,
+                        PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext);
 
     void afterThrowing(Exception e,
                        SfLineContext<NODE_ID, LINE_ID, LINE_EXECUTION_ID, LINE_CONFIG> lineContext,
