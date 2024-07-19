@@ -9,7 +9,7 @@ import org.ss.simpleflow.core.processconfig.SfProcessConfigGraph;
 
 import java.util.Map;
 
-public interface SfControlLineAspect<NODE_ID, LINE_ID, PROCESS_CONFIG_ID,
+public interface SfLineAspect<NODE_ID, LINE_ID, PROCESS_CONFIG_ID,
         NODE_CONFIG extends SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID>,
         LINE_CONFIG extends SfAbstractLineConfig<LINE_ID, NODE_ID>,
         PROCESS_CONFIG_GRAPH extends SfProcessConfigGraph<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG>,
@@ -32,5 +32,8 @@ public interface SfControlLineAspect<NODE_ID, LINE_ID, PROCESS_CONFIG_ID,
 
     void afterFinally(SfLineContext<NODE_ID, LINE_ID, LINE_EXECUTION_ID, LINE_CONFIG> lineContext,
                       SfProcessContext<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext);
+
+    void afterCancel(SfLineContext<NODE_ID, LINE_ID, LINE_EXECUTION_ID, LINE_CONFIG> lineContext,
+                     SfProcessContext<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext);
 
 }

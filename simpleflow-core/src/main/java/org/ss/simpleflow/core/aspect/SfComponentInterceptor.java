@@ -17,15 +17,15 @@ public interface SfComponentInterceptor<NODE_ID, LINE_ID, PROCESS_CONFIG_ID,
         PROCESS_CONFIG extends SfProcessConfig<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH>,
         NODE_EXECUTION_ID, LINE_EXECUTION_ID, PROCESS_EXECUTION_ID> {
 
-    boolean beforeHandle(Map<String, Object> params,
-                         SfNodeContext<NODE_ID, PROCESS_CONFIG_ID, NODE_EXECUTION_ID, NODE_CONFIG> nodeContext,
-                         SfProcessContext<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG,
-                                 LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext);
+    boolean cancel(Map<String, Object> params,
+                   SfNodeContext<NODE_ID, PROCESS_CONFIG_ID, NODE_EXECUTION_ID, NODE_CONFIG> nodeContext,
+                   SfProcessContext<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG,
+                           LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext);
 
-    boolean beforeHandle(Map<String, Object> params,
-                         SfLineContext<NODE_ID, LINE_ID, LINE_EXECUTION_ID, LINE_CONFIG> lineContext,
-                         SfProcessContext<NODE_ID, LINE_ID, PROCESS_CONFIG_ID,
-                                 NODE_CONFIG, LINE_CONFIG,
-                                 PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext);
+    boolean cancel(Map<String, Object> params,
+                   SfLineContext<NODE_ID, LINE_ID, LINE_EXECUTION_ID, LINE_CONFIG> lineContext,
+                   SfProcessContext<NODE_ID, LINE_ID, PROCESS_CONFIG_ID,
+                           NODE_CONFIG, LINE_CONFIG,
+                           PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext);
 
 }

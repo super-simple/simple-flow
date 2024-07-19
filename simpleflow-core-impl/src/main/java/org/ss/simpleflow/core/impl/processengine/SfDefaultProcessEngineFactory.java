@@ -1,6 +1,6 @@
 package org.ss.simpleflow.core.impl.processengine;
 
-import org.ss.simpleflow.core.aspect.SfControlLineAspect;
+import org.ss.simpleflow.core.aspect.SfLineAspect;
 import org.ss.simpleflow.core.aspect.SfNodeAspect;
 import org.ss.simpleflow.core.aspect.SfProcessAspect;
 import org.ss.simpleflow.core.factory.*;
@@ -37,7 +37,7 @@ public class SfDefaultProcessEngineFactory<NODE_ID, LINE_ID, PROCESS_CONFIG_ID,
             SfComponentExecutionIdGenerator<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, LINE_EXECUTION_ID, PROCESS_EXECUTION_ID> componentExecutionIdGenerator,
             SfProcessExecutionIdGenerator<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processExecutionIdGenerator,
             SfContextFactory<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, LINE_EXECUTION_ID, PROCESS_EXECUTION_ID> contextFactory,
-            List<SfControlLineAspect<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, LINE_EXECUTION_ID, PROCESS_EXECUTION_ID>> controlLineAspectList,
+            List<SfLineAspect<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, LINE_EXECUTION_ID, PROCESS_EXECUTION_ID>> lineAspectList,
             List<SfNodeAspect<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, PROCESS_EXECUTION_ID>> nodeAspectList,
             List<SfProcessAspect<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID>> processAspectList) {
         return new SfDefaultProcessEngine<>(processEngineConfig, controlLineFactory, dataLineFactory,
@@ -46,6 +46,6 @@ public class SfDefaultProcessEngineFactory<NODE_ID, LINE_ID, PROCESS_CONFIG_ID,
                                             validateManager,
                                             componentExecutionIdGenerator, processExecutionIdGenerator,
                                             contextFactory,
-                                            controlLineAspectList, nodeAspectList, processAspectList);
+                                            lineAspectList, nodeAspectList, processAspectList);
     }
 }

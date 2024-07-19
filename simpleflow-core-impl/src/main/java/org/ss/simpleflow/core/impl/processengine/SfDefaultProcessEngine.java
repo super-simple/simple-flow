@@ -3,7 +3,7 @@ package org.ss.simpleflow.core.impl.processengine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.ss.simpleflow.common.CollectionUtils;
-import org.ss.simpleflow.core.aspect.SfControlLineAspect;
+import org.ss.simpleflow.core.aspect.SfLineAspect;
 import org.ss.simpleflow.core.aspect.SfNodeAspect;
 import org.ss.simpleflow.core.aspect.SfProcessAspect;
 import org.ss.simpleflow.core.context.SfProcessContext;
@@ -53,7 +53,7 @@ public class SfDefaultProcessEngine<NODE_ID, LINE_ID, PROCESS_CONFIG_ID,
 
     private final SfContextFactory<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, LINE_EXECUTION_ID, PROCESS_EXECUTION_ID> contextFactory;
 
-    private final List<SfControlLineAspect<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, LINE_EXECUTION_ID, PROCESS_EXECUTION_ID>> controlLineAspectList;
+    private final List<SfLineAspect<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, LINE_EXECUTION_ID, PROCESS_EXECUTION_ID>> lineAspectList;
     private final List<SfNodeAspect<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, PROCESS_EXECUTION_ID>> nodeAspectList;
     private final List<SfProcessAspect<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID>> processAspectList;
 
@@ -72,7 +72,7 @@ public class SfDefaultProcessEngine<NODE_ID, LINE_ID, PROCESS_CONFIG_ID,
                            SfComponentExecutionIdGenerator<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, LINE_EXECUTION_ID, PROCESS_EXECUTION_ID> componentExecutionIdGenerator,
                            SfProcessExecutionIdGenerator<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processExecutionIdGenerator,
                            SfContextFactory<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, LINE_EXECUTION_ID, PROCESS_EXECUTION_ID> contextFactory,
-                           List<SfControlLineAspect<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, LINE_EXECUTION_ID, PROCESS_EXECUTION_ID>> controlLineAspectList,
+                           List<SfLineAspect<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, LINE_EXECUTION_ID, PROCESS_EXECUTION_ID>> lineAspectList,
                            List<SfNodeAspect<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, PROCESS_EXECUTION_ID>> nodeAspectList,
                            List<SfProcessAspect<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID>> processAspectList) {
         if (processEngineConfig == null) {
@@ -140,7 +140,7 @@ public class SfDefaultProcessEngine<NODE_ID, LINE_ID, PROCESS_CONFIG_ID,
         }
         this.contextFactory = contextFactory;
 
-        this.controlLineAspectList = controlLineAspectList;
+        this.lineAspectList = lineAspectList;
         this.nodeAspectList = nodeAspectList;
         this.processAspectList = processAspectList;
 
