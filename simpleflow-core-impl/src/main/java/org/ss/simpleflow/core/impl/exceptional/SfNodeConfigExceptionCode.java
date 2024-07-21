@@ -8,5 +8,6 @@ public enum SfNodeConfigExceptionCode {
     NO_NODE_TYPE,
     NO_EVENT_CODE,
     NO_NODE_ID,
+    START_EVENT_REPEAT,
     ID_REPEAT
 }

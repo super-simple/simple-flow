@@ -1,22 +1,22 @@
 package org.ss.simpleflow.core.context;
 
-import org.ss.simpleflow.core.line.SfAbstractLineConfig;
+import org.ss.simpleflow.core.edge.SfAbstractEdgeConfig;
 import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
 import org.ss.simpleflow.core.processconfig.SfProcessConfig;
 import org.ss.simpleflow.core.processconfig.SfProcessConfigGraph;
 
-public abstract class SfAbstractProcessContext<NODE_ID, LINE_ID, PROCESS_CONFIG_ID,
+public abstract class SfAbstractProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
         NODE_CONFIG extends SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID>,
-        LINE_CONFIG extends SfAbstractLineConfig<LINE_ID, NODE_ID>,
-        PROCESS_CONFIG_GRAPH extends SfProcessConfigGraph<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG>,
-        PROCESS_CONFIG extends SfProcessConfig<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH>,
+        EDGE_CONFIG extends SfAbstractEdgeConfig<EDGE_ID, NODE_ID>,
+        PROCESS_CONFIG_GRAPH extends SfProcessConfigGraph<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG>,
+        PROCESS_CONFIG extends SfProcessConfig<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH>,
         PROCESS_EXECUTION_ID>
         extends SfDefaultVariableContext
-        implements SfProcessContext<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG,
-        LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> {
+        implements SfProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG,
+        EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> {
 
-    protected SfProcessContext<NODE_ID, LINE_ID, PROCESS_CONFIG_ID,
-            NODE_CONFIG, LINE_CONFIG,
+    protected SfProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
+            NODE_CONFIG, EDGE_CONFIG,
             PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext;
     protected PROCESS_EXECUTION_ID processExecutionId;
 
@@ -25,15 +25,15 @@ public abstract class SfAbstractProcessContext<NODE_ID, LINE_ID, PROCESS_CONFIG_
     protected PROCESS_CONFIG_ID processConfigId;
 
     @Override
-    public void setParentProcessContext(SfProcessContext<NODE_ID, LINE_ID, PROCESS_CONFIG_ID,
-            NODE_CONFIG, LINE_CONFIG,
+    public void setParentProcessContext(SfProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
+            NODE_CONFIG, EDGE_CONFIG,
             PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext) {
         this.processContext = processContext;
     }
 
     @Override
-    public SfProcessContext<NODE_ID, LINE_ID, PROCESS_CONFIG_ID,
-            NODE_CONFIG, LINE_CONFIG,
+    public SfProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
+            NODE_CONFIG, EDGE_CONFIG,
             PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> getParentProcessContext() {
         return processContext;
     }

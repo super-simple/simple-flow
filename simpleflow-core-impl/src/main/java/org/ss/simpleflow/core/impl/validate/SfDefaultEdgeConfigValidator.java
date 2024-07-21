@@ -1,26 +1,26 @@
 package org.ss.simpleflow.core.impl.validate;
 
 import org.ss.simpleflow.common.StringUtils;
-import org.ss.simpleflow.core.constant.SfLineTypeConstant;
+import org.ss.simpleflow.core.constant.SfEdgeTypeConstant;
 import org.ss.simpleflow.core.context.SfProcessContext;
-import org.ss.simpleflow.core.impl.exceptional.SfLineConfigException;
-import org.ss.simpleflow.core.impl.exceptional.SfLineConfigExceptionCode;
-import org.ss.simpleflow.core.line.SfAbstractLineConfig;
+import org.ss.simpleflow.core.edge.SfAbstractEdgeConfig;
+import org.ss.simpleflow.core.impl.exceptional.SfEdgeConfigException;
+import org.ss.simpleflow.core.impl.exceptional.SfEdgeConfigExceptionCode;
 import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
 import org.ss.simpleflow.core.processconfig.SfProcessConfig;
 import org.ss.simpleflow.core.processconfig.SfProcessConfigGraph;
 import org.ss.simpleflow.core.processengine.SfProcessEngineConfig;
 
-public class SfDefaultLineConfigValidator<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG extends SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID>, LINE_CONFIG extends SfAbstractLineConfig<LINE_ID, NODE_ID>, PROCESS_CONFIG_GRAPH extends SfProcessConfigGraph<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG>, PROCESS_CONFIG extends SfProcessConfig<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH>, PROCESS_EXECUTION_ID> {
+public class SfDefaultEdgeConfigValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG extends SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID>, EDGE_CONFIG extends SfAbstractEdgeConfig<EDGE_ID, NODE_ID>, PROCESS_CONFIG_GRAPH extends SfProcessConfigGraph<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG>, PROCESS_CONFIG extends SfProcessConfig<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH>, PROCESS_EXECUTION_ID> {
 
-    public void preValidate(LINE_CONFIG lineConfig,
+    public void preValidate(EDGE_CONFIG edgeConfig,
                             PROCESS_CONFIG processConfig,
-                            SfProcessContext<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext,
+                            SfProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext,
                             SfProcessEngineConfig processEngineConfig) {
-        LINE_ID id = lineConfig.getId();
+        EDGE_ID id = edgeConfig.getId();
         if (id != null) {
-            throw new SfLineConfigException(SfLineConfigExceptionCode.NO_LINE_ID,
-                                            lineConfig,
+            throw new SfEdgeConfigException(SfEdgeConfigExceptionCode.NO_EDGE_ID,
+                                            edgeConfig,
                                             processConfig,
                                             null,
                                             processContext,
@@ -28,33 +28,33 @@ public class SfDefaultLineConfigValidator<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, N
         }
     }
 
-    public void validate(LINE_CONFIG lineConfig,
+    public void validate(EDGE_CONFIG edgeConfig,
                          PROCESS_CONFIG processConfig,
-                         SfProcessContext<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext,
+                         SfProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext,
                          SfProcessEngineConfig processEngineConfig) {
-        String lineType = lineConfig.getLineType();
+        String lineType = edgeConfig.getEdgeType();
         if (StringUtils.isNullOrEmpty(lineType)) {
-            throw new SfLineConfigException(SfLineConfigExceptionCode.NO_LINE_TYPE,
-                                            lineConfig,
+            throw new SfEdgeConfigException(SfEdgeConfigExceptionCode.NO_EDGE_TYPE,
+                                            edgeConfig,
                                             processConfig,
                                             null,
                                             processContext,
                                             processEngineConfig);
         }
 
-        NODE_ID fromNodeId = lineConfig.getFromNodeId();
+        NODE_ID fromNodeId = edgeConfig.getFromNodeId();
         if (fromNodeId != null) {
-            throw new SfLineConfigException(SfLineConfigExceptionCode.NO_FROM_NODE_ID,
-                                            lineConfig,
+            throw new SfEdgeConfigException(SfEdgeConfigExceptionCode.NO_FROM_NODE_ID,
+                                            edgeConfig,
                                             processConfig,
                                             null,
                                             processContext,
                                             processEngineConfig);
         }
-        NODE_ID toNodeId = lineConfig.getToNodeId();
+        NODE_ID toNodeId = edgeConfig.getToNodeId();
         if (toNodeId != null) {
-            throw new SfLineConfigException(SfLineConfigExceptionCode.NO_TO_NODE_ID,
-                                            lineConfig,
+            throw new SfEdgeConfigException(SfEdgeConfigExceptionCode.NO_TO_NODE_ID,
+                                            edgeConfig,
                                             processConfig,
                                             null,
                                             processContext,
@@ -63,23 +63,23 @@ public class SfDefaultLineConfigValidator<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, N
 
         String lineTypeUpperCase = lineType.toUpperCase();
         switch (lineTypeUpperCase) {
-            case (SfLineTypeConstant.CONTROL): {
+            case (SfEdgeTypeConstant.CONTROL): {
                 break;
             }
-            case (SfLineTypeConstant.DATA): {
-                String fromResultKey = lineConfig.getFromResultKey();
+            case (SfEdgeTypeConstant.DATA): {
+                String fromResultKey = edgeConfig.getFromResultKey();
                 if (StringUtils.isNullOrEmpty(fromResultKey)) {
-                    throw new SfLineConfigException(SfLineConfigExceptionCode.NO_FROM_RESULT_KEY,
-                                                    lineConfig,
+                    throw new SfEdgeConfigException(SfEdgeConfigExceptionCode.NO_FROM_RESULT_KEY,
+                                                    edgeConfig,
                                                     processConfig,
                                                     null,
                                                     processContext,
                                                     processEngineConfig);
                 }
-                String toParameterKey = lineConfig.getToParameterKey();
+                String toParameterKey = edgeConfig.getToParameterKey();
                 if (StringUtils.isNullOrEmpty(toParameterKey)) {
-                    throw new SfLineConfigException(SfLineConfigExceptionCode.NO_TO_PARAMETER_KEY,
-                                                    lineConfig,
+                    throw new SfEdgeConfigException(SfEdgeConfigExceptionCode.NO_TO_PARAMETER_KEY,
+                                                    edgeConfig,
                                                     processConfig,
                                                     null,
                                                     processContext,
@@ -88,9 +88,9 @@ public class SfDefaultLineConfigValidator<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, N
                 break;
             }
             default: {
-                throw new SfLineConfigException("unknown line type [" + lineType + ']',
-                                                SfLineConfigExceptionCode.WRONG_LINE_TYPE,
-                                                lineConfig,
+                throw new SfEdgeConfigException("unknown edge type [" + lineType + ']',
+                                                SfEdgeConfigExceptionCode.WRONG_EDGE_TYPE,
+                                                edgeConfig,
                                                 processConfig,
                                                 null,
                                                 processContext,

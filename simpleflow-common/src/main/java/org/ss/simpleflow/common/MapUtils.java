@@ -20,7 +20,7 @@ public class MapUtils {
         if (CollectionUtils.isNullOrEmpty(values)) {
             return Collections.emptyMap();
         }
-        Map<K, V> result = new HashMap<>();
+        Map<K, V> result = new HashMap<>(values.size());
         for (V value : values) {
             result.put(keyFunction.apply(value), value);
         }

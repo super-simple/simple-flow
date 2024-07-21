@@ -1,16 +1,18 @@
-package org.ss.simpleflow.core.line;
+package org.ss.simpleflow.core.edge;
 
-public class SfAbstractLineConfig<LINE_ID, NODE_ID> implements SfLineConfig<LINE_ID, NODE_ID> {
-    protected LINE_ID id;
+import org.ss.simpleflow.core.constant.SfEdgeTypeConstant;
+
+public class SfAbstractEdgeConfig<EDGE_ID, NODE_ID> implements SfEdgeConfig<EDGE_ID, NODE_ID> {
+    protected EDGE_ID id;
     protected NODE_ID fromNodeId;
     protected NODE_ID toNodeId;
     protected String lineType;
     protected String fromResultKey;
     protected String toParameterKey;
-    protected SfLineIndexEntry lineIndexEntry;
+    protected SfEdgeIndexEntry lineIndexEntry;
 
     @Override
-    public LINE_ID getId() {
+    public EDGE_ID getId() {
         return id;
     }
 
@@ -25,7 +27,7 @@ public class SfAbstractLineConfig<LINE_ID, NODE_ID> implements SfLineConfig<LINE
     }
 
     @Override
-    public String getLineType() {
+    public String getEdgeType() {
         return lineType;
     }
 
@@ -40,7 +42,15 @@ public class SfAbstractLineConfig<LINE_ID, NODE_ID> implements SfLineConfig<LINE
     }
 
     @Override
-    public SfLineIndexEntry getLineIndexEntry() {
+    public SfEdgeIndexEntry getEdgeIndexEntry() {
         return lineIndexEntry;
+    }
+
+    public boolean isControlLine() {
+        return SfEdgeTypeConstant.isControlLine(lineType);
+    }
+
+    public boolean isDataLine() {
+        return SfEdgeTypeConstant.isDataLine(lineType);
     }
 }

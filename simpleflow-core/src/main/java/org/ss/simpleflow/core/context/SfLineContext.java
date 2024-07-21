@@ -1,19 +1,19 @@
 package org.ss.simpleflow.core.context;
 
-import org.ss.simpleflow.core.line.SfAbstractLineConfig;
+import org.ss.simpleflow.core.edge.SfAbstractEdgeConfig;
 
 import java.io.Serializable;
 
-public interface SfLineContext<NODE_ID, LINE_ID, LINE_EXECUTION_ID,
-        LINE_CONFIG extends SfAbstractLineConfig<LINE_ID, NODE_ID>>
+public interface SfLineContext<NODE_ID, EDGE_ID, EDGE_EXECUTION_ID,
+        EDGE_CONFIG extends SfAbstractEdgeConfig<EDGE_ID, NODE_ID>>
         extends SfVariableContext, Serializable {
 
-    void setLineExecutionId(LINE_EXECUTION_ID lineExecutionId);
+    void setLineExecutionId(EDGE_EXECUTION_ID lineExecutionId);
 
-    LINE_EXECUTION_ID getLineExecutionId();
+    EDGE_EXECUTION_ID getLineExecutionId();
 
-    void setLineConfig(LINE_CONFIG lineConfig);
+    void setLineConfig(EDGE_CONFIG edgeConfig);
 
-    LINE_CONFIG getLineConfig();
+    EDGE_CONFIG getLineConfig();
 
 }

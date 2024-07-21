@@ -9,4 +9,8 @@ public interface SfBuiltInEventCodeConstant {
     String ERROR = "ERROR";
 
     String BREAK = "BREAK";
+
+    static boolean isStart(String eventCode) {
+        return START.equalsIgnoreCase(eventCode);
+    }
 }

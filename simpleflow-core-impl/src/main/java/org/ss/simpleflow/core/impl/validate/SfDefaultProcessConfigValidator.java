@@ -2,9 +2,9 @@ package org.ss.simpleflow.core.impl.validate;
 
 import org.ss.simpleflow.common.CollectionUtils;
 import org.ss.simpleflow.core.context.SfProcessContext;
+import org.ss.simpleflow.core.edge.SfAbstractEdgeConfig;
 import org.ss.simpleflow.core.impl.exceptional.SfProcessConfigException;
 import org.ss.simpleflow.core.impl.exceptional.SfProcessConfigExceptionCode;
-import org.ss.simpleflow.core.line.SfAbstractLineConfig;
 import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
 import org.ss.simpleflow.core.processconfig.SfProcessConfig;
 import org.ss.simpleflow.core.processconfig.SfProcessConfigGraph;
@@ -15,15 +15,15 @@ import java.util.List;
 import java.util.Set;
 
 public class SfDefaultProcessConfigValidator
-        <NODE_ID, LINE_ID, PROCESS_CONFIG_ID,
+        <NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
                 NODE_CONFIG extends SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID>,
-                LINE_CONFIG extends SfAbstractLineConfig<LINE_ID, NODE_ID>,
-                PROCESS_CONFIG_GRAPH extends SfProcessConfigGraph<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG>,
-                PROCESS_CONFIG extends SfProcessConfig<NODE_ID, LINE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, LINE_CONFIG, PROCESS_CONFIG_GRAPH>,
+                EDGE_CONFIG extends SfAbstractEdgeConfig<EDGE_ID, NODE_ID>,
+                PROCESS_CONFIG_GRAPH extends SfProcessConfigGraph<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG>,
+                PROCESS_CONFIG extends SfProcessConfig<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH>,
                 PROCESS_EXECUTION_ID> {
     public void preValidate(PROCESS_CONFIG processConfig,
-                            SfProcessContext<NODE_ID, LINE_ID, PROCESS_CONFIG_ID,
-                                    NODE_CONFIG, LINE_CONFIG,
+                            SfProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
+                                    NODE_CONFIG, EDGE_CONFIG,
                                     PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext,
                             SfProcessEngineConfig processEngineConfig) {
         PROCESS_CONFIG_ID processConfigId = processConfig.getId();
@@ -37,7 +37,8 @@ public class SfDefaultProcessConfigValidator
 
         List<PROCESS_CONFIG_GRAPH> subProcessConfigList = processConfig.getSubProcessConfigList();
         if (CollectionUtils.isNotEmpty(subProcessConfigList)) {
-            Set<PROCESS_CONFIG_ID> subProcessConfigIdSet = new HashSet<>(subProcessConfigList.size());
+            Set<PROCESS_CONFIG_ID> processConfigIdSet = new HashSet<>(subProcessConfigList.size() + 1);
+            processConfigIdSet.add(processConfigId);
             for (PROCESS_CONFIG_GRAPH processConfigGraph : subProcessConfigList) {
                 PROCESS_CONFIG_ID subProcessConfigId = processConfigGraph.getId();
                 if (subProcessConfigId == null) {
@@ -47,17 +48,18 @@ public class SfDefaultProcessConfigValidator
                                                        processContext,
                                                        processEngineConfig);
                 }
-                if (subProcessConfigIdSet.contains(subProcessConfigId)) {
+                if (processConfigIdSet.contains(subProcessConfigId)) {
                     throw new SfProcessConfigException(SfProcessConfigExceptionCode.ID_REPEAT,
                                                        processConfig,
                                                        processConfigGraph,
                                                        processContext,
                                                        processEngineConfig);
                 } else {
-                    subProcessConfigIdSet.add(subProcessConfigId);
+                    processConfigIdSet.add(subProcessConfigId);
                 }
             }
         }
     }
+
 
 }

@@ -1,33 +1,33 @@
 package org.ss.simpleflow.core.context;
 
-import org.ss.simpleflow.core.line.SfAbstractLineConfig;
+import org.ss.simpleflow.core.edge.SfAbstractEdgeConfig;
 
-public abstract class SfAbstractLineContext<NODE_ID, LINE_ID, LINE_EXECUTION_ID, LINE_CONFIG
-        extends SfAbstractLineConfig<LINE_ID, NODE_ID>>
+public abstract class SfAbstractLineContext<NODE_ID, EDGE_ID, EDGE_EXECUTION_ID, EDGE_CONFIG
+        extends SfAbstractEdgeConfig<EDGE_ID, NODE_ID>>
         extends SfDefaultVariableContext
-        implements SfLineContext<NODE_ID, LINE_ID, LINE_EXECUTION_ID, LINE_CONFIG> {
+        implements SfLineContext<NODE_ID, EDGE_ID, EDGE_EXECUTION_ID, EDGE_CONFIG> {
 
-    protected LINE_EXECUTION_ID lineExecutionId;
+    protected EDGE_EXECUTION_ID lineExecutionId;
 
-    protected LINE_CONFIG lineConfig;
+    protected EDGE_CONFIG edgeConfig;
 
     @Override
-    public void setLineExecutionId(LINE_EXECUTION_ID lineExecutionId) {
+    public void setLineExecutionId(EDGE_EXECUTION_ID lineExecutionId) {
         this.lineExecutionId = lineExecutionId;
     }
 
     @Override
-    public LINE_EXECUTION_ID getLineExecutionId() {
+    public EDGE_EXECUTION_ID getLineExecutionId() {
         return lineExecutionId;
     }
 
     @Override
-    public void setLineConfig(LINE_CONFIG lineConfig) {
-        this.lineConfig = lineConfig;
+    public void setLineConfig(EDGE_CONFIG edgeConfig) {
+        this.edgeConfig = edgeConfig;
     }
 
     @Override
-    public LINE_CONFIG getLineConfig() {
-        return lineConfig;
+    public EDGE_CONFIG getLineConfig() {
+        return edgeConfig;
     }
 }

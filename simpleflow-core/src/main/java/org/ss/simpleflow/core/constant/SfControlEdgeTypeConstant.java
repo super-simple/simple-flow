@@ -1,6 +1,6 @@
 package org.ss.simpleflow.core.constant;
 
-public interface SfControlLineTypeConstant {
+public interface SfControlEdgeTypeConstant {
     String DEFAULT = "DEFAULT";
 
 }

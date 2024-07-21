@@ -1,5 +1,8 @@
 package org.ss.simpleflow.core.node;
 
+import org.ss.simpleflow.core.constant.SfBuiltInEventCodeConstant;
+import org.ss.simpleflow.core.constant.SfEventTypeConstant;
+
 import java.util.Map;
 import java.util.Set;
 
@@ -113,5 +116,9 @@ public class SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID> implements SfNodeC
 
     public void setProcessId(PROCESS_CONFIG_ID processId) {
         this.processId = processId;
+    }
+
+    public boolean isStartNode() {
+        return SfBuiltInEventCodeConstant.isStart(eventCode) && SfEventTypeConstant.isCatch(eventType);
     }
 }
