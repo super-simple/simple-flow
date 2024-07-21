@@ -14,5 +14,5 @@ public interface SfProcessConfigGraph<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
 
     List<NODE_CONFIG> getNodeConfigList();
 
-    List<EDGE_CONFIG> getLineConfigList();
+    List<EDGE_CONFIG> getEdgeConfigList();
 }

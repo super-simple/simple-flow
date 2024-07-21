@@ -6,10 +6,10 @@ public class SfAbstractEdgeConfig<EDGE_ID, NODE_ID> implements SfEdgeConfig<EDGE
     protected EDGE_ID id;
     protected NODE_ID fromNodeId;
     protected NODE_ID toNodeId;
-    protected String lineType;
+    protected String edgeType;
     protected String fromResultKey;
     protected String toParameterKey;
-    protected SfEdgeIndexEntry lineIndexEntry;
+    protected SfEdgeIndexEntry edgeIndexEntry;
 
     @Override
     public EDGE_ID getId() {
@@ -28,7 +28,7 @@ public class SfAbstractEdgeConfig<EDGE_ID, NODE_ID> implements SfEdgeConfig<EDGE
 
     @Override
     public String getEdgeType() {
-        return lineType;
+        return edgeType;
     }
 
     @Override
@@ -43,14 +43,14 @@ public class SfAbstractEdgeConfig<EDGE_ID, NODE_ID> implements SfEdgeConfig<EDGE
 
     @Override
     public SfEdgeIndexEntry getEdgeIndexEntry() {
-        return lineIndexEntry;
+        return edgeIndexEntry;
     }
 
-    public boolean isControlLine() {
-        return SfEdgeTypeConstant.isControlLine(lineType);
+    public boolean isControlEdge() {
+        return SfEdgeTypeConstant.isControlEdge(edgeType);
     }
 
-    public boolean isDataLine() {
-        return SfEdgeTypeConstant.isDataLine(lineType);
+    public boolean isDataEdge() {
+        return SfEdgeTypeConstant.isDataEdge(edgeType);
     }
 }

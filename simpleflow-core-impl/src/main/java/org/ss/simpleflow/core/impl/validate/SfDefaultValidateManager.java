@@ -7,7 +7,7 @@ import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
 import org.ss.simpleflow.core.processconfig.SfProcessConfig;
 import org.ss.simpleflow.core.processconfig.SfProcessConfigGraph;
 import org.ss.simpleflow.core.processengine.SfProcessEngineConfig;
-import org.ss.simpleflow.core.validate.SfLineConfigCustomValidator;
+import org.ss.simpleflow.core.validate.SfEdgeConfigCustomValidator;
 import org.ss.simpleflow.core.validate.SfNodeConfigCustomValidator;
 import org.ss.simpleflow.core.validate.SfProcessConfigCustomValidate;
 import org.ss.simpleflow.core.validate.SfValidateManager;
@@ -25,10 +25,10 @@ public class SfDefaultValidateManager<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
     private final SfDefaultBasicValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> basicValidator;
 
     SfDefaultValidateManager(SfNodeConfigCustomValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> nodeConfigCustomValidator,
-                             SfLineConfigCustomValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> lineConfigCustomValidator,
+                             SfEdgeConfigCustomValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> edgeConfigCustomValidator,
                              SfProcessConfigCustomValidate<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processConfigCustomValidate) {
         basicValidator = new SfDefaultBasicValidator<>(nodeConfigCustomValidator,
-                                                       lineConfigCustomValidator,
+                                                       edgeConfigCustomValidator,
                                                        processConfigCustomValidate);
     }
 
@@ -49,9 +49,9 @@ public class SfDefaultValidateManager<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
         basicValidator.basicValidate(processConfig, processContext, processEngineConfig);
 
         List<NODE_CONFIG> nodeConfigList = processConfig.getNodeConfigList();
-        List<EDGE_CONFIG> lineConfigList = processConfig.getLineConfigList();
+        List<EDGE_CONFIG> edgeConfigList = processConfig.getEdgeConfigList();
 
-        validateProcess(nodeConfigList, lineConfigList, processContext, processEngineConfig);
+        validateProcess(nodeConfigList, edgeConfigList, processContext, processEngineConfig);
 
         validateSubProcessConfig(processConfig, processContext, processEngineConfig);
 
@@ -60,9 +60,9 @@ public class SfDefaultValidateManager<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
         if (CollectionUtils.isNotEmpty(subProcessConfigList)) {
             for (PROCESS_CONFIG_GRAPH processConfigGraph : subProcessConfigList) {
                 List<NODE_CONFIG> subProcessNodeConfigList = processConfigGraph.getNodeConfigList();
-                List<EDGE_CONFIG> subProcessLineConfigList = processConfigGraph.getLineConfigList();
+                List<EDGE_CONFIG> subProcessEdgeConfigList = processConfigGraph.getEdgeConfigList();
                 validateProcess(subProcessNodeConfigList,
-                                subProcessLineConfigList,
+                                subProcessEdgeConfigList,
                                 processContext,
                                 processEngineConfig);
             }
@@ -79,7 +79,7 @@ public class SfDefaultValidateManager<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
 
 
     private void validateProcess(List<NODE_CONFIG> nodeConfigList,
-                                 List<EDGE_CONFIG> lineConfigList,
+                                 List<EDGE_CONFIG> edgeConfigList,
                                  SfProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
                                          NODE_CONFIG, EDGE_CONFIG,
                                          PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext,

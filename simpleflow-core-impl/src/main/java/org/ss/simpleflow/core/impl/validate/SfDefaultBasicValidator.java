@@ -8,7 +8,7 @@ import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
 import org.ss.simpleflow.core.processconfig.SfProcessConfig;
 import org.ss.simpleflow.core.processconfig.SfProcessConfigGraph;
 import org.ss.simpleflow.core.processengine.SfProcessEngineConfig;
-import org.ss.simpleflow.core.validate.SfLineConfigCustomValidator;
+import org.ss.simpleflow.core.validate.SfEdgeConfigCustomValidator;
 import org.ss.simpleflow.core.validate.SfNodeConfigCustomValidator;
 import org.ss.simpleflow.core.validate.SfProcessConfigCustomValidate;
 
@@ -24,21 +24,21 @@ public class SfDefaultBasicValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
         PROCESS_EXECUTION_ID> {
 
     private final SfDefaultNodeConfigValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> nodeConfigValidator;
-    private final SfDefaultEdgeConfigValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> lineConfigValidator;
+    private final SfDefaultEdgeConfigValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> edgeConfigValidator;
     private final SfDefaultProcessConfigValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processConfigValidator;
     private final SfNodeConfigCustomValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> nodeConfigCustomValidator;
-    private final SfLineConfigCustomValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> lineConfigCustomValidator;
+    private final SfEdgeConfigCustomValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> edgeConfigCustomValidator;
     private final SfProcessConfigCustomValidate<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processConfigCustomValidate;
 
     public SfDefaultBasicValidator(SfNodeConfigCustomValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> nodeConfigCustomValidator,
-                                   SfLineConfigCustomValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> lineConfigCustomValidator,
+                                   SfEdgeConfigCustomValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> edgeConfigCustomValidator,
                                    SfProcessConfigCustomValidate<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processConfigCustomValidate) {
         this.nodeConfigCustomValidator = nodeConfigCustomValidator;
-        this.lineConfigCustomValidator = lineConfigCustomValidator;
+        this.edgeConfigCustomValidator = edgeConfigCustomValidator;
         this.processConfigCustomValidate = processConfigCustomValidate;
 
         nodeConfigValidator = new SfDefaultNodeConfigValidator<>();
-        lineConfigValidator = new SfDefaultEdgeConfigValidator<>();
+        edgeConfigValidator = new SfDefaultEdgeConfigValidator<>();
         processConfigValidator = new SfDefaultProcessConfigValidator<>();
     }
 
@@ -48,9 +48,9 @@ public class SfDefaultBasicValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
         processConfigValidator.preValidate(processConfig, processContext, processEngineConfig);
 
         List<NODE_CONFIG> nodeConfigList = processConfig.getNodeConfigList();
-        List<EDGE_CONFIG> lineConfigList = processConfig.getLineConfigList();
-        preValidateNodeAndLine(nodeConfigList,
-                               lineConfigList,
+        List<EDGE_CONFIG> edgeConfigList = processConfig.getEdgeConfigList();
+        preValidateNodeAndEdge(nodeConfigList,
+                               edgeConfigList,
                                processConfig,
                                null,
                                processContext,
@@ -59,14 +59,15 @@ public class SfDefaultBasicValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
         List<PROCESS_CONFIG_GRAPH> subProcessConfigList = processConfig.getSubProcessConfigList();
         if (CollectionUtils.isNotEmpty(subProcessConfigList)) {
             for (PROCESS_CONFIG_GRAPH processConfigGraph : subProcessConfigList) {
-                preValidateNodeAndLine(processConfigGraph.getNodeConfigList(), processConfigGraph.getLineConfigList(),
+                preValidateNodeAndEdge(processConfigGraph.getNodeConfigList(), processConfigGraph.getEdgeConfigList(),
                                        processConfig, processConfigGraph,
                                        processContext, processEngineConfig);
             }
         }
     }
 
-    private void preValidateNodeAndLine(List<NODE_CONFIG> nodeConfigList, List<EDGE_CONFIG> lineConfigList,
+    private void preValidateNodeAndEdge(List<NODE_CONFIG> nodeConfigList,
+                                        List<EDGE_CONFIG> edgeConfigList,
                                         PROCESS_CONFIG processConfig, PROCESS_CONFIG_GRAPH processConfigGraph,
                                         SfProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext,
                                         SfProcessEngineConfig processEngineConfig) {
@@ -120,11 +121,11 @@ public class SfDefaultBasicValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
                                                processEngineConfig);
         }
 
-        if (CollectionUtils.isNotEmpty(lineConfigList)) {
-            Set<EDGE_ID> lineIdSet = new HashSet<>(lineConfigList.size());
-            for (EDGE_CONFIG edgeConfig : lineConfigList) {
-                EDGE_ID lineId = edgeConfig.getId();
-                if (lineIdSet.contains(lineId)) {
+        if (CollectionUtils.isNotEmpty(edgeConfigList)) {
+            Set<EDGE_ID> edgeIdSet = new HashSet<>(edgeConfigList.size());
+            for (EDGE_CONFIG edgeConfig : edgeConfigList) {
+                EDGE_ID edgeId = edgeConfig.getId();
+                if (edgeIdSet.contains(edgeId)) {
                     throw new SfEdgeConfigException(SfEdgeConfigExceptionCode.ID_REPEAT,
                                                     edgeConfig,
                                                     processConfig,
@@ -132,9 +133,9 @@ public class SfDefaultBasicValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
                                                     processContext,
                                                     processEngineConfig);
                 }
-                lineIdSet.add(lineId);
+                edgeIdSet.add(edgeId);
 
-                lineConfigValidator.preValidate(edgeConfig, processConfig, processContext, processEngineConfig);
+                edgeConfigValidator.preValidate(edgeConfig, processConfig, processContext, processEngineConfig);
             }
         }
     }
@@ -153,11 +154,11 @@ public class SfDefaultBasicValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
             }
         }
 
-        List<EDGE_CONFIG> lineConfigList = processConfig.getLineConfigList();
-        for (EDGE_CONFIG edgeConfig : lineConfigList) {
-            lineConfigValidator.validate(edgeConfig, processConfig, processContext, processEngineConfig);
-            if (lineConfigCustomValidator != null) {
-                lineConfigCustomValidator.customValidate(edgeConfig,
+        List<EDGE_CONFIG> edgeConfigList = processConfig.getEdgeConfigList();
+        for (EDGE_CONFIG edgeConfig : edgeConfigList) {
+            edgeConfigValidator.validate(edgeConfig, processConfig, processContext, processEngineConfig);
+            if (edgeConfigCustomValidator != null) {
+                edgeConfigCustomValidator.customValidate(edgeConfig,
                                                          processConfig,
                                                          processContext,
                                                          processEngineConfig);

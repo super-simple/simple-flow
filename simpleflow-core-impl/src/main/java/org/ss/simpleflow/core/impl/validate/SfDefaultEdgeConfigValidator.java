@@ -32,8 +32,8 @@ public class SfDefaultEdgeConfigValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, N
                          PROCESS_CONFIG processConfig,
                          SfProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext,
                          SfProcessEngineConfig processEngineConfig) {
-        String lineType = edgeConfig.getEdgeType();
-        if (StringUtils.isNullOrEmpty(lineType)) {
+        String edgeType = edgeConfig.getEdgeType();
+        if (StringUtils.isNullOrEmpty(edgeType)) {
             throw new SfEdgeConfigException(SfEdgeConfigExceptionCode.NO_EDGE_TYPE,
                                             edgeConfig,
                                             processConfig,
@@ -61,8 +61,8 @@ public class SfDefaultEdgeConfigValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, N
                                             processEngineConfig);
         }
 
-        String lineTypeUpperCase = lineType.toUpperCase();
-        switch (lineTypeUpperCase) {
+        String edgeTypeUpperCase = edgeType.toUpperCase();
+        switch (edgeTypeUpperCase) {
             case (SfEdgeTypeConstant.CONTROL): {
                 break;
             }
@@ -88,7 +88,7 @@ public class SfDefaultEdgeConfigValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, N
                 break;
             }
             default: {
-                throw new SfEdgeConfigException("unknown edge type [" + lineType + ']',
+                throw new SfEdgeConfigException("unknown edge type [" + edgeType + ']',
                                                 SfEdgeConfigExceptionCode.WRONG_EDGE_TYPE,
                                                 edgeConfig,
                                                 processConfig,

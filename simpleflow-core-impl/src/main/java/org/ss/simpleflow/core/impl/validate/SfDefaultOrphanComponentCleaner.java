@@ -29,18 +29,17 @@ public class SfDefaultOrphanComponentCleaner<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID
     }
 
 
-    private void cleanOrphanNodeAndLine(List<NODE_CONFIG> nodeConfigList, List<EDGE_CONFIG> lineConfigList,
+    private void cleanOrphanNodeAndEdge(List<NODE_CONFIG> nodeConfigList,
+                                        List<EDGE_CONFIG> edgeConfigList,
                                         PROCESS_CONFIG processConfig, PROCESS_CONFIG_GRAPH processConfigGraph,
                                         SfProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext,
                                         SfProcessEngineConfig processEngineConfig) {
         Map<NODE_ID, NODE_CONFIG> nodeConfigMap = MapUtils.uniqueIndex(nodeConfigList,
                                                                        SfAbstractNodeConfig::getId);
-        Map<EDGE_ID, EDGE_CONFIG> lineConfigMap = MapUtils.uniqueIndex(lineConfigList,
-                                                                       SfAbstractEdgeConfig::getId);
 
-        List<EDGE_CONFIG> controlLineList = CollectionUtils.collect(lineConfigList,
-                                                                    SfAbstractEdgeConfig::isControlLine);
-        Map<NODE_ID, List<EDGE_CONFIG>> outgoingControlLineMap = MultiMapUtils.index(controlLineList,
+        List<EDGE_CONFIG> controlEdgeList = CollectionUtils.collect(edgeConfigList,
+                                                                    SfAbstractEdgeConfig::isControlEdge);
+        Map<NODE_ID, List<EDGE_CONFIG>> outgoingControlEdgeMap = MultiMapUtils.index(controlEdgeList,
                                                                                      SfAbstractEdgeConfig::getFromNodeId);
 
         Set<NODE_CONFIG> visitedNodeSet = new HashSet<>();
@@ -56,9 +55,9 @@ public class SfDefaultOrphanComponentCleaner<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID
                     visitedNodeSet.add(nodeConfig);
 
                     NODE_ID nodeId = nodeConfig.getId();
-                    List<EDGE_CONFIG> controlLineFromList = outgoingControlLineMap.get(nodeId);
-                    if (CollectionUtils.isNotEmpty(controlLineFromList)) {
-                        for (EDGE_CONFIG edgeConfig : controlLineFromList) {
+                    List<EDGE_CONFIG> outgoingControlEdgeList = outgoingControlEdgeMap.get(nodeId);
+                    if (CollectionUtils.isNotEmpty(outgoingControlEdgeList)) {
+                        for (EDGE_CONFIG edgeConfig : outgoingControlEdgeList) {
                             stack.push(edgeConfig);
                         }
                     }

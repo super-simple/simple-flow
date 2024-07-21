@@ -1,6 +1,6 @@
 package org.ss.simpleflow.core.processengine;
 
-import org.ss.simpleflow.core.context.SfLineContext;
+import org.ss.simpleflow.core.context.SfEdgeContext;
 import org.ss.simpleflow.core.context.SfNodeContext;
 import org.ss.simpleflow.core.context.SfProcessContext;
 import org.ss.simpleflow.core.edge.SfAbstractEdgeConfig;
@@ -20,8 +20,8 @@ public interface SfComponentExecutionIdGenerator<NODE_ID, EDGE_ID, PROCESS_CONFI
             SfProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG,
                     EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext);
 
-    EDGE_EXECUTION_ID generateLineExecutionId(
-            SfLineContext<NODE_ID, EDGE_ID, EDGE_EXECUTION_ID, EDGE_CONFIG> lineContext,
+    EDGE_EXECUTION_ID generateEdgeExecutionId(
+            SfEdgeContext<NODE_ID, EDGE_ID, EDGE_EXECUTION_ID, EDGE_CONFIG> edgeContext,
             SfProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG,
                     EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext);
 }

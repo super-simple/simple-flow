@@ -2,5 +2,5 @@ package org.ss.simpleflow.core.edge;
 
 public class SfEdgeIndexEntry {
 
-    private int lineIndex;
+    private int edgeIndex;
 }

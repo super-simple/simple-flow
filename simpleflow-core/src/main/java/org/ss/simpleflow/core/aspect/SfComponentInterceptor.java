@@ -1,6 +1,6 @@
 package org.ss.simpleflow.core.aspect;
 
-import org.ss.simpleflow.core.context.SfLineContext;
+import org.ss.simpleflow.core.context.SfEdgeContext;
 import org.ss.simpleflow.core.context.SfNodeContext;
 import org.ss.simpleflow.core.context.SfProcessContext;
 import org.ss.simpleflow.core.edge.SfAbstractEdgeConfig;
@@ -23,7 +23,7 @@ public interface SfComponentInterceptor<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
                            EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext);
 
     boolean cancel(Map<String, Object> params,
-                   SfLineContext<NODE_ID, EDGE_ID, EDGE_EXECUTION_ID, EDGE_CONFIG> lineContext,
+                   SfEdgeContext<NODE_ID, EDGE_ID, EDGE_EXECUTION_ID, EDGE_CONFIG> edgeContext,
                    SfProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
                            NODE_CONFIG, EDGE_CONFIG,
                            PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext);

@@ -5,12 +5,11 @@ public interface SfEdgeTypeConstant {
 
     String DATA = "DATA";
 
-
-    static boolean isControlLine(String lineType) {
-        return CONTROL.equalsIgnoreCase(lineType);
+    static boolean isControlEdge(String edgeType) {
+        return CONTROL.equalsIgnoreCase(edgeType);
     }
 
-    static boolean isDataLine(String lineType) {
-        return DATA.equalsIgnoreCase(lineType);
+    static boolean isDataEdge(String edgeType) {
+        return DATA.equalsIgnoreCase(edgeType);
     }
 }
