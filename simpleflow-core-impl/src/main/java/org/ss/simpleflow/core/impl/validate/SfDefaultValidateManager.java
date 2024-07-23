@@ -46,8 +46,6 @@ public class SfDefaultValidateManager<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
                                  PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext,
                          SfProcessEngineConfig processEngineConfig) {
 
-        basicValidator.basicValidate(processConfig, processContext, processEngineConfig);
-
         List<NODE_CONFIG> nodeConfigList = processConfig.getNodeConfigList();
         List<EDGE_CONFIG> edgeConfigList = processConfig.getEdgeConfigList();
 

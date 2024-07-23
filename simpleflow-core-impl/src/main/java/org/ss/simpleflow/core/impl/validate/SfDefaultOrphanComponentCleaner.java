@@ -6,7 +6,9 @@ import org.ss.simpleflow.common.MultiMapUtils;
 import org.ss.simpleflow.core.component.SfComponentConfig;
 import org.ss.simpleflow.core.context.SfProcessContext;
 import org.ss.simpleflow.core.edge.SfAbstractEdgeConfig;
+import org.ss.simpleflow.core.impl.util.StackUtils;
 import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
+import org.ss.simpleflow.core.node.SfNodeParameter;
 import org.ss.simpleflow.core.processconfig.SfProcessConfig;
 import org.ss.simpleflow.core.processconfig.SfProcessConfigGraph;
 import org.ss.simpleflow.core.processengine.SfProcessEngineConfig;
@@ -42,7 +44,7 @@ public class SfDefaultOrphanComponentCleaner<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID
         Map<NODE_ID, List<EDGE_CONFIG>> outgoingControlEdgeMap = MultiMapUtils.index(controlEdgeList,
                                                                                      SfAbstractEdgeConfig::getFromNodeId);
 
-        Set<NODE_CONFIG> visitedNodeSet = new HashSet<>();
+        Set<NODE_ID> visitedNodeSet = new HashSet<>();
         Deque<SfComponentConfig> stack = new ArrayDeque<>();
 
         NODE_CONFIG startNodeConfig = CollectionUtils.find(nodeConfigList, SfAbstractNodeConfig::isStartNode);
@@ -51,20 +53,38 @@ public class SfDefaultOrphanComponentCleaner<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID
             SfComponentConfig current = stack.pop();
             if (current instanceof SfAbstractNodeConfig) {
                 @SuppressWarnings("unchecked") NODE_CONFIG nodeConfig = (NODE_CONFIG) current;
-                if (!visitedNodeSet.contains(nodeConfig)) {
-                    visitedNodeSet.add(nodeConfig);
+                NODE_ID nodeId = nodeConfig.getId();
+                if (!visitedNodeSet.contains(nodeId)) {
+                    visitedNodeSet.add(nodeId);
 
-                    NODE_ID nodeId = nodeConfig.getId();
-                    List<EDGE_CONFIG> outgoingControlEdgeList = outgoingControlEdgeMap.get(nodeId);
-                    if (CollectionUtils.isNotEmpty(outgoingControlEdgeList)) {
-                        for (EDGE_CONFIG edgeConfig : outgoingControlEdgeList) {
-                            stack.push(edgeConfig);
-                        }
-                    }
+                    StackUtils.pushToStack(stack, outgoingControlEdgeMap.get(nodeId));
                 }
             } else {
                 @SuppressWarnings("unchecked") EDGE_CONFIG edgeConfig = (EDGE_CONFIG) current;
                 stack.push(nodeConfigMap.get(edgeConfig.getToNodeId()));
+            }
+        }
+
+        nodeConfigList.removeIf(nodeConfig -> !visitedNodeSet.contains(nodeConfig.getId()));
+        if (CollectionUtils.isNotEmpty(edgeConfigList)) {
+
+            Set<String> parameterUniqueKeySet = new HashSet<>();
+            Iterator<EDGE_CONFIG> iterator = edgeConfigList.iterator();
+            while (iterator.hasNext()) {
+                EDGE_CONFIG next = iterator.next();
+                if (!visitedNodeSet.contains(next.getFromNodeId()) || !visitedNodeSet.contains(next.getToNodeId())) {
+                    iterator.remove();
+                }
+                if (next.isDataEdge()) {
+                    parameterUniqueKeySet.add(next.getFromNodeId() + next.getFromResultKey());
+                }
+            }
+
+            for (NODE_CONFIG nodeConfig : nodeConfigList) {
+                Map<String, SfNodeParameter> parameterMap = nodeConfig.getParameterMap();
+                if (MapUtils.isNotEmpty(parameterMap)) {
+
+                }
             }
         }
     }

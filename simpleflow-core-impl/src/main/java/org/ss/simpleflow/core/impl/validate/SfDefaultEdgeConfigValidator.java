@@ -13,12 +13,12 @@ import org.ss.simpleflow.core.processengine.SfProcessEngineConfig;
 
 public class SfDefaultEdgeConfigValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG extends SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID>, EDGE_CONFIG extends SfAbstractEdgeConfig<EDGE_ID, NODE_ID>, PROCESS_CONFIG_GRAPH extends SfProcessConfigGraph<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG>, PROCESS_CONFIG extends SfProcessConfig<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH>, PROCESS_EXECUTION_ID> {
 
-    public void preValidate(EDGE_CONFIG edgeConfig,
-                            PROCESS_CONFIG processConfig,
-                            SfProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext,
-                            SfProcessEngineConfig processEngineConfig) {
-        EDGE_ID id = edgeConfig.getId();
-        if (id != null) {
+    public void validate(EDGE_CONFIG edgeConfig,
+                         PROCESS_CONFIG processConfig,
+                         SfProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext,
+                         SfProcessEngineConfig processEngineConfig) {
+        EDGE_ID edgeId = edgeConfig.getId();
+        if (edgeId != null) {
             throw new SfEdgeConfigException(SfEdgeConfigExceptionCode.NO_EDGE_ID,
                                             edgeConfig,
                                             processConfig,
@@ -26,12 +26,7 @@ public class SfDefaultEdgeConfigValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, N
                                             processContext,
                                             processEngineConfig);
         }
-    }
 
-    public void validate(EDGE_CONFIG edgeConfig,
-                         PROCESS_CONFIG processConfig,
-                         SfProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext,
-                         SfProcessEngineConfig processEngineConfig) {
         String edgeType = edgeConfig.getEdgeType();
         if (StringUtils.isNullOrEmpty(edgeType)) {
             throw new SfEdgeConfigException(SfEdgeConfigExceptionCode.NO_EDGE_TYPE,

@@ -1,10 +1,13 @@
 package org.ss.simpleflow.core.impl.validate;
 
 import org.ss.simpleflow.common.CollectionUtils;
+import org.ss.simpleflow.common.MapUtils;
 import org.ss.simpleflow.core.context.SfProcessContext;
 import org.ss.simpleflow.core.edge.SfAbstractEdgeConfig;
 import org.ss.simpleflow.core.impl.exceptional.*;
 import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
+import org.ss.simpleflow.core.node.SfNodeParameter;
+import org.ss.simpleflow.core.node.SfNodeResult;
 import org.ss.simpleflow.core.processconfig.SfProcessConfig;
 import org.ss.simpleflow.core.processconfig.SfProcessConfigGraph;
 import org.ss.simpleflow.core.processengine.SfProcessEngineConfig;
@@ -14,6 +17,7 @@ import org.ss.simpleflow.core.validate.SfProcessConfigCustomValidate;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class SfDefaultBasicValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
@@ -84,6 +88,14 @@ public class SfDefaultBasicValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
         NODE_CONFIG startNodeConfig = null;
 
         for (NODE_CONFIG nodeConfig : nodeConfigList) {
+            nodeConfigValidator.validate(nodeConfig, processConfig, processContext, processEngineConfig);
+            if (nodeConfigCustomValidator != null) {
+                nodeConfigCustomValidator.customValidate(nodeConfig,
+                                                         processConfig,
+                                                         processContext,
+                                                         processEngineConfig);
+            }
+
             NODE_ID nodeId = nodeConfig.getId();
             if (nodeIdSet.contains(nodeId)) {
                 throw new SfNodeConfigException(SfNodeConfigExceptionCode.ID_REPEAT,
@@ -108,9 +120,6 @@ public class SfDefaultBasicValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
                                                     processEngineConfig);
                 }
             }
-
-            nodeConfigValidator.preValidate(nodeConfig, processConfig, processContext, processEngineConfig);
-
         }
 
         if (startNodeConfig == null) {
@@ -121,9 +130,22 @@ public class SfDefaultBasicValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
                                                processEngineConfig);
         }
 
+        Map<NODE_ID, NODE_CONFIG> nodeConfigMap = MapUtils.uniqueIndex(nodeConfigList,
+                                                                       SfAbstractNodeConfig::getId);
+
         if (CollectionUtils.isNotEmpty(edgeConfigList)) {
             Set<EDGE_ID> edgeIdSet = new HashSet<>(edgeConfigList.size());
+            Set<String> controlEdgeDistinctIdSet = new HashSet<>();
+            Set<String> dataEdgeDistinctIdSet = new HashSet<>();
             for (EDGE_CONFIG edgeConfig : edgeConfigList) {
+                edgeConfigValidator.validate(edgeConfig, processConfig, processContext, processEngineConfig);
+                if (edgeConfigCustomValidator != null) {
+                    edgeConfigCustomValidator.customValidate(edgeConfig,
+                                                             processConfig,
+                                                             processContext,
+                                                             processEngineConfig);
+                }
+
                 EDGE_ID edgeId = edgeConfig.getId();
                 if (edgeIdSet.contains(edgeId)) {
                     throw new SfEdgeConfigException(SfEdgeConfigExceptionCode.ID_REPEAT,
@@ -135,33 +157,90 @@ public class SfDefaultBasicValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
                 }
                 edgeIdSet.add(edgeId);
 
-                edgeConfigValidator.preValidate(edgeConfig, processConfig, processContext, processEngineConfig);
-            }
-        }
-    }
+                NODE_ID fromNodeId = edgeConfig.getFromNodeId();
+                if (!nodeIdSet.contains(fromNodeId)) {
+                    throw new SfEdgeConfigException(SfEdgeConfigExceptionCode.WRONG_FROM_NODE_ID,
+                                                    edgeConfig,
+                                                    processConfig,
+                                                    processConfigGraph,
+                                                    processContext,
+                                                    processEngineConfig);
+                }
+                NODE_ID toNodeId = edgeConfig.getToNodeId();
+                if (!nodeIdSet.contains(toNodeId)) {
+                    throw new SfEdgeConfigException(SfEdgeConfigExceptionCode.WRONG_TO_NODE_ID,
+                                                    edgeConfig,
+                                                    processConfig,
+                                                    processConfigGraph,
+                                                    processContext,
+                                                    processEngineConfig);
+                }
+                if (edgeConfig.isControlEdge()) {
+                    String uniqueKey = fromNodeId.toString() + toNodeId.toString();
+                    if (controlEdgeDistinctIdSet.contains(uniqueKey)) {
+                        throw new SfEdgeConfigException(SfEdgeConfigExceptionCode.CONTROL_EDGE_REPEAT,
+                                                        edgeConfig,
+                                                        processConfig,
+                                                        processConfigGraph,
+                                                        processContext,
+                                                        processEngineConfig);
+                    } else {
+                        controlEdgeDistinctIdSet.add(uniqueKey);
+                    }
+                } else {
+                    String fromResultKey = edgeConfig.getFromResultKey();
+                    NODE_CONFIG fromNodeConfig = nodeConfigMap.get(fromNodeId);
+                    Map<String, SfNodeResult> resultMap = fromNodeConfig.getResultMap();
+                    boolean wrongFromResultKey = false;
+                    if (MapUtils.isNullOrEmpty(resultMap)) {
+                        wrongFromResultKey = true;
+                    } else {
+                        if (!resultMap.containsKey(fromResultKey)) {
+                            wrongFromResultKey = true;
+                        }
+                    }
+                    if (wrongFromResultKey) {
+                        throw new SfEdgeConfigException(SfEdgeConfigExceptionCode.WRONG_FROM_RESULT_KEY,
+                                                        edgeConfig,
+                                                        processConfig,
+                                                        processConfigGraph,
+                                                        processContext,
+                                                        processEngineConfig);
+                    }
 
-    public void basicValidate(PROCESS_CONFIG processConfig,
-                              SfProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext,
-                              SfProcessEngineConfig processEngineConfig) {
-        List<NODE_CONFIG> nodeConfigList = processConfig.getNodeConfigList();
-        for (NODE_CONFIG nodeConfig : nodeConfigList) {
-            nodeConfigValidator.validate(nodeConfig, processConfig, processContext, processEngineConfig);
-            if (nodeConfigCustomValidator != null) {
-                nodeConfigCustomValidator.customValidate(nodeConfig,
-                                                         processConfig,
-                                                         processContext,
-                                                         processEngineConfig);
-            }
-        }
+                    String toParameterKey = edgeConfig.getToParameterKey();
+                    NODE_CONFIG toNodeConfig = nodeConfigMap.get(toNodeId);
+                    Map<String, SfNodeParameter> parameterMap = toNodeConfig.getParameterMap();
+                    boolean wrongToParameterKey = false;
+                    if (MapUtils.isNullOrEmpty(parameterMap)) {
+                        wrongToParameterKey = true;
+                    } else {
+                        if (!parameterMap.containsKey(toParameterKey)) {
+                            wrongToParameterKey = true;
+                        }
+                    }
+                    if (wrongToParameterKey) {
+                        throw new SfEdgeConfigException(SfEdgeConfigExceptionCode.WRONG_TO_PARAMETER_KEY,
+                                                        edgeConfig,
+                                                        processConfig,
+                                                        processConfigGraph,
+                                                        processContext,
+                                                        processEngineConfig);
+                    }
 
-        List<EDGE_CONFIG> edgeConfigList = processConfig.getEdgeConfigList();
-        for (EDGE_CONFIG edgeConfig : edgeConfigList) {
-            edgeConfigValidator.validate(edgeConfig, processConfig, processContext, processEngineConfig);
-            if (edgeConfigCustomValidator != null) {
-                edgeConfigCustomValidator.customValidate(edgeConfig,
-                                                         processConfig,
-                                                         processContext,
-                                                         processEngineConfig);
+                    String uniqueKey = fromNodeId.toString() + fromResultKey +
+                            toNodeId.toString() + toParameterKey;
+                    if (dataEdgeDistinctIdSet.contains(uniqueKey)) {
+                        throw new SfEdgeConfigException(SfEdgeConfigExceptionCode.DATA_EDGE_REPEAT,
+                                                        edgeConfig,
+                                                        processConfig,
+                                                        processConfigGraph,
+                                                        processContext,
+                                                        processEngineConfig);
+                    } else {
+                        dataEdgeDistinctIdSet.add(uniqueKey);
+                    }
+                }
             }
         }
     }

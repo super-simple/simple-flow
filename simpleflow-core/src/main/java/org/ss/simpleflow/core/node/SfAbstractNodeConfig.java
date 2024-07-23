@@ -121,4 +121,9 @@ public class SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID> implements SfNodeC
     public boolean isStartNode() {
         return SfBuiltInEventCodeConstant.isStart(eventCode) && SfEventTypeConstant.isCatch(eventType);
     }
+
+    public boolean isLegalEventType() {
+        return SfEventTypeConstant.isLegal(eventType);
+    }
+
 }
