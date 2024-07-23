@@ -16,16 +16,7 @@ import org.ss.simpleflow.core.validate.SfOrphanComponentCleaner;
 
 import java.util.*;
 
-public class SfDefaultOrphanComponentCleaner<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
-        NODE_CONFIG extends SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID>,
-        EDGE_CONFIG extends SfAbstractEdgeConfig<EDGE_ID, NODE_ID>,
-        PROCESS_CONFIG_GRAPH extends SfProcessConfigGraph<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG>,
-        PROCESS_CONFIG extends SfProcessConfig<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH>,
-        PROCESS_EXECUTION_ID>
-        implements SfOrphanComponentCleaner<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
-        NODE_CONFIG, EDGE_CONFIG,
-        PROCESS_CONFIG_GRAPH, PROCESS_CONFIG
-        , PROCESS_EXECUTION_ID> {
+public class SfDefaultOrphanComponentCleaner<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG extends SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID>, EDGE_CONFIG extends SfAbstractEdgeConfig<EDGE_ID, NODE_ID>, PROCESS_CONFIG_GRAPH extends SfProcessConfigGraph<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG>, PROCESS_CONFIG extends SfProcessConfig<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH>, PROCESS_EXECUTION_ID> implements SfOrphanComponentCleaner<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> {
     @Override
     public void cleanOrphanComponent(PROCESS_CONFIG origin) {
     }
@@ -33,11 +24,11 @@ public class SfDefaultOrphanComponentCleaner<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID
 
     private void cleanOrphanNodeAndEdge(List<NODE_CONFIG> nodeConfigList,
                                         List<EDGE_CONFIG> edgeConfigList,
-                                        PROCESS_CONFIG processConfig, PROCESS_CONFIG_GRAPH processConfigGraph,
+                                        PROCESS_CONFIG processConfig,
+                                        PROCESS_CONFIG_GRAPH processConfigGraph,
                                         SfProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext,
                                         SfProcessEngineConfig processEngineConfig) {
-        Map<NODE_ID, NODE_CONFIG> nodeConfigMap = MapUtils.uniqueIndex(nodeConfigList,
-                                                                       SfAbstractNodeConfig::getId);
+        Map<NODE_ID, NODE_CONFIG> nodeConfigMap = MapUtils.uniqueIndex(nodeConfigList, SfAbstractNodeConfig::getId);
 
         List<EDGE_CONFIG> controlEdgeList = CollectionUtils.collect(edgeConfigList,
                                                                     SfAbstractEdgeConfig::isControlEdge);
@@ -68,22 +59,30 @@ public class SfDefaultOrphanComponentCleaner<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID
         nodeConfigList.removeIf(nodeConfig -> !visitedNodeSet.contains(nodeConfig.getId()));
         if (CollectionUtils.isNotEmpty(edgeConfigList)) {
 
-            Set<String> parameterUniqueKeySet = new HashSet<>();
-            Iterator<EDGE_CONFIG> iterator = edgeConfigList.iterator();
-            while (iterator.hasNext()) {
-                EDGE_CONFIG next = iterator.next();
+            Map<NODE_ID, Set<String>> parameterKeySetMap = new HashMap<>();
+            Iterator<EDGE_CONFIG> edgeConfigListIterator = edgeConfigList.iterator();
+            while (edgeConfigListIterator.hasNext()) {
+                EDGE_CONFIG next = edgeConfigListIterator.next();
                 if (!visitedNodeSet.contains(next.getFromNodeId()) || !visitedNodeSet.contains(next.getToNodeId())) {
-                    iterator.remove();
+                    edgeConfigListIterator.remove();
                 }
                 if (next.isDataEdge()) {
-                    parameterUniqueKeySet.add(next.getFromNodeId() + next.getFromResultKey());
+                    NODE_ID fromNodeId = next.getFromNodeId();
+                    Set<String> parameterKeySet = parameterKeySetMap.computeIfAbsent(fromNodeId,
+                                                                                     k -> new HashSet<>());
+                    parameterKeySet.add(next.getFromResultKey());
                 }
             }
 
             for (NODE_CONFIG nodeConfig : nodeConfigList) {
                 Map<String, SfNodeParameter> parameterMap = nodeConfig.getParameterMap();
                 if (MapUtils.isNotEmpty(parameterMap)) {
-
+                    Set<String> parameterKeySet = parameterKeySetMap.get(nodeConfig.getId());
+                    if (CollectionUtils.isNullOrEmpty(parameterKeySet)) {
+                        nodeConfig.setParameterMap(null);
+                    } else {
+                        parameterMap.keySet().removeIf(parameterKey -> !parameterKeySet.contains(parameterKey));
+                    }
                 }
             }
         }
