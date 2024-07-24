@@ -2,6 +2,7 @@ package org.ss.simpleflow.core.impl.validate;
 
 import org.ss.simpleflow.common.CollectionUtils;
 import org.ss.simpleflow.common.MapUtils;
+import org.ss.simpleflow.core.context.SfExecutionGlobalContext;
 import org.ss.simpleflow.core.context.SfProcessContext;
 import org.ss.simpleflow.core.edge.SfAbstractEdgeConfig;
 import org.ss.simpleflow.core.impl.exceptional.*;
@@ -25,7 +26,7 @@ public class SfDefaultBasicValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
         EDGE_CONFIG extends SfAbstractEdgeConfig<EDGE_ID, NODE_ID>,
         PROCESS_CONFIG_GRAPH extends SfProcessConfigGraph<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG>,
         PROCESS_CONFIG extends SfAbstractProcessConfig<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH>,
-        PROCESS_EXECUTION_ID> {
+        NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> {
 
     private final SfDefaultNodeConfigValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> nodeConfigValidator;
     private final SfDefaultEdgeConfigValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> edgeConfigValidator;
@@ -48,6 +49,7 @@ public class SfDefaultBasicValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
 
     public void preValidate(PROCESS_CONFIG processConfig,
                             SfProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext,
+                            SfExecutionGlobalContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> executionGlobalContext,
                             SfProcessEngineConfig processEngineConfig) {
         processConfigValidator.preValidate(processConfig, processContext, processEngineConfig);
 
@@ -58,6 +60,7 @@ public class SfDefaultBasicValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
                                processConfig,
                                null,
                                processContext,
+                               executionGlobalContext,
                                processEngineConfig);
 
         List<PROCESS_CONFIG_GRAPH> subProcessConfigList = processConfig.getSubProcessConfigList();
@@ -65,7 +68,7 @@ public class SfDefaultBasicValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
             for (PROCESS_CONFIG_GRAPH processConfigGraph : subProcessConfigList) {
                 preValidateNodeAndEdge(processConfigGraph.getNodeConfigList(), processConfigGraph.getEdgeConfigList(),
                                        processConfig, processConfigGraph,
-                                       processContext, processEngineConfig);
+                                       processContext, executionGlobalContext, processEngineConfig);
             }
         }
     }
@@ -74,6 +77,7 @@ public class SfDefaultBasicValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
                                         List<EDGE_CONFIG> edgeConfigList,
                                         PROCESS_CONFIG processConfig, PROCESS_CONFIG_GRAPH processConfigGraph,
                                         SfProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext,
+                                        SfExecutionGlobalContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> executionGlobalContext,
                                         SfProcessEngineConfig processEngineConfig) {
         if (CollectionUtils.isNullOrEmpty(nodeConfigList)) {
             throw new SfProcessConfigException(SfProcessConfigExceptionCode.NO_NODE,

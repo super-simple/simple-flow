@@ -13,25 +13,29 @@ public interface SfContextFactory<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
         PROCESS_CONFIG extends SfAbstractProcessConfig<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH>,
         NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> {
 
-    SfEdgeContext<NODE_ID, EDGE_ID, EDGE_EXECUTION_ID, EDGE_CONFIG> createedgeContext();
+    EDGE_CONFIG createEdgeContext();
 
-    SfNodeContext<NODE_ID, PROCESS_CONFIG_ID, NODE_EXECUTION_ID, NODE_CONFIG> createNodeContext();
+    NODE_CONFIG createNodeContext();
 
     SfProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG,
             PROCESS_CONFIG_GRAPH, PROCESS_CONFIG,
             PROCESS_EXECUTION_ID> createProcessContext();
 
+    SfExecutionGlobalContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG,
+            PROCESS_CONFIG_GRAPH, PROCESS_CONFIG,
+            NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> createExecutionGlobalContext();
+
     SfExecutionProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG,
             PROCESS_CONFIG_GRAPH, PROCESS_CONFIG,
-            NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> createExecutionContext();
+            NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> createExecutionProcessContext();
 
     SfExecutionProcessExternalContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG,
             PROCESS_CONFIG_GRAPH, PROCESS_CONFIG,
-            NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> createExecutionExternalContext();
+            NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> createExecutionProcessExternalContext();
 
     SfExecutionProcessInternalContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG,
             PROCESS_CONFIG_GRAPH, PROCESS_CONFIG,
-            NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> createExecutionInternalContext();
+            NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> createExecutionProcessInternalContext();
 
     SfProcessReturn<PROCESS_EXECUTION_ID> createProcessReturn();
 }
