@@ -25,7 +25,5 @@ public interface SfNodeConfig<NODE_ID, PROCESS_CONFIG_ID> extends SfComponentCon
 
     Set<String> getEnumGatewayEnumSet();
 
-    SfNodeIndexEntry getNodeIndexEntry();
-
     PROCESS_CONFIG_ID getProcessId();
 }

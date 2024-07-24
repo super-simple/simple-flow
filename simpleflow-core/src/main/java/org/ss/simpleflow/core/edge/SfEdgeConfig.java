@@ -16,5 +16,4 @@ public interface SfEdgeConfig<EDGE_ID, NODE_ID> extends SfComponentConfig {
 
     String getToParameterKey();
 
-    SfEdgeIndexEntry getEdgeIndexEntry();
 }

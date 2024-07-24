@@ -16,8 +16,8 @@ public class SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID> implements SfNodeC
     protected Map<String, SfNodeParameter> parameterMap;
     protected Map<String, SfNodeResult> resultMap;
     protected Set<String> enumGatewayEnumSet;
-    protected SfNodeIndexEntry nodeIndexEntry;
     protected PROCESS_CONFIG_ID processId;
+    private SfNodeIndexEntry nodeIndexEntry;
 
     @Override
     public NODE_ID getId() {
@@ -65,11 +65,6 @@ public class SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID> implements SfNodeC
     }
 
     @Override
-    public SfNodeIndexEntry getNodeIndexEntry() {
-        return nodeIndexEntry;
-    }
-
-    @Override
     public PROCESS_CONFIG_ID getProcessId() {
         return processId;
     }
@@ -112,6 +107,10 @@ public class SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID> implements SfNodeC
 
     public void setNodeIndexEntry(SfNodeIndexEntry nodeIndexEntry) {
         this.nodeIndexEntry = nodeIndexEntry;
+    }
+
+    public SfNodeIndexEntry getNodeIndexEntry() {
+        return nodeIndexEntry;
     }
 
     public void setProcessId(PROCESS_CONFIG_ID processId) {
