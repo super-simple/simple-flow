@@ -9,4 +9,9 @@ public interface SfNodeTypeConstant {
     String AROUND_ITERATOR = "AROUND_ITERATOR";
     String STREAM_ITERATOR = "STREAM_ITERATOR";
     String PROCESS = "PROCESS";
+
+    static boolean isProcess(String nodeType) {
+        return PROCESS.equalsIgnoreCase(nodeType);
+    }
+
 }

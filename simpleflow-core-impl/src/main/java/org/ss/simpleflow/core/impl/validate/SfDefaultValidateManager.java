@@ -8,10 +8,7 @@ import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
 import org.ss.simpleflow.core.processconfig.SfAbstractProcessConfig;
 import org.ss.simpleflow.core.processconfig.SfProcessConfigGraph;
 import org.ss.simpleflow.core.processengine.SfProcessEngineConfig;
-import org.ss.simpleflow.core.validate.SfEdgeConfigCustomValidator;
-import org.ss.simpleflow.core.validate.SfNodeConfigCustomValidator;
-import org.ss.simpleflow.core.validate.SfProcessConfigCustomValidate;
-import org.ss.simpleflow.core.validate.SfValidateManager;
+import org.ss.simpleflow.core.validate.*;
 
 import java.util.List;
 
@@ -23,22 +20,17 @@ public class SfDefaultValidateManager<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
         NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID>
         implements SfValidateManager<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> {
 
-    private final SfDefaultBasicValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> basicValidator;
+    private final SfDefaultPreValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> preValidator;
+
+    private final SfOrphanComponentCleaner<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> orphanComponentCleaner;
 
     SfDefaultValidateManager(SfNodeConfigCustomValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> nodeConfigCustomValidator,
                              SfEdgeConfigCustomValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> edgeConfigCustomValidator,
                              SfProcessConfigCustomValidate<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processConfigCustomValidate) {
-        basicValidator = new SfDefaultBasicValidator<>(nodeConfigCustomValidator,
-                                                       edgeConfigCustomValidator,
-                                                       processConfigCustomValidate);
-    }
-
-    @Override
-    public void preValidate(PROCESS_CONFIG processConfig,
-                            SfProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext,
-                            SfExecutionGlobalContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> executionGlobalContext,
-                            SfProcessEngineConfig processEngineConfig) {
-        basicValidator.preValidate(processConfig, processContext, executionGlobalContext, processEngineConfig);
+        preValidator = new SfDefaultPreValidator<>(nodeConfigCustomValidator,
+                                                   edgeConfigCustomValidator,
+                                                   processConfigCustomValidate);
+        orphanComponentCleaner = new SfDefaultOrphanComponentCleaner<>();
     }
 
     @Override
@@ -48,6 +40,12 @@ public class SfDefaultValidateManager<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
                                  PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext,
                          SfExecutionGlobalContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> executionGlobalContext,
                          SfProcessEngineConfig processEngineConfig) {
+
+        preValidator.preValidate(processConfig, processContext, executionGlobalContext, processEngineConfig);
+
+        if (processEngineConfig.isCleanOrphanNode()) {
+            orphanComponentCleaner.cleanOrphanComponent(processConfig, executionGlobalContext);
+        }
 
         List<NODE_CONFIG> nodeConfigList = processConfig.getNodeConfigList();
         List<EDGE_CONFIG> edgeConfigList = processConfig.getEdgeConfigList();

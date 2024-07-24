@@ -18,7 +18,7 @@ public class SfDefaultEdgeConfigValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, N
                          SfProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext,
                          SfProcessEngineConfig processEngineConfig) {
         EDGE_ID edgeId = edgeConfig.getId();
-        if (edgeId != null) {
+        if (edgeId == null) {
             throw new SfEdgeConfigException(SfEdgeConfigExceptionCode.NO_EDGE_ID,
                                             edgeConfig,
                                             processConfig,
@@ -38,7 +38,7 @@ public class SfDefaultEdgeConfigValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, N
         }
 
         NODE_ID fromNodeId = edgeConfig.getFromNodeId();
-        if (fromNodeId != null) {
+        if (fromNodeId == null) {
             throw new SfEdgeConfigException(SfEdgeConfigExceptionCode.NO_FROM_NODE_ID,
                                             edgeConfig,
                                             processConfig,
@@ -47,7 +47,7 @@ public class SfDefaultEdgeConfigValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, N
                                             processEngineConfig);
         }
         NODE_ID toNodeId = edgeConfig.getToNodeId();
-        if (toNodeId != null) {
+        if (toNodeId == null) {
             throw new SfEdgeConfigException(SfEdgeConfigExceptionCode.NO_TO_NODE_ID,
                                             edgeConfig,
                                             processConfig,

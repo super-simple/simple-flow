@@ -21,7 +21,7 @@ public class SfDefaultNodeConfigValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, N
                          SfProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext,
                          SfProcessEngineConfig processEngineConfig) {
         NODE_ID nodeId = nodeConfig.getId();
-        if (nodeId != null) {
+        if (nodeId == null) {
             throw new SfNodeConfigException(SfNodeConfigExceptionCode.NO_NODE_ID,
                                             nodeConfig,
                                             processConfig,
@@ -76,7 +76,7 @@ public class SfDefaultNodeConfigValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, N
             }
             case SfNodeTypeConstant.PROCESS: {
                 PROCESS_CONFIG_ID processId = nodeConfig.getProcessId();
-                if (processId != null) {
+                if (processId == null) {
                     throw new SfNodeConfigException(SfNodeConfigExceptionCode.NO_PROCESS_ID,
                                                     nodeConfig,
                                                     processConfig,

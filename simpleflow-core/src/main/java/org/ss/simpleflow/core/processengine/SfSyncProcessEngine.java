@@ -8,7 +8,7 @@ import org.ss.simpleflow.core.processconfig.SfProcessConfigGraph;
 
 import java.util.Map;
 
-public interface SfProcessEngine<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
+public interface SfSyncProcessEngine<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
         NODE_CONFIG extends SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID>,
         EDGE_CONFIG extends SfAbstractEdgeConfig<EDGE_ID, NODE_ID>,
         PROCESS_CONFIG_GRAPH extends SfProcessConfigGraph<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG>,

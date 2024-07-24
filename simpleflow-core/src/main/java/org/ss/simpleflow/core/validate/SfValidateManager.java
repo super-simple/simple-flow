@@ -15,13 +15,6 @@ public interface SfValidateManager<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
         PROCESS_CONFIG extends SfAbstractProcessConfig<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH>,
         NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> {
 
-    void preValidate(PROCESS_CONFIG processConfig,
-                     SfProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
-                             NODE_CONFIG, EDGE_CONFIG,
-                             PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext,
-                     SfExecutionGlobalContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> executionGlobalContext,
-                     SfProcessEngineConfig processEngineConfig);
-
     void validate(PROCESS_CONFIG processConfig,
                   SfProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
                           NODE_CONFIG, EDGE_CONFIG,
