@@ -63,7 +63,7 @@ public class SfDefaultOrphanComponentCleaner<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID
                 if (!visitedNodeSet.contains(nodeId)) {
                     visitedNodeSet.add(nodeId);
 
-                    StackUtils.pushToStack(stack, outgoingControlEdgeMap.get(nodeId));
+                    StackUtils.pushAllToStack(stack, outgoingControlEdgeMap.get(nodeId));
                 }
             } else {
                 @SuppressWarnings("unchecked") EDGE_CONFIG edgeConfig = (EDGE_CONFIG) current;

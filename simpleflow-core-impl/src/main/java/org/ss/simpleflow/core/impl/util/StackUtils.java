@@ -2,14 +2,14 @@ package org.ss.simpleflow.core.impl.util;
 
 import org.ss.simpleflow.common.CollectionUtils;
 
+import java.util.Collection;
 import java.util.Deque;
-import java.util.List;
 
 public class StackUtils {
 
-    public static <T> void pushToStack(Deque<T> stack, List<? extends T> componentList) {
-        if (CollectionUtils.isNotEmpty(componentList)) {
-            for (T sfComponentConfig : componentList) {
+    public static <T> void pushAllToStack(Deque<T> stack, Collection<? extends T> componentCollection) {
+        if (CollectionUtils.isNotEmpty(componentCollection)) {
+            for (T sfComponentConfig : componentCollection) {
                 stack.push(sfComponentConfig);
             }
         }

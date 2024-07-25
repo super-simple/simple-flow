@@ -96,15 +96,4 @@ public class SfEdgeConfigException extends RuntimeException {
         this.processEngineConfig = processEngineConfig;
     }
 
-    @Override
-    public String getMessage() {
-        String prefix = "edge id[" + edgeConfig.getId() + "] " + exceptionCode.name();
-        String message = super.getMessage();
-        if (message == null) {
-            return prefix;
-        } else {
-            return prefix + ", " + message;
-        }
-    }
-
 }

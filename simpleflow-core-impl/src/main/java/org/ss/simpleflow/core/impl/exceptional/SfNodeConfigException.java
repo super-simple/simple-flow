@@ -96,15 +96,4 @@ public class SfNodeConfigException extends RuntimeException {
         this.processEngineConfig = processEngineConfig;
     }
 
-    @Override
-    public String getMessage() {
-        String prefix = "node id[" + nodeConfig.getId() + "] " + exceptionCode.name();
-        String message = super.getMessage();
-        if (message == null) {
-            return prefix;
-        } else {
-            return prefix + ", " + message;
-        }
-    }
-
 }
