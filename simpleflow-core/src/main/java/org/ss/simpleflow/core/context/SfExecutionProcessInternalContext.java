@@ -5,6 +5,7 @@ import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
 import org.ss.simpleflow.core.processconfig.SfAbstractProcessConfig;
 import org.ss.simpleflow.core.processconfig.SfProcessConfigGraph;
 
+import java.util.Map;
 import java.util.Set;
 
 public abstract class SfExecutionProcessInternalContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
@@ -16,6 +17,8 @@ public abstract class SfExecutionProcessInternalContext<NODE_ID, EDGE_ID, PROCES
 
     private NODE_CONFIG startNodeConfig;
 
+    private Map<NODE_ID, NODE_CONFIG> nodeConfigMap;
+
     private Set<PROCESS_CONFIG_ID> subProcessConfigIdSet;
 
     public NODE_CONFIG getStartNodeConfig() {
@@ -24,6 +27,14 @@ public abstract class SfExecutionProcessInternalContext<NODE_ID, EDGE_ID, PROCES
 
     public void setStartNodeConfig(NODE_CONFIG startNodeConfig) {
         this.startNodeConfig = startNodeConfig;
+    }
+
+    public Map<NODE_ID, NODE_CONFIG> getNodeConfigMap() {
+        return nodeConfigMap;
+    }
+
+    public void setNodeConfigMap(Map<NODE_ID, NODE_CONFIG> nodeConfigMap) {
+        this.nodeConfigMap = nodeConfigMap;
     }
 
     public Set<PROCESS_CONFIG_ID> getSubProcessConfigIdSet() {

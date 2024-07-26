@@ -86,6 +86,37 @@ public class SfDefaultPreValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
                                                processConfig,
                                                processContext,
                                                processEngineConfig);
+
+        cleanUnreferencedSubProcess(processConfig, subProcessConfigList, executionGlobalContext);
+
+        processConfigCustomValidate.customValidate(processConfig, processContext, processEngineConfig);
+    }
+
+    private void cleanUnreferencedSubProcess(
+            PROCESS_CONFIG processConfig,
+            List<PROCESS_CONFIG_GRAPH> subProcessConfigList,
+            SfExecutionGlobalContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
+                    NODE_CONFIG, EDGE_CONFIG,
+                    PROCESS_CONFIG_GRAPH, PROCESS_CONFIG,
+                    NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> executionGlobalContext
+    ) {
+        Set<PROCESS_CONFIG_ID> referencedSubProcessConfigIdSet = executionGlobalContext.getReferencedSubProcessConfigIdSet();
+        if (CollectionUtils.isNullOrEmpty(referencedSubProcessConfigIdSet)) {
+            processConfig.setSubProcessConfigList(null);
+            executionGlobalContext.setSubExecutionProcessContextList(null);
+        } else {
+            List<SfExecutionProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID>> subExecutionProcessContextList = executionGlobalContext.getSubExecutionProcessContextList();
+            Iterator<PROCESS_CONFIG_GRAPH> subProcessConfigListIterator = subProcessConfigList.iterator();
+            Iterator<SfExecutionProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID>> subExecutionProcessContextListIterator = subExecutionProcessContextList.iterator();
+            while (subProcessConfigListIterator.hasNext()) {
+                PROCESS_CONFIG_GRAPH subProcessConfig = subProcessConfigListIterator.next();
+                PROCESS_CONFIG_ID subProcessConfigId = subProcessConfig.getId();
+                if (!referencedSubProcessConfigIdSet.contains(subProcessConfigId)) {
+                    subProcessConfigListIterator.remove();
+                    subExecutionProcessContextListIterator.remove();
+                }
+            }
+        }
     }
 
     private void collectReferencedSubProcessAndValidate(
@@ -167,10 +198,12 @@ public class SfDefaultPreValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
                                               processEngineConfig);
 
         validateEdge(nodeConfigList,
-                     nodeIdSet, edgeConfigList,
+                     nodeIdSet,
+                     edgeConfigList,
                      processConfig,
                      processConfigGraph,
                      processContext,
+                     executionProcessContext,
                      processEngineConfig
         );
     }
@@ -181,9 +214,13 @@ public class SfDefaultPreValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
                               PROCESS_CONFIG processConfig,
                               PROCESS_CONFIG_GRAPH processConfigGraph,
                               SfProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext,
+                              SfExecutionProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> executionProcessContext,
                               SfProcessEngineConfig processEngineConfig) {
         Map<NODE_ID, NODE_CONFIG> nodeConfigMap = MapUtils.uniqueIndex(nodeConfigList,
                                                                        SfAbstractNodeConfig::getId);
+
+        SfExecutionProcessInternalContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> executionInternalContext = executionProcessContext.getExecutionInternalContext();
+        executionInternalContext.setNodeConfigMap(nodeConfigMap);
 
         if (CollectionUtils.isNotEmpty(edgeConfigList)) {
             Set<EDGE_ID> edgeIdSet = new HashSet<>(edgeConfigList.size());
