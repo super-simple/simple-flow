@@ -44,7 +44,10 @@ public class SfDefaultValidateManager<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
         preValidator.preValidate(processConfig, processContext, executionGlobalContext, processEngineConfig);
 
         if (processEngineConfig.isCleanOrphanNode()) {
-            orphanComponentCleaner.cleanOrphanComponent(processConfig, executionGlobalContext);
+            orphanComponentCleaner.cleanOrphanComponent(processConfig,
+                                                        processContext,
+                                                        executionGlobalContext,
+                                                        processEngineConfig);
         }
 
         List<NODE_CONFIG> nodeConfigList = processConfig.getNodeConfigList();
