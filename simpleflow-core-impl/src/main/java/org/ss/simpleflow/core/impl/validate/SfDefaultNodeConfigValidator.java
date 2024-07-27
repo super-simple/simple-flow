@@ -14,15 +14,15 @@ import org.ss.simpleflow.core.processengine.SfProcessEngineConfig;
 
 import java.util.Set;
 
-public class SfDefaultNodeConfigValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG extends SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID>, EDGE_CONFIG extends SfAbstractEdgeConfig<EDGE_ID, NODE_ID>, PROCESS_CONFIG_GRAPH extends SfProcessConfigGraph<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG>, PROCESS_CONFIG extends SfAbstractProcessConfig<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH>, PROCESS_EXECUTION_ID> {
+public class SfDefaultNodeConfigValidator<NI, EI, PCI, NC extends SfAbstractNodeConfig<NI, PCI>, EC extends SfAbstractEdgeConfig<EI, NI>, PCG extends SfProcessConfigGraph<NI, EI, PCI, NC, EC>, PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC, PCG>, PEI> {
 
-    public void validate(NODE_CONFIG nodeConfig,
-                         PROCESS_CONFIG processConfig,
-                         SfProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext,
-                         SfProcessEngineConfig processEngineConfig) {
-        NODE_ID nodeId = nodeConfig.getId();
+    public void basicValidate(NC nodeConfig,
+                              PC processConfig,
+                              SfProcessContext<NI, EI, PCI, NC, EC, PCG, PC, PEI> processContext,
+                              SfProcessEngineConfig processEngineConfig) {
+        NI nodeId = nodeConfig.getId();
         if (nodeId == null) {
-            throw new SfNodeConfigException(SfNodeConfigExceptionCode.NO_NODE_ID,
+            throw new SfNodeConfigException(SfNodeConfigExceptionCode.NO_NI,
                                             nodeConfig,
                                             processConfig,
                                             null,
@@ -75,7 +75,7 @@ public class SfDefaultNodeConfigValidator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, N
                 break;
             }
             case SfNodeTypeConstant.PROCESS: {
-                PROCESS_CONFIG_ID processId = nodeConfig.getProcessId();
+                PCI processId = nodeConfig.getProcessId();
                 if (processId == null) {
                     throw new SfNodeConfigException(SfNodeConfigExceptionCode.NO_PROCESS_ID,
                                                     nodeConfig,

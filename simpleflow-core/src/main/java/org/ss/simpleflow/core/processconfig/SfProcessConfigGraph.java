@@ -6,13 +6,13 @@ import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
 import java.io.Serializable;
 import java.util.List;
 
-public interface SfProcessConfigGraph<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
-        NODE_CONFIG extends SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID>,
-        EDGE_CONFIG extends SfAbstractEdgeConfig<EDGE_ID, NODE_ID>> extends Serializable {
+public interface SfProcessConfigGraph<NI, EI, PCI,
+        NC extends SfAbstractNodeConfig<NI, PCI>,
+        EC extends SfAbstractEdgeConfig<EI, NI>> extends Serializable {
 
-    PROCESS_CONFIG_ID getId();
+    PCI getId();
 
-    List<NODE_CONFIG> getNodeConfigList();
+    List<NC> getNodeConfigList();
 
-    List<EDGE_CONFIG> getEdgeConfigList();
+    List<EC> getEdgeConfigList();
 }

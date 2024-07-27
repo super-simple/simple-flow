@@ -5,12 +5,12 @@ import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
 
 import java.util.List;
 
-public interface SfProcessConfig<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
-        NODE_CONFIG extends SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID>,
-        EDGE_CONFIG extends SfAbstractEdgeConfig<EDGE_ID, NODE_ID>,
-        PROCESS_CONFIG_GRAPH extends SfProcessConfigGraph<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG>>
-        extends SfProcessConfigGraph<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG> {
+public interface SfProcessConfig<NI, EI, PCI,
+        NC extends SfAbstractNodeConfig<NI, PCI>,
+        EC extends SfAbstractEdgeConfig<EI, NI>,
+        PCG extends SfProcessConfigGraph<NI, EI, PCI, NC, EC>>
+        extends SfProcessConfigGraph<NI, EI, PCI, NC, EC> {
 
-    List<PROCESS_CONFIG_GRAPH> getSubProcessConfigList();
+    List<PCG> getSubProcessConfigList();
 
 }

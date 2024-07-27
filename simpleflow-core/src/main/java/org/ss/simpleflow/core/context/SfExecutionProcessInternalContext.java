@@ -8,40 +8,40 @@ import org.ss.simpleflow.core.processconfig.SfProcessConfigGraph;
 import java.util.Map;
 import java.util.Set;
 
-public abstract class SfExecutionProcessInternalContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
-        NODE_CONFIG extends SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID>,
-        EDGE_CONFIG extends SfAbstractEdgeConfig<EDGE_ID, NODE_ID>,
-        PROCESS_CONFIG_GRAPH extends SfProcessConfigGraph<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG>,
-        PROCESS_CONFIG extends SfAbstractProcessConfig<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH>,
-        NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> {
+public abstract class SfExecutionProcessInternalContext<NI, EI, PCI,
+        NC extends SfAbstractNodeConfig<NI, PCI>,
+        EC extends SfAbstractEdgeConfig<EI, NI>,
+        PCG extends SfProcessConfigGraph<NI, EI, PCI, NC, EC>,
+        PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC, PCG>,
+        NEI, EEI, PEI> {
 
-    private NODE_CONFIG startNodeConfig;
+    private NC startNodeConfig;
 
-    private Map<NODE_ID, NODE_CONFIG> nodeConfigMap;
+    private Map<NI, NC> nodeConfigMap;
 
-    private Set<PROCESS_CONFIG_ID> subProcessConfigIdSet;
+    private Set<PCI> subProcessConfigIdSet;
 
-    public NODE_CONFIG getStartNodeConfig() {
+    public NC getStartNodeConfig() {
         return startNodeConfig;
     }
 
-    public void setStartNodeConfig(NODE_CONFIG startNodeConfig) {
+    public void setStartNodeConfig(NC startNodeConfig) {
         this.startNodeConfig = startNodeConfig;
     }
 
-    public Map<NODE_ID, NODE_CONFIG> getNodeConfigMap() {
+    public Map<NI, NC> getNodeConfigMap() {
         return nodeConfigMap;
     }
 
-    public void setNodeConfigMap(Map<NODE_ID, NODE_CONFIG> nodeConfigMap) {
+    public void setNodeConfigMap(Map<NI, NC> nodeConfigMap) {
         this.nodeConfigMap = nodeConfigMap;
     }
 
-    public Set<PROCESS_CONFIG_ID> getSubProcessConfigIdSet() {
+    public Set<PCI> getSubProcessConfigIdSet() {
         return subProcessConfigIdSet;
     }
 
-    public void setSubProcessConfigIdSet(Set<PROCESS_CONFIG_ID> subProcessConfigIdSet) {
+    public void setSubProcessConfigIdSet(Set<PCI> subProcessConfigIdSet) {
         this.subProcessConfigIdSet = subProcessConfigIdSet;
     }
 }

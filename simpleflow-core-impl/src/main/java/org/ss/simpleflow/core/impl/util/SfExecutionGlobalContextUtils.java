@@ -14,34 +14,35 @@ import java.util.List;
 
 public class SfExecutionGlobalContextUtils {
 
-    public static <NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
-            NODE_CONFIG extends SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID>,
-            EDGE_CONFIG extends SfAbstractEdgeConfig<EDGE_ID, NODE_ID>,
-            PROCESS_CONFIG_GRAPH extends SfProcessConfigGraph<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG>,
-            PROCESS_CONFIG extends SfAbstractProcessConfig<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH>,
-            NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID>
-    SfExecutionGlobalContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
-            NODE_CONFIG, EDGE_CONFIG,
-            PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID,
-            EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> createGlobalContext(
-            PROCESS_CONFIG processConfig,
-            SfContextFactory<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
-                    NODE_CONFIG, EDGE_CONFIG,
-                    PROCESS_CONFIG_GRAPH, PROCESS_CONFIG,
-                    NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> contextFactory) {
-        SfExecutionGlobalContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> executionGlobalContext = contextFactory.createExecutionGlobalContext();
-        SfExecutionProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> mainExecutionProcessContext = contextFactory.createExecutionProcessContext();
+    public static <NI, EI, PCI,
+            NC extends SfAbstractNodeConfig<NI, PCI>,
+            EC extends SfAbstractEdgeConfig<EI, NI>,
+            PCG extends SfProcessConfigGraph<NI, EI, PCI, NC, EC>,
+            PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC, PCG>,
+            NEI, EEI, PEI>
+    SfExecutionGlobalContext<NI, EI, PCI,
+            NC, EC,
+            PCG, PC, NEI,
+            EEI, PEI> createGlobalContext(
+            PC processConfig,
+            SfContextFactory<NI, EI, PCI,
+                    NC, EC,
+                    PCG, PC,
+                    NEI, EEI, PEI> contextFactory) {
+        SfExecutionGlobalContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> executionGlobalContext = contextFactory.createExecutionGlobalContext();
+        SfExecutionProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> mainExecutionProcessContext = contextFactory.createExecutionProcessContext();
         executionGlobalContext.setMainExecutionProcessContext(mainExecutionProcessContext);
         mainExecutionProcessContext.setExecutionInternalContext(contextFactory.createExecutionProcessInternalContext());
         mainExecutionProcessContext.setExecutionExternalContext(contextFactory.createExecutionProcessExternalContext());
 
-        List<PROCESS_CONFIG_GRAPH> subProcessConfigList = processConfig.getSubProcessConfigList();
+        List<PCG> subProcessConfigList = processConfig.getSubProcessConfigList();
         if (CollectionUtils.isNotEmpty(subProcessConfigList)) {
-            List<SfExecutionProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID>> subExecutionProcessContextList = new ArrayList<>(
-                    subProcessConfigList.size());
+            int size = subProcessConfigList.size();
+            List<SfExecutionProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI>> subExecutionProcessContextList = new ArrayList<>(
+                    size);
             executionGlobalContext.setSubExecutionProcessContextList(subExecutionProcessContextList);
-            for (PROCESS_CONFIG_GRAPH processConfigGraph : subProcessConfigList) {
-                SfExecutionProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> subExecutionProcessContext = contextFactory.createExecutionProcessContext();
+            for (int i = 0; i < size; i++) {
+                SfExecutionProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> subExecutionProcessContext = contextFactory.createExecutionProcessContext();
                 subExecutionProcessContextList.add(subExecutionProcessContext);
 
                 subExecutionProcessContext.setExecutionInternalContext(contextFactory.createExecutionProcessInternalContext());

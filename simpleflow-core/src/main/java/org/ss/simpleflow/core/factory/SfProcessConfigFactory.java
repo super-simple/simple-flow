@@ -5,13 +5,13 @@ import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
 import org.ss.simpleflow.core.processconfig.SfAbstractProcessConfig;
 import org.ss.simpleflow.core.processconfig.SfProcessConfigGraph;
 
-public interface SfProcessConfigFactory<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
-        NODE_CONFIG extends SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID>,
-        EDGE_CONFIG extends SfAbstractEdgeConfig<EDGE_ID, NODE_ID>,
-        PROCESS_CONFIG_GRAPH extends SfProcessConfigGraph<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG>,
-        PROCESS_CONFIG extends SfAbstractProcessConfig<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH>> {
+public interface SfProcessConfigFactory<NI, EI, PCI,
+        NC extends SfAbstractNodeConfig<NI, PCI>,
+        EC extends SfAbstractEdgeConfig<EI, NI>,
+        PCG extends SfProcessConfigGraph<NI, EI, PCI, NC, EC>,
+        PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC, PCG>> {
 
-    PROCESS_CONFIG createProcessConfig();
+    PC createProcessConfig();
 
-    PROCESS_CONFIG_GRAPH createSubProcessConfig();
+    PCG createSubProcessConfig();
 }

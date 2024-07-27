@@ -5,9 +5,9 @@ import org.ss.simpleflow.core.component.SfComponentConfig;
 import java.util.Map;
 import java.util.Set;
 
-public interface SfNodeConfig<NODE_ID, PROCESS_CONFIG_ID> extends SfComponentConfig {
+public interface SfNodeConfig<NI, PCI> extends SfComponentConfig {
 
-    NODE_ID getId();
+    NI getId();
 
     String getNodeType();
 
@@ -25,5 +25,5 @@ public interface SfNodeConfig<NODE_ID, PROCESS_CONFIG_ID> extends SfComponentCon
 
     Set<String> getEnumGatewayEnumSet();
 
-    PROCESS_CONFIG_ID getProcessId();
+    PCI getProcessId();
 }

@@ -2,32 +2,32 @@ package org.ss.simpleflow.core.context;
 
 import org.ss.simpleflow.core.edge.SfAbstractEdgeConfig;
 
-public abstract class SfAbstractEdgeContext<NODE_ID, EDGE_ID, EDGE_EXECUTION_ID, EDGE_CONFIG
-        extends SfAbstractEdgeConfig<EDGE_ID, NODE_ID>>
+public abstract class SfAbstractEdgeContext<NI, EI, EEI, EC
+        extends SfAbstractEdgeConfig<EI, NI>>
         extends SfDefaultVariableContext
-        implements SfEdgeContext<NODE_ID, EDGE_ID, EDGE_EXECUTION_ID, EDGE_CONFIG> {
+        implements SfEdgeContext<NI, EI, EEI, EC> {
 
-    protected EDGE_EXECUTION_ID edgeExecutionId;
+    protected EEI edgeExecutionId;
 
-    protected EDGE_CONFIG edgeConfig;
+    protected EC edgeConfig;
 
     @Override
-    public void setEdgeExecutionId(EDGE_EXECUTION_ID edgeExecutionId) {
+    public void setEdgeExecutionId(EEI edgeExecutionId) {
         this.edgeExecutionId = edgeExecutionId;
     }
 
     @Override
-    public EDGE_EXECUTION_ID getEdgeExecutionId() {
+    public EEI getEdgeExecutionId() {
         return edgeExecutionId;
     }
 
     @Override
-    public void setEdgeConfig(EDGE_CONFIG edgeConfig) {
+    public void setEdgeConfig(EC edgeConfig) {
         this.edgeConfig = edgeConfig;
     }
 
     @Override
-    public EDGE_CONFIG getEdgeConfig() {
+    public EC getEdgeConfig() {
         return edgeConfig;
     }
 }

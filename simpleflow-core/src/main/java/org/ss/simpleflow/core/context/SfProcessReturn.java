@@ -2,16 +2,16 @@ package org.ss.simpleflow.core.context;
 
 import java.util.Map;
 
-public abstract class SfProcessReturn<PROCESS_EXECUTION_ID> {
-    protected PROCESS_EXECUTION_ID executionId;
+public abstract class SfProcessReturn<PEI> {
+    protected PEI executionId;
     protected Map<String, Object> resultMap;
     protected Map<String, Object> env;
 
-    public PROCESS_EXECUTION_ID getExecutionId() {
+    public PEI getExecutionId() {
         return executionId;
     }
 
-    public void setExecutionId(PROCESS_EXECUTION_ID executionId) {
+    public void setExecutionId(PEI executionId) {
         this.executionId = executionId;
     }
 

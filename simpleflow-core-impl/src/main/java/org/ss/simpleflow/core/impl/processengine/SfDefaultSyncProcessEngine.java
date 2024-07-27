@@ -24,55 +24,55 @@ import org.ss.simpleflow.core.validate.SfValidateManager;
 import java.util.List;
 import java.util.Map;
 
-public class SfDefaultSyncProcessEngine<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
-        NODE_CONFIG extends SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID>,
-        EDGE_CONFIG extends SfAbstractEdgeConfig<EDGE_ID, NODE_ID>,
-        PROCESS_CONFIG_GRAPH extends SfProcessConfigGraph<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG>,
-        PROCESS_CONFIG extends SfAbstractProcessConfig<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH>,
-        NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID>
-        implements SfSyncProcessEngine<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH,
-        PROCESS_CONFIG, NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> {
+public class SfDefaultSyncProcessEngine<NI, EI, PCI,
+        NC extends SfAbstractNodeConfig<NI, PCI>,
+        EC extends SfAbstractEdgeConfig<EI, NI>,
+        PCG extends SfProcessConfigGraph<NI, EI, PCI, NC, EC>,
+        PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC, PCG>,
+        NEI, EEI, PEI>
+        implements SfSyncProcessEngine<NI, EI, PCI, NC, EC, PCG,
+        PC, NEI, EEI, PEI> {
 
     private static final Logger LOG = LoggerFactory.getLogger(SfDefaultSyncProcessEngine.class);
 
     private final SfProcessEngineConfig processEngineConfig;
 
-    private final SfControlEdgeFactory<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> controlEdgeFactory;
-    private final SfDataEdgeFactory<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> dataEdgeFactory;
-    private final SfEventFactory<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, PROCESS_EXECUTION_ID> eventFactory;
-    private final SfNodeFactory<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, PROCESS_EXECUTION_ID> nodeFactory;
-    private final SfEnumGatewayFactory<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, PROCESS_EXECUTION_ID> enumGatewayFactory;
-    private final SfStreamIteratorFactory<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, PROCESS_EXECUTION_ID> streamIteratorFactory;
-    private final SfGatewayFactory<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, PROCESS_EXECUTION_ID> gatewayFactory;
-    private final SfAroundIteratorFactory<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, PROCESS_EXECUTION_ID> aroundIteratorFactory;
+    private final SfControlEdgeFactory<NI, EI, PCI, NC, EC, PCG, PC, EEI, PEI> controlEdgeFactory;
+    private final SfDataEdgeFactory<NI, EI, PCI, NC, EC, PCG, PC, EEI, PEI> dataEdgeFactory;
+    private final SfEventFactory<NI, EI, PCI, NC, EC, PCG, PC, NEI, PEI> eventFactory;
+    private final SfNodeFactory<NI, EI, PCI, NC, EC, PCG, PC, NEI, PEI> nodeFactory;
+    private final SfEnumGatewayFactory<NI, EI, PCI, NC, EC, PCG, PC, NEI, PEI> enumGatewayFactory;
+    private final SfStreamIteratorFactory<NI, EI, PCI, NC, EC, PCG, PC, NEI, PEI> streamIteratorFactory;
+    private final SfGatewayFactory<NI, EI, PCI, NC, EC, PCG, PC, NEI, PEI> gatewayFactory;
+    private final SfAroundIteratorFactory<NI, EI, PCI, NC, EC, PCG, PC, NEI, PEI> aroundIteratorFactory;
 
-    private final SfValidateManager<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> validateManager;
+    private final SfValidateManager<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> validateManager;
 
-    private final SfComponentExecutionIdGenerator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> componentExecutionIdGenerator;
-    private final SfProcessExecutionIdGenerator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processExecutionIdGenerator;
+    private final SfComponentExecutionIdGenerator<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> componentExecutionIdGenerator;
+    private final SfProcessExecutionIdGenerator<NI, EI, PCI, NC, EC, PCG, PC, PEI> processExecutionIdGenerator;
 
-    private final SfContextFactory<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> contextFactory;
+    private final SfContextFactory<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> contextFactory;
 
-    private final List<SfEdgeAspect<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID>> edgeAspectList;
-    private final List<SfNodeAspect<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, PROCESS_EXECUTION_ID>> nodeAspectList;
-    private final List<SfProcessAspect<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID>> processAspectList;
+    private final List<SfEdgeAspect<NI, EI, PCI, NC, EC, PCG, PC, EEI, PEI>> edgeAspectList;
+    private final List<SfNodeAspect<NI, EI, PCI, NC, EC, PCG, PC, NEI, PEI>> nodeAspectList;
+    private final List<SfProcessAspect<NI, EI, PCI, NC, EC, PCG, PC, PEI>> processAspectList;
 
     SfDefaultSyncProcessEngine(SfProcessEngineConfig processEngineConfig,
-                               SfControlEdgeFactory<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> controlEdgeFactory,
-                               SfDataEdgeFactory<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> dataEdgeFactory,
-                               SfEventFactory<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, PROCESS_EXECUTION_ID> eventFactory,
-                               SfNodeFactory<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, PROCESS_EXECUTION_ID> nodeFactory,
-                               SfEnumGatewayFactory<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, PROCESS_EXECUTION_ID> enumGatewayFactory,
-                               SfStreamIteratorFactory<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, PROCESS_EXECUTION_ID> streamIteratorFactory,
-                               SfGatewayFactory<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, PROCESS_EXECUTION_ID> gatewayFactory,
-                               SfAroundIteratorFactory<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, PROCESS_EXECUTION_ID> aroundIteratorFactory,
-                               SfValidateManager<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> validateManager,
-                               SfComponentExecutionIdGenerator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> componentExecutionIdGenerator,
-                               SfProcessExecutionIdGenerator<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processExecutionIdGenerator,
-                               SfContextFactory<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> contextFactory,
-                               List<SfEdgeAspect<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID>> edgeAspectList,
-                               List<SfNodeAspect<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, PROCESS_EXECUTION_ID>> nodeAspectList,
-                               List<SfProcessAspect<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID>> processAspectList) {
+                               SfControlEdgeFactory<NI, EI, PCI, NC, EC, PCG, PC, EEI, PEI> controlEdgeFactory,
+                               SfDataEdgeFactory<NI, EI, PCI, NC, EC, PCG, PC, EEI, PEI> dataEdgeFactory,
+                               SfEventFactory<NI, EI, PCI, NC, EC, PCG, PC, NEI, PEI> eventFactory,
+                               SfNodeFactory<NI, EI, PCI, NC, EC, PCG, PC, NEI, PEI> nodeFactory,
+                               SfEnumGatewayFactory<NI, EI, PCI, NC, EC, PCG, PC, NEI, PEI> enumGatewayFactory,
+                               SfStreamIteratorFactory<NI, EI, PCI, NC, EC, PCG, PC, NEI, PEI> streamIteratorFactory,
+                               SfGatewayFactory<NI, EI, PCI, NC, EC, PCG, PC, NEI, PEI> gatewayFactory,
+                               SfAroundIteratorFactory<NI, EI, PCI, NC, EC, PCG, PC, NEI, PEI> aroundIteratorFactory,
+                               SfValidateManager<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> validateManager,
+                               SfComponentExecutionIdGenerator<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> componentExecutionIdGenerator,
+                               SfProcessExecutionIdGenerator<NI, EI, PCI, NC, EC, PCG, PC, PEI> processExecutionIdGenerator,
+                               SfContextFactory<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> contextFactory,
+                               List<SfEdgeAspect<NI, EI, PCI, NC, EC, PCG, PC, EEI, PEI>> edgeAspectList,
+                               List<SfNodeAspect<NI, EI, PCI, NC, EC, PCG, PC, NEI, PEI>> nodeAspectList,
+                               List<SfProcessAspect<NI, EI, PCI, NC, EC, PCG, PC, PEI>> processAspectList) {
         if (processEngineConfig == null) {
             throw new IllegalArgumentException("SfProcessEngineConfig can not be null");
         }
@@ -144,18 +144,18 @@ public class SfDefaultSyncProcessEngine<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
     }
 
     @Override
-    public SfProcessReturn<PROCESS_EXECUTION_ID> runProcess(PROCESS_CONFIG processConfig,
-                                                            PROCESS_EXECUTION_ID executionId,
-                                                            Map<String, Object> params,
-                                                            Map<String, Object> env) {
+    public SfProcessReturn<PEI> runProcess(PC processConfig,
+                                           PEI executionId,
+                                           Map<String, Object> params,
+                                           Map<String, Object> env) {
         if (processConfig == null) {
             throw new NullPointerException("processConfig can not be null");
         }
 
-        SfProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext = contextFactory.createProcessContext();
+        SfProcessContext<NI, EI, PCI, NC, EC, PCG, PC, PEI> processContext = contextFactory.createProcessContext();
         processContext.setProcessConfig(processConfig);
 
-        PROCESS_EXECUTION_ID actualExecutionId;
+        PEI actualExecutionId;
         if (executionId != null) {
             actualExecutionId = executionId;
         } else {
@@ -164,9 +164,9 @@ public class SfDefaultSyncProcessEngine<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
         processContext.setProcessExecutionId(actualExecutionId);
 
         if (CollectionUtils.isNotEmpty(processAspectList)) {
-            for (SfProcessAspect<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
-                    NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH,
-                    PROCESS_CONFIG, PROCESS_EXECUTION_ID> processAspect : processAspectList) {
+            for (SfProcessAspect<NI, EI, PCI,
+                    NC, EC, PCG,
+                    PC, PEI> processAspect : processAspectList) {
                 try {
                     processAspect.before(params, processContext);
                 } catch (Exception e) {
@@ -175,7 +175,7 @@ public class SfDefaultSyncProcessEngine<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
             }
         }
 
-        SfExecutionGlobalContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> executionGlobalContext = SfExecutionGlobalContextUtils.createGlobalContext(
+        SfExecutionGlobalContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> executionGlobalContext = SfExecutionGlobalContextUtils.createGlobalContext(
                 processConfig, contextFactory);
 
         validateManager.validate(processConfig, processContext, executionGlobalContext, processEngineConfig);
@@ -184,14 +184,14 @@ public class SfDefaultSyncProcessEngine<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
     }
 
     @Override
-    public SfProcessReturn<PROCESS_EXECUTION_ID> runProcess(PROCESS_CONFIG processConfig,
-                                                            Map<String, Object> params,
-                                                            Map<String, Object> env) {
+    public SfProcessReturn<PEI> runProcess(PC processConfig,
+                                           Map<String, Object> params,
+                                           Map<String, Object> env) {
         return runProcess(processConfig, null, params, env);
     }
 
     @Override
-    public SfProcessReturn<PROCESS_EXECUTION_ID> runProcess(PROCESS_CONFIG processConfig, Map<String, Object> params) {
+    public SfProcessReturn<PEI> runProcess(PC processConfig, Map<String, Object> params) {
         return runProcess(processConfig, params, null);
     }
 }

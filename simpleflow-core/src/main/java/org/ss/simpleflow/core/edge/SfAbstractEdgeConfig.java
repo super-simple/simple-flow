@@ -2,27 +2,27 @@ package org.ss.simpleflow.core.edge;
 
 import org.ss.simpleflow.core.constant.SfEdgeTypeConstant;
 
-public class SfAbstractEdgeConfig<EDGE_ID, NODE_ID> implements SfEdgeConfig<EDGE_ID, NODE_ID> {
-    protected EDGE_ID id;
-    protected NODE_ID fromNodeId;
-    protected NODE_ID toNodeId;
+public class SfAbstractEdgeConfig<EI, NI> implements SfEdgeConfig<EI, NI> {
+    protected EI id;
+    protected NI fromNodeId;
+    protected NI toNodeId;
     protected String edgeType;
     protected String fromResultKey;
     protected String toParameterKey;
     private SfEdgeIndexEntry edgeIndexEntry;
 
     @Override
-    public EDGE_ID getId() {
+    public EI getId() {
         return id;
     }
 
     @Override
-    public NODE_ID getFromNodeId() {
+    public NI getFromNodeId() {
         return fromNodeId;
     }
 
     @Override
-    public NODE_ID getToNodeId() {
+    public NI getToNodeId() {
         return toNodeId;
     }
 
@@ -41,15 +41,15 @@ public class SfAbstractEdgeConfig<EDGE_ID, NODE_ID> implements SfEdgeConfig<EDGE
         return toParameterKey;
     }
 
-    public void setId(EDGE_ID id) {
+    public void setId(EI id) {
         this.id = id;
     }
 
-    public void setFromNodeId(NODE_ID fromNodeId) {
+    public void setFromNodeId(NI fromNodeId) {
         this.fromNodeId = fromNodeId;
     }
 
-    public void setToNodeId(NODE_ID toNodeId) {
+    public void setToNodeId(NI toNodeId) {
         this.toNodeId = toNodeId;
     }
 

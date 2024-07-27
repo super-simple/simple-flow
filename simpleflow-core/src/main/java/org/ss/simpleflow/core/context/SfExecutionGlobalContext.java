@@ -8,38 +8,38 @@ import org.ss.simpleflow.core.processconfig.SfProcessConfigGraph;
 import java.util.List;
 import java.util.Set;
 
-public abstract class SfExecutionGlobalContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
-        NODE_CONFIG extends SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID>,
-        EDGE_CONFIG extends SfAbstractEdgeConfig<EDGE_ID, NODE_ID>,
-        PROCESS_CONFIG_GRAPH extends SfProcessConfigGraph<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG>,
-        PROCESS_CONFIG extends SfAbstractProcessConfig<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH>,
-        NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> {
+public abstract class SfExecutionGlobalContext<NI, EI, PCI,
+        NC extends SfAbstractNodeConfig<NI, PCI>,
+        EC extends SfAbstractEdgeConfig<EI, NI>,
+        PCG extends SfProcessConfigGraph<NI, EI, PCI, NC, EC>,
+        PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC, PCG>,
+        NEI, EEI, PEI> {
 
-    protected Set<PROCESS_CONFIG_ID> referencedSubProcessConfigIdSet;
-    protected SfExecutionProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> mainExecutionProcessContext;
-    protected List<SfExecutionProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID>> subExecutionProcessContextList;
+    protected Set<PCI> referencedSubProcessConfigIdSet;
+    protected SfExecutionProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> mainExecutionProcessContext;
+    protected List<SfExecutionProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI>> subExecutionProcessContextList;
 
-    public Set<PROCESS_CONFIG_ID> getReferencedSubProcessConfigIdSet() {
+    public Set<PCI> getReferencedSubProcessConfigIdSet() {
         return referencedSubProcessConfigIdSet;
     }
 
-    public void setReferencedSubProcessConfigIdSet(Set<PROCESS_CONFIG_ID> referencedSubProcessConfigIdSet) {
+    public void setReferencedSubProcessConfigIdSet(Set<PCI> referencedSubProcessConfigIdSet) {
         this.referencedSubProcessConfigIdSet = referencedSubProcessConfigIdSet;
     }
 
-    public SfExecutionProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> getMainExecutionProcessContext() {
+    public SfExecutionProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> getMainExecutionProcessContext() {
         return mainExecutionProcessContext;
     }
 
-    public void setMainExecutionProcessContext(SfExecutionProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> mainExecutionProcessContext) {
+    public void setMainExecutionProcessContext(SfExecutionProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> mainExecutionProcessContext) {
         this.mainExecutionProcessContext = mainExecutionProcessContext;
     }
 
-    public List<SfExecutionProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID>> getSubExecutionProcessContextList() {
+    public List<SfExecutionProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI>> getSubExecutionProcessContextList() {
         return subExecutionProcessContextList;
     }
 
-    public void setSubExecutionProcessContextList(List<SfExecutionProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID>> subExecutionProcessContextList) {
+    public void setSubExecutionProcessContextList(List<SfExecutionProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI>> subExecutionProcessContextList) {
         this.subExecutionProcessContextList = subExecutionProcessContextList;
     }
 }

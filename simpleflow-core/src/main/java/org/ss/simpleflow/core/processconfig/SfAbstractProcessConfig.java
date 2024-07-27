@@ -5,50 +5,50 @@ import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
 
 import java.util.List;
 
-public abstract class SfAbstractProcessConfig<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
-        NODE_CONFIG extends SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID>,
-        EDGE_CONFIG extends SfAbstractEdgeConfig<EDGE_ID, NODE_ID>,
-        PROCESS_CONFIG_GRAPH extends SfProcessConfigGraph<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG>> implements SfProcessConfig<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH> {
+public abstract class SfAbstractProcessConfig<NI, EI, PCI,
+        NC extends SfAbstractNodeConfig<NI, PCI>,
+        EC extends SfAbstractEdgeConfig<EI, NI>,
+        PCG extends SfProcessConfigGraph<NI, EI, PCI, NC, EC>> implements SfProcessConfig<NI, EI, PCI, NC, EC, PCG> {
 
-    protected PROCESS_CONFIG_ID id;
-    protected List<NODE_CONFIG> nodeConfigList;
-    protected List<EDGE_CONFIG> edgeConfigList;
-    protected List<PROCESS_CONFIG_GRAPH> subProcessConfigList;
+    protected PCI id;
+    protected List<NC> nodeConfigList;
+    protected List<EC> edgeConfigList;
+    protected List<PCG> subProcessConfigList;
 
 
-    public void setId(PROCESS_CONFIG_ID id) {
+    public void setId(PCI id) {
         this.id = id;
     }
 
     @Override
-    public PROCESS_CONFIG_ID getId() {
+    public PCI getId() {
         return id;
     }
 
-    public void setNodeConfigList(List<NODE_CONFIG> nodeConfigList) {
+    public void setNodeConfigList(List<NC> nodeConfigList) {
         this.nodeConfigList = nodeConfigList;
     }
 
     @Override
-    public List<NODE_CONFIG> getNodeConfigList() {
+    public List<NC> getNodeConfigList() {
         return nodeConfigList;
     }
 
-    public void setEdgeConfigList(List<EDGE_CONFIG> edgeConfigList) {
+    public void setEdgeConfigList(List<EC> edgeConfigList) {
         this.edgeConfigList = edgeConfigList;
     }
 
     @Override
-    public List<EDGE_CONFIG> getEdgeConfigList() {
+    public List<EC> getEdgeConfigList() {
         return edgeConfigList;
     }
 
-    public void setSubProcessConfigList(List<PROCESS_CONFIG_GRAPH> subProcessConfigList) {
+    public void setSubProcessConfigList(List<PCG> subProcessConfigList) {
         this.subProcessConfigList = subProcessConfigList;
     }
 
     @Override
-    public List<PROCESS_CONFIG_GRAPH> getSubProcessConfigList() {
+    public List<PCG> getSubProcessConfigList() {
         return subProcessConfigList;
     }
 

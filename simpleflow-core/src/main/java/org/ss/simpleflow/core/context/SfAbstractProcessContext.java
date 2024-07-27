@@ -5,66 +5,66 @@ import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
 import org.ss.simpleflow.core.processconfig.SfAbstractProcessConfig;
 import org.ss.simpleflow.core.processconfig.SfProcessConfigGraph;
 
-public abstract class SfAbstractProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
-        NODE_CONFIG extends SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID>,
-        EDGE_CONFIG extends SfAbstractEdgeConfig<EDGE_ID, NODE_ID>,
-        PROCESS_CONFIG_GRAPH extends SfProcessConfigGraph<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG>,
-        PROCESS_CONFIG extends SfAbstractProcessConfig<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH>,
-        PROCESS_EXECUTION_ID>
+public abstract class SfAbstractProcessContext<NI, EI, PCI,
+        NC extends SfAbstractNodeConfig<NI, PCI>,
+        EC extends SfAbstractEdgeConfig<EI, NI>,
+        PCG extends SfProcessConfigGraph<NI, EI, PCI, NC, EC>,
+        PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC, PCG>,
+        PEI>
         extends SfDefaultVariableContext
-        implements SfProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG,
-        EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> {
+        implements SfProcessContext<NI, EI, PCI, NC,
+        EC, PCG, PC, PEI> {
 
-    protected SfProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
-            NODE_CONFIG, EDGE_CONFIG,
-            PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext;
-    protected PROCESS_EXECUTION_ID processExecutionId;
+    protected SfProcessContext<NI, EI, PCI,
+            NC, EC,
+            PCG, PC, PEI> processContext;
+    protected PEI processExecutionId;
 
-    protected PROCESS_CONFIG processConfig;
+    protected PC processConfig;
 
-    protected PROCESS_CONFIG_ID processConfigId;
+    protected PCI processConfigId;
 
     @Override
-    public void setParentProcessContext(SfProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
-            NODE_CONFIG, EDGE_CONFIG,
-            PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext) {
+    public void setParentProcessContext(SfProcessContext<NI, EI, PCI,
+            NC, EC,
+            PCG, PC, PEI> processContext) {
         this.processContext = processContext;
     }
 
     @Override
-    public SfProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
-            NODE_CONFIG, EDGE_CONFIG,
-            PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> getParentProcessContext() {
+    public SfProcessContext<NI, EI, PCI,
+            NC, EC,
+            PCG, PC, PEI> getParentProcessContext() {
         return processContext;
     }
 
     @Override
-    public void setProcessExecutionId(PROCESS_EXECUTION_ID processExecutionId) {
+    public void setProcessExecutionId(PEI processExecutionId) {
         this.processExecutionId = processExecutionId;
     }
 
     @Override
-    public PROCESS_EXECUTION_ID getProcessExecutionId() {
+    public PEI getProcessExecutionId() {
         return processExecutionId;
     }
 
     @Override
-    public void setProcessConfig(PROCESS_CONFIG processConfig) {
+    public void setProcessConfig(PC processConfig) {
         this.processConfig = processConfig;
     }
 
     @Override
-    public PROCESS_CONFIG getProcessConfig() {
+    public PC getProcessConfig() {
         return processConfig;
     }
 
     @Override
-    public void setProcessConfigId(PROCESS_CONFIG_ID processConfigId) {
+    public void setProcessConfigId(PCI processConfigId) {
         this.processConfigId = processConfigId;
     }
 
     @Override
-    public PROCESS_CONFIG_ID getProcessConfigId() {
+    public PCI getProcessConfigId() {
         return processConfigId;
     }
 }

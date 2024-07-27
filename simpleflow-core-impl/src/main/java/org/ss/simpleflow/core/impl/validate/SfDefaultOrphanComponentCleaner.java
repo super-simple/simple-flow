@@ -19,29 +19,29 @@ import org.ss.simpleflow.core.validate.SfOrphanComponentCleaner;
 
 import java.util.*;
 
-public class SfDefaultOrphanComponentCleaner<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
-        NODE_CONFIG extends SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID>,
-        EDGE_CONFIG extends SfAbstractEdgeConfig<EDGE_ID, NODE_ID>,
-        PROCESS_CONFIG_GRAPH extends SfProcessConfigGraph<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG>,
-        PROCESS_CONFIG extends SfAbstractProcessConfig<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH>,
-        NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID>
-        implements SfOrphanComponentCleaner<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
-        NODE_CONFIG, EDGE_CONFIG,
-        PROCESS_CONFIG_GRAPH, PROCESS_CONFIG,
-        NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> {
+public class SfDefaultOrphanComponentCleaner<NI, EI, PCI,
+        NC extends SfAbstractNodeConfig<NI, PCI>,
+        EC extends SfAbstractEdgeConfig<EI, NI>,
+        PCG extends SfProcessConfigGraph<NI, EI, PCI, NC, EC>,
+        PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC, PCG>,
+        NEI, EEI, PEI>
+        implements SfOrphanComponentCleaner<NI, EI, PCI,
+        NC, EC,
+        PCG, PC,
+        NEI, EEI, PEI> {
 
     @Override
-    public void cleanOrphanComponent(PROCESS_CONFIG processConfig,
-                                     SfProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
-                                             NODE_CONFIG, EDGE_CONFIG,
-                                             PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext,
-                                     SfExecutionGlobalContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
-                                             NODE_CONFIG, EDGE_CONFIG,
-                                             PROCESS_CONFIG_GRAPH, PROCESS_CONFIG,
-                                             NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> executionGlobalContext,
+    public void cleanOrphanComponent(PC processConfig,
+                                     SfProcessContext<NI, EI, PCI,
+                                             NC, EC,
+                                             PCG, PC, PEI> processContext,
+                                     SfExecutionGlobalContext<NI, EI, PCI,
+                                             NC, EC,
+                                             PCG, PC,
+                                             NEI, EEI, PEI> executionGlobalContext,
                                      SfProcessEngineConfig processEngineConfig) {
-        List<NODE_CONFIG> nodeConfigList = processConfig.getNodeConfigList();
-        List<EDGE_CONFIG> edgeConfigList = processConfig.getEdgeConfigList();
+        List<NC> nodeConfigList = processConfig.getNodeConfigList();
+        List<EC> edgeConfigList = processConfig.getEdgeConfigList();
         cleanOrphanNodeAndEdge(nodeConfigList,
                                edgeConfigList,
                                processConfig,
@@ -50,16 +50,16 @@ public class SfDefaultOrphanComponentCleaner<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID
                                executionGlobalContext.getMainExecutionProcessContext(),
                                processEngineConfig);
 
-        List<PROCESS_CONFIG_GRAPH> subProcessConfigList = processConfig.getSubProcessConfigList();
+        List<PCG> subProcessConfigList = processConfig.getSubProcessConfigList();
         if (CollectionUtils.isNotEmpty(subProcessConfigList)) {
-            List<SfExecutionProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID>> subExecutionProcessContextList = executionGlobalContext.getSubExecutionProcessContextList();
+            List<SfExecutionProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI>> subExecutionProcessContextList = executionGlobalContext.getSubExecutionProcessContextList();
             int size = subProcessConfigList.size();
             for (int i = 0; i < size; i++) {
-                PROCESS_CONFIG_GRAPH subProcessConfig = subProcessConfigList.get(i);
-                SfExecutionProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> subExecutionProcessContext = subExecutionProcessContextList.get(
+                PCG subProcessConfig = subProcessConfigList.get(i);
+                SfExecutionProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> subExecutionProcessContext = subExecutionProcessContextList.get(
                         i);
-                List<NODE_CONFIG> subNodeConfigList = subProcessConfig.getNodeConfigList();
-                List<EDGE_CONFIG> subEdgeConfigList = subProcessConfig.getEdgeConfigList();
+                List<NC> subNodeConfigList = subProcessConfig.getNodeConfigList();
+                List<EC> subEdgeConfigList = subProcessConfig.getEdgeConfigList();
                 cleanOrphanNodeAndEdge(subNodeConfigList,
                                        subEdgeConfigList,
                                        processConfig,
@@ -70,37 +70,37 @@ public class SfDefaultOrphanComponentCleaner<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID
         }
     }
 
-    private void cleanOrphanNodeAndEdge(List<NODE_CONFIG> nodeConfigList,
-                                        List<EDGE_CONFIG> edgeConfigList,
-                                        PROCESS_CONFIG processConfig,
-                                        PROCESS_CONFIG_GRAPH processConfigGraph,
-                                        SfProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext,
-                                        SfExecutionProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> executionProcessContext,
+    private void cleanOrphanNodeAndEdge(List<NC> nodeConfigList,
+                                        List<EC> edgeConfigList,
+                                        PC processConfig,
+                                        PCG processConfigGraph,
+                                        SfProcessContext<NI, EI, PCI, NC, EC, PCG, PC, PEI> processContext,
+                                        SfExecutionProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> executionProcessContext,
                                         SfProcessEngineConfig processEngineConfig) {
 
-        List<EDGE_CONFIG> controlEdgeList = CollectionUtils.collect(edgeConfigList,
-                                                                    SfAbstractEdgeConfig::isControlEdge);
-        Map<NODE_ID, List<EDGE_CONFIG>> outgoingControlEdgeMap = MultiMapUtils.index(controlEdgeList,
-                                                                                     SfAbstractEdgeConfig::getFromNodeId);
+        List<EC> controlEdgeList = CollectionUtils.collect(edgeConfigList,
+                                                           SfAbstractEdgeConfig::isControlEdge);
+        Map<NI, List<EC>> outgoingControlEdgeMap = MultiMapUtils.index(controlEdgeList,
+                                                                       SfAbstractEdgeConfig::getFromNodeId);
 
-        Set<NODE_ID> visitedNodeSet = new HashSet<>();
+        Set<NI> visitedNodeSet = new HashSet<>();
         Deque<SfComponentConfig> stack = new ArrayDeque<>();
 
-        SfExecutionProcessInternalContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> executionInternalContext = executionProcessContext.getExecutionInternalContext();
+        SfExecutionProcessInternalContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> executionInternalContext = executionProcessContext.getExecutionInternalContext();
         stack.push(executionInternalContext.getStartNodeConfig());
-        Map<NODE_ID, NODE_CONFIG> nodeConfigMap = executionInternalContext.getNodeConfigMap();
+        Map<NI, NC> nodeConfigMap = executionInternalContext.getNodeConfigMap();
         while (!stack.isEmpty()) {
             SfComponentConfig current = stack.pop();
             if (current instanceof SfAbstractNodeConfig) {
-                @SuppressWarnings("unchecked") NODE_CONFIG nodeConfig = (NODE_CONFIG) current;
-                NODE_ID nodeId = nodeConfig.getId();
+                @SuppressWarnings("unchecked") NC nodeConfig = (NC) current;
+                NI nodeId = nodeConfig.getId();
                 if (!visitedNodeSet.contains(nodeId)) {
                     visitedNodeSet.add(nodeId);
 
                     StackUtils.pushAllToStack(stack, outgoingControlEdgeMap.get(nodeId));
                 }
             } else {
-                @SuppressWarnings("unchecked") EDGE_CONFIG edgeConfig = (EDGE_CONFIG) current;
+                @SuppressWarnings("unchecked") EC edgeConfig = (EC) current;
                 stack.push(nodeConfigMap.get(edgeConfig.getToNodeId()));
             }
         }
@@ -108,21 +108,21 @@ public class SfDefaultOrphanComponentCleaner<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID
         nodeConfigList.removeIf(nodeConfig -> !visitedNodeSet.contains(nodeConfig.getId()));
         if (CollectionUtils.isNotEmpty(edgeConfigList)) {
 
-            Map<NODE_ID, Set<String>> parameterKeySetMap = new HashMap<>();
-            Iterator<EDGE_CONFIG> edgeConfigListIterator = edgeConfigList.iterator();
+            Map<NI, Set<String>> parameterKeySetMap = new HashMap<>();
+            Iterator<EC> edgeConfigListIterator = edgeConfigList.iterator();
             while (edgeConfigListIterator.hasNext()) {
-                EDGE_CONFIG next = edgeConfigListIterator.next();
+                EC next = edgeConfigListIterator.next();
                 if (!visitedNodeSet.contains(next.getFromNodeId()) || !visitedNodeSet.contains(next.getToNodeId())) {
                     edgeConfigListIterator.remove();
                 }
                 if (next.isDataEdge()) {
-                    NODE_ID fromNodeId = next.getFromNodeId();
+                    NI fromNodeId = next.getFromNodeId();
                     Set<String> parameterKeySet = parameterKeySetMap.computeIfAbsent(fromNodeId, k -> new HashSet<>());
                     parameterKeySet.add(next.getFromResultKey());
                 }
             }
 
-            for (NODE_CONFIG nodeConfig : nodeConfigList) {
+            for (NC nodeConfig : nodeConfigList) {
                 Map<String, SfNodeParameter> parameterMap = nodeConfig.getParameterMap();
                 if (MapUtils.isNotEmpty(parameterMap)) {
                     Set<String> parameterKeySet = parameterKeySetMap.get(nodeConfig.getId());

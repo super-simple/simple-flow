@@ -4,16 +4,16 @@ import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
 
 import java.io.Serializable;
 
-public interface SfNodeContext<NODE_ID, PROCESS_CONFIG_ID, NODE_EXECUTION_ID,
-        NODE_CONFIG extends SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID>>
+public interface SfNodeContext<NI, PCI, NEI,
+        NC extends SfAbstractNodeConfig<NI, PCI>>
         extends SfVariableContext, Serializable {
 
-    void setNodeExecutionId(NODE_EXECUTION_ID nodeExecutionId);
+    void setNodeExecutionId(NEI nodeExecutionId);
 
-    NODE_EXECUTION_ID getNodeExecutionId();
+    NEI getNodeExecutionId();
 
-    void setNodeConfig(NODE_CONFIG nodeConfig);
+    void setNodeConfig(NC nodeConfig);
 
-    NODE_CONFIG getNodeConfig();
+    NC getNodeConfig();
 
 }

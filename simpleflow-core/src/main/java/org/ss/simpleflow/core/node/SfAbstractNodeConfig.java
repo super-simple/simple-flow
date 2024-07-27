@@ -7,8 +7,8 @@ import org.ss.simpleflow.core.constant.SfNodeTypeConstant;
 import java.util.Map;
 import java.util.Set;
 
-public class SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID> implements SfNodeConfig<NODE_ID, PROCESS_CONFIG_ID> {
-    protected NODE_ID id;
+public class SfAbstractNodeConfig<NI, PCI> implements SfNodeConfig<NI, PCI> {
+    protected NI id;
     protected String nodeType;
     protected String eventCode;
     protected String eventType;
@@ -17,11 +17,11 @@ public class SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID> implements SfNodeC
     protected Map<String, SfNodeParameter> parameterMap;
     protected Map<String, SfNodeResult> resultMap;
     protected Set<String> enumGatewayEnumSet;
-    protected PROCESS_CONFIG_ID processId;
+    protected PCI processId;
     private SfNodeIndexEntry nodeIndexEntry;
 
     @Override
-    public NODE_ID getId() {
+    public NI getId() {
         return id;
     }
 
@@ -66,11 +66,11 @@ public class SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID> implements SfNodeC
     }
 
     @Override
-    public PROCESS_CONFIG_ID getProcessId() {
+    public PCI getProcessId() {
         return processId;
     }
 
-    public void setId(NODE_ID id) {
+    public void setId(NI id) {
         this.id = id;
     }
 
@@ -114,7 +114,7 @@ public class SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID> implements SfNodeC
         return nodeIndexEntry;
     }
 
-    public void setProcessId(PROCESS_CONFIG_ID processId) {
+    public void setProcessId(PCI processId) {
         this.processId = processId;
     }
 

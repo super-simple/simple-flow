@@ -4,16 +4,16 @@ import org.ss.simpleflow.core.edge.SfAbstractEdgeConfig;
 
 import java.io.Serializable;
 
-public interface SfEdgeContext<NODE_ID, EDGE_ID, EDGE_EXECUTION_ID,
-        EDGE_CONFIG extends SfAbstractEdgeConfig<EDGE_ID, NODE_ID>>
+public interface SfEdgeContext<NI, EI, EEI,
+        EC extends SfAbstractEdgeConfig<EI, NI>>
         extends SfVariableContext, Serializable {
 
-    void setEdgeExecutionId(EDGE_EXECUTION_ID edgeExecutionId);
+    void setEdgeExecutionId(EEI edgeExecutionId);
 
-    EDGE_EXECUTION_ID getEdgeExecutionId();
+    EEI getEdgeExecutionId();
 
-    void setEdgeConfig(EDGE_CONFIG edgeConfig);
+    void setEdgeConfig(EC edgeConfig);
 
-    EDGE_CONFIG getEdgeConfig();
+    EC getEdgeConfig();
 
 }

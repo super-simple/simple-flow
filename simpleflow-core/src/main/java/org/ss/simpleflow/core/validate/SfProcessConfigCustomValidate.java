@@ -10,17 +10,17 @@ import org.ss.simpleflow.core.processengine.SfProcessEngineConfig;
 /**
  * 校验
  */
-public interface SfProcessConfigCustomValidate<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
-        NODE_CONFIG extends SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID>,
-        EDGE_CONFIG extends SfAbstractEdgeConfig<EDGE_ID, NODE_ID>,
-        PROCESS_CONFIG_GRAPH extends SfProcessConfigGraph<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG>,
-        PROCESS_CONFIG extends SfAbstractProcessConfig<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH>,
-        PROCESS_EXECUTION_ID> {
+public interface SfProcessConfigCustomValidate<NI, EI, PCI,
+        NC extends SfAbstractNodeConfig<NI, PCI>,
+        EC extends SfAbstractEdgeConfig<EI, NI>,
+        PCG extends SfProcessConfigGraph<NI, EI, PCI, NC, EC>,
+        PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC, PCG>,
+        PEI> {
 
-    void customValidate(PROCESS_CONFIG processConfig,
-                        SfProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
-                                NODE_CONFIG, EDGE_CONFIG,
-                                PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext,
+    void customValidate(PC processConfig,
+                        SfProcessContext<NI, EI, PCI,
+                                NC, EC,
+                                PCG, PC, PEI> processContext,
                         SfProcessEngineConfig processEngineConfig);
 
 }

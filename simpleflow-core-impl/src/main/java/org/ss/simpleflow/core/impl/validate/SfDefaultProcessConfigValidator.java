@@ -15,18 +15,18 @@ import java.util.List;
 import java.util.Set;
 
 public class SfDefaultProcessConfigValidator
-        <NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
-                NODE_CONFIG extends SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID>,
-                EDGE_CONFIG extends SfAbstractEdgeConfig<EDGE_ID, NODE_ID>,
-                PROCESS_CONFIG_GRAPH extends SfProcessConfigGraph<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG>,
-                PROCESS_CONFIG extends SfAbstractProcessConfig<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH>,
-                PROCESS_EXECUTION_ID> {
-    public void preValidate(PROCESS_CONFIG processConfig,
-                            SfProcessContext<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
-                                    NODE_CONFIG, EDGE_CONFIG,
-                                    PROCESS_CONFIG_GRAPH, PROCESS_CONFIG, PROCESS_EXECUTION_ID> processContext,
-                            SfProcessEngineConfig processEngineConfig) {
-        PROCESS_CONFIG_ID processConfigId = processConfig.getId();
+        <NI, EI, PCI,
+                NC extends SfAbstractNodeConfig<NI, PCI>,
+                EC extends SfAbstractEdgeConfig<EI, NI>,
+                PCG extends SfProcessConfigGraph<NI, EI, PCI, NC, EC>,
+                PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC, PCG>,
+                PEI> {
+    public void basicValidate(PC processConfig,
+                              SfProcessContext<NI, EI, PCI,
+                                      NC, EC,
+                                      PCG, PC, PEI> processContext,
+                              SfProcessEngineConfig processEngineConfig) {
+        PCI processConfigId = processConfig.getId();
         if (processConfigId == null) {
             throw new SfProcessConfigException(SfProcessConfigExceptionCode.NO_PROCESS_ID,
                                                processConfig,
@@ -35,12 +35,12 @@ public class SfDefaultProcessConfigValidator
                                                processEngineConfig);
         }
 
-        List<PROCESS_CONFIG_GRAPH> subProcessConfigList = processConfig.getSubProcessConfigList();
+        List<PCG> subProcessConfigList = processConfig.getSubProcessConfigList();
         if (CollectionUtils.isNotEmpty(subProcessConfigList)) {
-            Set<PROCESS_CONFIG_ID> processConfigIdSet = new HashSet<>(subProcessConfigList.size() + 1);
+            Set<PCI> processConfigIdSet = new HashSet<>(subProcessConfigList.size() + 1);
             processConfigIdSet.add(processConfigId);
-            for (PROCESS_CONFIG_GRAPH processConfigGraph : subProcessConfigList) {
-                PROCESS_CONFIG_ID subProcessConfigId = processConfigGraph.getId();
+            for (PCG processConfigGraph : subProcessConfigList) {
+                PCI subProcessConfigId = processConfigGraph.getId();
                 if (subProcessConfigId == null) {
                     throw new SfProcessConfigException(SfProcessConfigExceptionCode.NO_PROCESS_ID,
                                                        processConfig,

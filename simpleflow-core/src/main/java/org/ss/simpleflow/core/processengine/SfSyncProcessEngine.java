@@ -8,22 +8,22 @@ import org.ss.simpleflow.core.processconfig.SfProcessConfigGraph;
 
 import java.util.Map;
 
-public interface SfSyncProcessEngine<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID,
-        NODE_CONFIG extends SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID>,
-        EDGE_CONFIG extends SfAbstractEdgeConfig<EDGE_ID, NODE_ID>,
-        PROCESS_CONFIG_GRAPH extends SfProcessConfigGraph<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG>,
-        PROCESS_CONFIG extends SfAbstractProcessConfig<NODE_ID, EDGE_ID, PROCESS_CONFIG_ID, NODE_CONFIG, EDGE_CONFIG, PROCESS_CONFIG_GRAPH>,
-        NODE_EXECUTION_ID, EDGE_EXECUTION_ID, PROCESS_EXECUTION_ID> {
+public interface SfSyncProcessEngine<NI, EI, PCI,
+        NC extends SfAbstractNodeConfig<NI, PCI>,
+        EC extends SfAbstractEdgeConfig<EI, NI>,
+        PCG extends SfProcessConfigGraph<NI, EI, PCI, NC, EC>,
+        PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC, PCG>,
+        NEI, EEI, PEI> {
 
-    SfProcessReturn<PROCESS_EXECUTION_ID> runProcess(PROCESS_CONFIG processConfig,
-                                                     PROCESS_EXECUTION_ID executionId,
-                                                     Map<String, Object> params,
-                                                     Map<String, Object> env);
+    SfProcessReturn<PEI> runProcess(PC processConfig,
+                                    PEI executionId,
+                                    Map<String, Object> params,
+                                    Map<String, Object> env);
 
-    SfProcessReturn<PROCESS_EXECUTION_ID> runProcess(PROCESS_CONFIG processConfig,
-                                                     Map<String, Object> params,
-                                                     Map<String, Object> env);
+    SfProcessReturn<PEI> runProcess(PC processConfig,
+                                    Map<String, Object> params,
+                                    Map<String, Object> env);
 
-    SfProcessReturn<PROCESS_EXECUTION_ID> runProcess(PROCESS_CONFIG processConfig, Map<String, Object> params);
+    SfProcessReturn<PEI> runProcess(PC processConfig, Map<String, Object> params);
 
 }

@@ -2,32 +2,32 @@ package org.ss.simpleflow.core.context;
 
 import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
 
-public abstract class SfAbstractNodeContext<NODE_ID, PROCESS_CONFIG_ID, NODE_EXECUTION_ID,
-        NODE_CONFIG extends SfAbstractNodeConfig<NODE_ID, PROCESS_CONFIG_ID>>
+public abstract class SfAbstractNodeContext<NI, PCI, NEI,
+        NC extends SfAbstractNodeConfig<NI, PCI>>
         extends SfDefaultVariableContext
-        implements SfNodeContext<NODE_ID, PROCESS_CONFIG_ID, NODE_EXECUTION_ID, NODE_CONFIG> {
+        implements SfNodeContext<NI, PCI, NEI, NC> {
 
-    protected NODE_EXECUTION_ID nodeExecutionId;
+    protected NEI nodeExecutionId;
 
-    protected NODE_CONFIG nodeConfig;
+    protected NC nodeConfig;
 
     @Override
-    public void setNodeExecutionId(NODE_EXECUTION_ID nodeExecutionId) {
+    public void setNodeExecutionId(NEI nodeExecutionId) {
         this.nodeExecutionId = nodeExecutionId;
     }
 
     @Override
-    public NODE_EXECUTION_ID getNodeExecutionId() {
+    public NEI getNodeExecutionId() {
         return nodeExecutionId;
     }
 
     @Override
-    public void setNodeConfig(NODE_CONFIG nodeConfig) {
+    public void setNodeConfig(NC nodeConfig) {
         this.nodeConfig = nodeConfig;
     }
 
     @Override
-    public NODE_CONFIG getNodeConfig() {
+    public NC getNodeConfig() {
         return nodeConfig;
     }
 
