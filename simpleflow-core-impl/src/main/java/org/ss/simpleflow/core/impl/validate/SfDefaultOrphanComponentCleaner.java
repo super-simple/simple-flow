@@ -65,7 +65,7 @@ public class SfDefaultOrphanComponentCleaner<NI, EI, PCI,
                                        processConfig,
                                        subProcessConfig,
                                        processContext,
-                                       executionGlobalContext.getMainExecutionProcessContext(), processEngineConfig);
+                                       subExecutionProcessContext, processEngineConfig);
             }
         }
     }
@@ -77,6 +77,16 @@ public class SfDefaultOrphanComponentCleaner<NI, EI, PCI,
                                         SfProcessContext<NI, EI, PCI, NC, EC, PCG, PC, PEI> processContext,
                                         SfExecutionProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> executionProcessContext,
                                         SfProcessEngineConfig processEngineConfig) {
+        if (CollectionUtils.isNullOrEmpty(edgeConfigList)) {
+            Iterator<NC> iterator = nodeConfigList.iterator();
+            if (iterator.hasNext()) {
+                NC next = iterator.next();
+                if (!next.isStartNode()) {
+                    iterator.remove();
+                }
+            }
+            return;
+        }
 
         List<EC> controlEdgeList = CollectionUtils.collect(edgeConfigList,
                                                            SfAbstractEdgeConfig::isControlEdge);
@@ -96,6 +106,12 @@ public class SfDefaultOrphanComponentCleaner<NI, EI, PCI,
                 NI nodeId = nodeConfig.getId();
                 if (!visitedNodeSet.contains(nodeId)) {
                     visitedNodeSet.add(nodeId);
+
+                    if (nodeConfig.isSubProcessNode()) {
+                        Set<PCI> subProcessConfigIdSet = SfDefaultBasicValidator.getSubProcessConfigIdSet(
+                                executionProcessContext);
+                        subProcessConfigIdSet.add(nodeConfig.getProcessId());
+                    }
 
                     StackUtils.pushAllToStack(stack, outgoingControlEdgeMap.get(nodeId));
                 }
