@@ -4,10 +4,9 @@ import org.ss.simpleflow.common.CollectionUtils;
 import org.ss.simpleflow.common.MapUtils;
 import org.ss.simpleflow.common.MultiMapUtils;
 import org.ss.simpleflow.core.component.SfComponentConfig;
-import org.ss.simpleflow.core.context.SfExecutionGlobalContext;
-import org.ss.simpleflow.core.context.SfExecutionProcessContext;
-import org.ss.simpleflow.core.context.SfExecutionProcessInternalContext;
 import org.ss.simpleflow.core.context.SfProcessContext;
+import org.ss.simpleflow.core.context.SfValidationGlobalContext;
+import org.ss.simpleflow.core.context.SfValidationProcessContext;
 import org.ss.simpleflow.core.edge.SfAbstractEdgeConfig;
 import org.ss.simpleflow.core.impl.exceptional.*;
 import org.ss.simpleflow.core.impl.util.StackUtils;
@@ -56,33 +55,33 @@ public class SfDefaultBasicValidator<NI, EI, PCI,
 
     public void basicValidate(PC processConfig,
                               SfProcessContext<NI, EI, PCI, NC, EC, PCG, PC, PEI> processContext,
-                              SfExecutionGlobalContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> executionGlobalContext,
+                              SfValidationGlobalContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> validationGlobalContext,
                               SfProcessEngineConfig processEngineConfig) {
         processConfigValidator.basicValidate(processConfig, processContext, processEngineConfig);
 
         List<NC> nodeConfigList = processConfig.getNodeConfigList();
         List<EC> edgeConfigList = processConfig.getEdgeConfigList();
-        SfExecutionProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> mainExecutionProcessContext = executionGlobalContext.getMainExecutionProcessContext();
+        SfValidationProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> mainProcessValidationContext = validationGlobalContext.getMainProcessValidationContext();
         validateNodeAndEdge(nodeConfigList,
                             edgeConfigList,
                             processConfig,
                             null,
                             processContext,
-                            mainExecutionProcessContext,
+                            mainProcessValidationContext,
                             processEngineConfig);
 
         List<PCG> subProcessConfigList = processConfig.getSubProcessConfigList();
         if (CollectionUtils.isNotEmpty(subProcessConfigList)) {
-            List<SfExecutionProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI>> subExecutionProcessContextList = executionGlobalContext.getSubExecutionProcessContextList();
+            List<SfValidationProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI>> subValidationProcessContextList = validationGlobalContext.getSubValidationProcessContextList();
             int size = subProcessConfigList.size();
             for (int i = 0; i < size; i++) {
-                SfExecutionProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> subExecutionProcessContext = subExecutionProcessContextList.get(
+                SfValidationProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> subValidationProcessContext = subValidationProcessContextList.get(
                         i);
                 PCG processConfigGraph = subProcessConfigList.get(i);
                 validateNodeAndEdge(processConfigGraph.getNodeConfigList(), processConfigGraph.getEdgeConfigList(),
                                     processConfig, processConfigGraph,
                                     processContext,
-                                    subExecutionProcessContext,
+                                    subValidationProcessContext,
                                     processEngineConfig);
             }
         }
@@ -92,56 +91,58 @@ public class SfDefaultBasicValidator<NI, EI, PCI,
         if (processEngineConfig.isCleanOrphanNode()) {
             orphanComponentCleaner.cleanOrphanComponent(processConfig,
                                                         processContext,
-                                                        executionGlobalContext,
+                                                        validationGlobalContext,
                                                         processEngineConfig);
 
         }
 
-        cleanUnreferencedSubProcess(processConfig, subProcessConfigList, executionGlobalContext);
+        collectReferencedSubProcess(processConfig, processContext, validationGlobalContext, processEngineConfig);
+
+        cleanUnreferencedSubProcess(processConfig, subProcessConfigList, validationGlobalContext);
 
         if (processEngineConfig.isCleanOrphanNode()) {
-            wholeGraphValidate(processConfig, processContext, executionGlobalContext, processEngineConfig);
+            orphanComponentValidate(processConfig, processContext, validationGlobalContext, processEngineConfig);
         }
     }
 
-    private void wholeGraphValidate(PC processConfig,
-                                    SfProcessContext<NI, EI, PCI, NC, EC, PCG, PC, PEI> processContext,
-                                    SfExecutionGlobalContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> executionGlobalContext,
-                                    SfProcessEngineConfig processEngineConfig) {
+    private void orphanComponentValidate(PC processConfig,
+                                         SfProcessContext<NI, EI, PCI, NC, EC, PCG, PC, PEI> processContext,
+                                         SfValidationGlobalContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> validationGlobalContext,
+                                         SfProcessEngineConfig processEngineConfig) {
         List<NC> nodeConfigList = processConfig.getNodeConfigList();
         List<EC> edgeConfigList = processConfig.getEdgeConfigList();
 
-        graphValidate(nodeConfigList, edgeConfigList, processConfig, null, processContext,
-                      executionGlobalContext.getMainExecutionProcessContext(), processEngineConfig);
+        orphanComponentValidate(nodeConfigList, edgeConfigList, processConfig, null, processContext,
+                                validationGlobalContext.getMainProcessValidationContext(), processEngineConfig);
 
         List<PCG> subProcessConfigList = processConfig.getSubProcessConfigList();
         if (CollectionUtils.isNotEmpty(subProcessConfigList)) {
             int size = subProcessConfigList.size();
-            List<SfExecutionProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI>> subExecutionProcessContextList = executionGlobalContext.getSubExecutionProcessContextList();
+            List<SfValidationProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI>> subValidationProcessContextList = validationGlobalContext.getSubValidationProcessContextList();
             for (int i = 0; i < size; i++) {
                 PCG pcg = subProcessConfigList.get(i);
-                SfExecutionProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> subExecutionProcessContext = subExecutionProcessContextList.get(
+                SfValidationProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> subValidationGlobalContext = subValidationProcessContextList.get(
                         i);
                 List<NC> subNodeConfigList = pcg.getNodeConfigList();
                 List<EC> subEdgeConfigList = pcg.getEdgeConfigList();
-                graphValidate(subNodeConfigList,
-                              subEdgeConfigList,
-                              processConfig,
-                              pcg,
-                              processContext,
-                              subExecutionProcessContext,
-                              processEngineConfig);
+                orphanComponentValidate(subNodeConfigList,
+                                        subEdgeConfigList,
+                                        processConfig,
+                                        pcg,
+                                        processContext,
+                                        subValidationGlobalContext,
+                                        processEngineConfig);
             }
         }
     }
 
-    private void graphValidate(List<NC> nodeConfigList,
-                               List<EC> edgeConfigList,
-                               PC processConfig,
-                               PCG processConfigGraph,
-                               SfProcessContext<NI, EI, PCI, NC, EC, PCG, PC, PEI> processContext,
-                               SfExecutionProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> executionProcessContext,
-                               SfProcessEngineConfig processEngineConfig) {
+    private void orphanComponentValidate(List<NC> nodeConfigList,
+                                         List<EC> edgeConfigList,
+                                         PC processConfig,
+                                         PCG processConfigGraph,
+                                         SfProcessContext<NI, EI, PCI, NC, EC, PCG, PC, PEI> processContext,
+                                         SfValidationProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> processValidationContext,
+                                         SfProcessEngineConfig processEngineConfig) {
         int edgeConfigListSize = edgeConfigList.size();
         if (CollectionUtils.isNullOrEmpty(edgeConfigList)) {
             if (edgeConfigListSize != 1) {
@@ -162,9 +163,8 @@ public class SfDefaultBasicValidator<NI, EI, PCI,
         Set<NI> visitedNodeSet = new HashSet<>();
         Deque<SfComponentConfig> stack = new ArrayDeque<>();
 
-        SfExecutionProcessInternalContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> executionInternalContext = executionProcessContext.getExecutionInternalContext();
-        stack.push(executionInternalContext.getStartNodeConfig());
-        Map<NI, NC> nodeConfigMap = executionInternalContext.getNodeConfigMap();
+        stack.push(processValidationContext.getStartNodeConfig());
+        Map<NI, NC> nodeConfigMap = processValidationContext.getNodeConfigMap();
 
         int nodeConfigListSize = nodeConfigList.size();
         int nodeConfigCount = 1;
@@ -198,22 +198,65 @@ public class SfDefaultBasicValidator<NI, EI, PCI,
         }
     }
 
+    private void collectReferencedSubProcess(
+            PC processConfig,
+            SfProcessContext<NI, EI, PCI, NC, EC, PCG, PC, PEI> processContext,
+            SfValidationGlobalContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> validationGlobalContext,
+            SfProcessEngineConfig processEngineConfig) {
+        SfValidationProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> mainProcessValidationContext = validationGlobalContext.getMainProcessValidationContext();
+        Set<PCI> mainSubProcessConfigIdSet = mainProcessValidationContext.getSubProcessConfigIdSet();
+        List<PCG> subProcessConfigList = processConfig.getSubProcessConfigList();
+        if (CollectionUtils.isNotEmpty(mainSubProcessConfigIdSet)) {
+            Set<PCI> referencedSubProcessConfigIdSet = new HashSet<>();
+            Map<PCI, Set<PCI>> subProcessContainProcessConfigIdMap = new HashMap<>();
+            subProcessContainProcessConfigIdMap.put(processConfig.getId(), mainSubProcessConfigIdSet);
+
+            int size = subProcessConfigList.size();
+            List<SfValidationProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI>> subValidationProcessContextList = validationGlobalContext.getSubValidationProcessContextList();
+            for (int i = 0; i < size; i++) {
+                PCG processConfigGraph = subProcessConfigList.get(i);
+                SfValidationProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> subValidationProcessContext = subValidationProcessContextList.get(
+                        i);
+                subProcessContainProcessConfigIdMap.put(processConfigGraph.getId(),
+                                                        subValidationProcessContext.getSubProcessConfigIdSet());
+            }
+
+            Deque<PCI> stack = new ArrayDeque<>();
+            StackUtils.pushAllToStack(stack, mainSubProcessConfigIdSet);
+            while (!stack.isEmpty()) {
+                PCI pop = stack.pop();
+                if (subProcessContainProcessConfigIdMap.containsKey(pop)) {
+                    referencedSubProcessConfigIdSet.add(pop);
+                    Set<PCI> processConfigIdSet = subProcessContainProcessConfigIdMap.get(pop);
+                    StackUtils.pushAllToStack(stack, processConfigIdSet);
+                } else {
+                    throw new SfProcessConfigException(SfProcessConfigExceptionCode.NO_SUB_PROCESS,
+                                                       null,
+                                                       null,
+                                                       processContext,
+                                                       processEngineConfig);
+                }
+            }
+
+            validationGlobalContext.setSubProcessContainProcessConfigIdMap(subProcessContainProcessConfigIdMap);
+            validationGlobalContext.setReferencedSubProcessConfigIdSet(referencedSubProcessConfigIdSet);
+        }
+    }
+
     private void cleanUnreferencedSubProcess(
             PC processConfig,
             List<PCG> subProcessConfigList,
-            SfExecutionGlobalContext<NI, EI, PCI,
-                    NC, EC,
-                    PCG, PC,
-                    NEI, EEI, PEI> executionGlobalContext
-    ) {
-        Set<PCI> referencedSubProcessConfigIdSet = executionGlobalContext.getReferencedSubProcessConfigIdSet();
-        if (CollectionUtils.isNullOrEmpty(referencedSubProcessConfigIdSet)) {
+            SfValidationGlobalContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> validationGlobalContext) {
+        SfValidationProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> mainProcessValidationContext = validationGlobalContext.getMainProcessValidationContext();
+        Set<PCI> subProcessConfigIdSet = mainProcessValidationContext.getSubProcessConfigIdSet();
+        if (CollectionUtils.isNullOrEmpty(subProcessConfigIdSet)) {
             processConfig.setSubProcessConfigList(null);
-            executionGlobalContext.setSubExecutionProcessContextList(null);
+            validationGlobalContext.setSubValidationProcessContextList(null);
         } else {
-            List<SfExecutionProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI>> subExecutionProcessContextList = executionGlobalContext.getSubExecutionProcessContextList();
+            Set<PCI> referencedSubProcessConfigIdSet = validationGlobalContext.getReferencedSubProcessConfigIdSet();
+            List<SfValidationProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI>> subValidationProcessContextList = validationGlobalContext.getSubValidationProcessContextList();
             Iterator<PCG> subProcessConfigListIterator = subProcessConfigList.iterator();
-            Iterator<SfExecutionProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI>> subExecutionProcessContextListIterator = subExecutionProcessContextList.iterator();
+            Iterator<SfValidationProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI>> subExecutionProcessContextListIterator = subValidationProcessContextList.iterator();
             while (subProcessConfigListIterator.hasNext()) {
                 PCG subProcessConfig = subProcessConfigListIterator.next();
                 PCI subProcessConfigId = subProcessConfig.getId();
@@ -229,13 +272,13 @@ public class SfDefaultBasicValidator<NI, EI, PCI,
                                      List<EC> edgeConfigList,
                                      PC processConfig, PCG processConfigGraph,
                                      SfProcessContext<NI, EI, PCI, NC, EC, PCG, PC, PEI> processContext,
-                                     SfExecutionProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> executionProcessContext,
+                                     SfValidationProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> processValidationContext,
                                      SfProcessEngineConfig processEngineConfig) {
         Set<NI> nodeIdSet = validateNode(nodeConfigList,
                                          processConfig,
                                          processConfigGraph,
                                          processContext,
-                                         executionProcessContext,
+                                         processValidationContext,
                                          processEngineConfig);
 
         validateEdge(nodeConfigList,
@@ -244,7 +287,7 @@ public class SfDefaultBasicValidator<NI, EI, PCI,
                      processConfig,
                      processConfigGraph,
                      processContext,
-                     executionProcessContext,
+                     processValidationContext,
                      processEngineConfig
         );
     }
@@ -255,13 +298,12 @@ public class SfDefaultBasicValidator<NI, EI, PCI,
                               PC processConfig,
                               PCG processConfigGraph,
                               SfProcessContext<NI, EI, PCI, NC, EC, PCG, PC, PEI> processContext,
-                              SfExecutionProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> executionProcessContext,
+                              SfValidationProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> processValidationContext,
                               SfProcessEngineConfig processEngineConfig) {
         Map<NI, NC> nodeConfigMap = MapUtils.uniqueIndex(nodeConfigList,
                                                          SfAbstractNodeConfig::getId);
 
-        SfExecutionProcessInternalContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> executionInternalContext = executionProcessContext.getExecutionInternalContext();
-        executionInternalContext.setNodeConfigMap(nodeConfigMap);
+        processValidationContext.setNodeConfigMap(nodeConfigMap);
 
         if (CollectionUtils.isNotEmpty(edgeConfigList)) {
             Set<EI> edgeIdSet = new HashSet<>(edgeConfigList.size());
@@ -379,7 +421,7 @@ public class SfDefaultBasicValidator<NI, EI, PCI,
                                  PC processConfig,
                                  PCG processConfigGraph,
                                  SfProcessContext<NI, EI, PCI, NC, EC, PCG, PC, PEI> processContext,
-                                 SfExecutionProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> executionProcessContext,
+                                 SfValidationProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> processValidationContext,
                                  SfProcessEngineConfig processEngineConfig) {
         if (CollectionUtils.isNullOrEmpty(nodeConfigList)) {
             throw new SfProcessConfigException(SfProcessConfigExceptionCode.NO_NODE,
@@ -428,7 +470,7 @@ public class SfDefaultBasicValidator<NI, EI, PCI,
 
             if (nodeConfig.isSubProcessNode()) {
                 if (!processEngineConfig.isCleanOrphanNode()) {
-                    Set<PCI> subProcessConfigIdSet = getSubProcessConfigIdSet(executionProcessContext);
+                    Set<PCI> subProcessConfigIdSet = getSubProcessConfigIdSet(processValidationContext);
                     subProcessConfigIdSet.add(nodeConfig.getProcessId());
                 }
             }
@@ -442,8 +484,7 @@ public class SfDefaultBasicValidator<NI, EI, PCI,
                                                processEngineConfig);
         }
 
-        SfExecutionProcessInternalContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> executionInternalContext = executionProcessContext.getExecutionInternalContext();
-        executionInternalContext.setStartNodeConfig(startNodeConfig);
+        processValidationContext.setStartNodeConfig(startNodeConfig);
         return nodeIdSet;
     }
 
@@ -453,12 +494,11 @@ public class SfDefaultBasicValidator<NI, EI, PCI,
             PCG extends SfProcessConfigGraph<NI, EI, PCI, NC, EC>,
             PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC, PCG>,
             NEI, EEI, PEI> Set<PCI> getSubProcessConfigIdSet(
-            SfExecutionProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> executionProcessContext) {
-        SfExecutionProcessInternalContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> executionInternalContext = executionProcessContext.getExecutionInternalContext();
-        Set<PCI> subProcessConfigIdSet = executionInternalContext.getSubProcessConfigIdSet();
+            SfValidationProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> processValidationContext) {
+        Set<PCI> subProcessConfigIdSet = processValidationContext.getSubProcessConfigIdSet();
         if (CollectionUtils.isNullOrEmpty(subProcessConfigIdSet)) {
             subProcessConfigIdSet = new HashSet<>();
-            executionInternalContext.setSubProcessConfigIdSet(subProcessConfigIdSet);
+            processValidationContext.setSubProcessConfigIdSet(subProcessConfigIdSet);
         }
         return subProcessConfigIdSet;
     }

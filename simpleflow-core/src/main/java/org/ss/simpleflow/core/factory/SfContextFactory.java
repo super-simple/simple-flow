@@ -37,5 +37,13 @@ public interface SfContextFactory<NI, EI, PCI,
             PCG, PC,
             NEI, EEI, PEI> createExecutionProcessInternalContext();
 
+    SfValidationGlobalContext<NI, EI, PCI, NC, EC,
+            PCG, PC,
+            NEI, EEI, PEI> createValidationGlobalContext();
+
+    SfValidationProcessContext<NI, EI, PCI, NC, EC,
+            PCG, PC,
+            NEI, EEI, PEI> createProcessValidationContext();
+
     SfProcessReturn<PEI> createProcessReturn();
 }

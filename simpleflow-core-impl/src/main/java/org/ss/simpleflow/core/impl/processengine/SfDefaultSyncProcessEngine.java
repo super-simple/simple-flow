@@ -6,12 +6,10 @@ import org.ss.simpleflow.common.CollectionUtils;
 import org.ss.simpleflow.core.aspect.SfEdgeAspect;
 import org.ss.simpleflow.core.aspect.SfNodeAspect;
 import org.ss.simpleflow.core.aspect.SfProcessAspect;
-import org.ss.simpleflow.core.context.SfExecutionGlobalContext;
-import org.ss.simpleflow.core.context.SfProcessContext;
-import org.ss.simpleflow.core.context.SfProcessReturn;
+import org.ss.simpleflow.core.context.*;
 import org.ss.simpleflow.core.edge.SfAbstractEdgeConfig;
 import org.ss.simpleflow.core.factory.*;
-import org.ss.simpleflow.core.impl.util.SfExecutionGlobalContextUtils;
+import org.ss.simpleflow.core.impl.util.SfValidationGlobalContextUtils;
 import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
 import org.ss.simpleflow.core.processconfig.SfAbstractProcessConfig;
 import org.ss.simpleflow.core.processconfig.SfProcessConfigGraph;
@@ -21,6 +19,7 @@ import org.ss.simpleflow.core.processengine.SfProcessExecutionIdGenerator;
 import org.ss.simpleflow.core.processengine.SfSyncProcessEngine;
 import org.ss.simpleflow.core.validate.SfValidateManager;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -175,12 +174,45 @@ public class SfDefaultSyncProcessEngine<NI, EI, PCI,
             }
         }
 
-        SfExecutionGlobalContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> executionGlobalContext = SfExecutionGlobalContextUtils.createGlobalContext(
-                processConfig, contextFactory);
-
-        validateManager.validate(processConfig, processContext, executionGlobalContext, processEngineConfig);
+        SfValidationGlobalContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> validationGlobalContext =
+                SfValidationGlobalContextUtils.createValidationGlobalContext(processConfig, contextFactory);
+        validateManager.validate(processConfig, processContext, validationGlobalContext, processEngineConfig);
 
         return null;
+    }
+
+
+    private SfExecutionGlobalContext<NI, EI, PCI,
+            NC, EC,
+            PCG, PC, NEI,
+            EEI, PEI> createExecutionGlobalContext(
+            PC processConfig,
+            SfContextFactory<NI, EI, PCI,
+                    NC, EC,
+                    PCG, PC,
+                    NEI, EEI, PEI> contextFactory) {
+        SfExecutionGlobalContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> executionGlobalContext = contextFactory.createExecutionGlobalContext();
+        SfExecutionProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> mainExecutionProcessContext = contextFactory.createExecutionProcessContext();
+        executionGlobalContext.setMainExecutionProcessContext(mainExecutionProcessContext);
+        mainExecutionProcessContext.setExecutionInternalContext(contextFactory.createExecutionProcessInternalContext());
+        mainExecutionProcessContext.setExecutionExternalContext(contextFactory.createExecutionProcessExternalContext());
+
+        List<PCG> subProcessConfigList = processConfig.getSubProcessConfigList();
+        if (CollectionUtils.isNotEmpty(subProcessConfigList)) {
+            int size = subProcessConfigList.size();
+            List<SfExecutionProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI>> subExecutionProcessContextList = new ArrayList<>(
+                    size);
+            executionGlobalContext.setSubExecutionProcessContextList(subExecutionProcessContextList);
+            for (int i = 0; i < size; i++) {
+                SfExecutionProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> subExecutionProcessContext = contextFactory.createExecutionProcessContext();
+                subExecutionProcessContextList.add(subExecutionProcessContext);
+
+                subExecutionProcessContext.setExecutionInternalContext(contextFactory.createExecutionProcessInternalContext());
+                subExecutionProcessContext.setExecutionExternalContext(contextFactory.createExecutionProcessExternalContext());
+            }
+        }
+
+        return executionGlobalContext;
     }
 
     @Override

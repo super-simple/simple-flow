@@ -6,7 +6,6 @@ import org.ss.simpleflow.core.processconfig.SfAbstractProcessConfig;
 import org.ss.simpleflow.core.processconfig.SfProcessConfigGraph;
 
 import java.util.List;
-import java.util.Set;
 
 public abstract class SfExecutionGlobalContext<NI, EI, PCI,
         NC extends SfAbstractNodeConfig<NI, PCI>,
@@ -15,17 +14,9 @@ public abstract class SfExecutionGlobalContext<NI, EI, PCI,
         PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC, PCG>,
         NEI, EEI, PEI> {
 
-    protected Set<PCI> referencedSubProcessConfigIdSet;
     protected SfExecutionProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> mainExecutionProcessContext;
+
     protected List<SfExecutionProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI>> subExecutionProcessContextList;
-
-    public Set<PCI> getReferencedSubProcessConfigIdSet() {
-        return referencedSubProcessConfigIdSet;
-    }
-
-    public void setReferencedSubProcessConfigIdSet(Set<PCI> referencedSubProcessConfigIdSet) {
-        this.referencedSubProcessConfigIdSet = referencedSubProcessConfigIdSet;
-    }
 
     public SfExecutionProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> getMainExecutionProcessContext() {
         return mainExecutionProcessContext;

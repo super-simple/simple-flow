@@ -4,10 +4,9 @@ import org.ss.simpleflow.common.CollectionUtils;
 import org.ss.simpleflow.common.MapUtils;
 import org.ss.simpleflow.common.MultiMapUtils;
 import org.ss.simpleflow.core.component.SfComponentConfig;
-import org.ss.simpleflow.core.context.SfExecutionGlobalContext;
-import org.ss.simpleflow.core.context.SfExecutionProcessContext;
-import org.ss.simpleflow.core.context.SfExecutionProcessInternalContext;
 import org.ss.simpleflow.core.context.SfProcessContext;
+import org.ss.simpleflow.core.context.SfValidationGlobalContext;
+import org.ss.simpleflow.core.context.SfValidationProcessContext;
 import org.ss.simpleflow.core.edge.SfAbstractEdgeConfig;
 import org.ss.simpleflow.core.impl.util.StackUtils;
 import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
@@ -35,10 +34,9 @@ public class SfDefaultOrphanComponentCleaner<NI, EI, PCI,
                                      SfProcessContext<NI, EI, PCI,
                                              NC, EC,
                                              PCG, PC, PEI> processContext,
-                                     SfExecutionGlobalContext<NI, EI, PCI,
+                                     SfValidationGlobalContext<NI, EI, PCI,
                                              NC, EC,
-                                             PCG, PC,
-                                             NEI, EEI, PEI> executionGlobalContext,
+                                             PCG, PC, NEI, EEI, PEI> validationGlobalContext,
                                      SfProcessEngineConfig processEngineConfig) {
         List<NC> nodeConfigList = processConfig.getNodeConfigList();
         List<EC> edgeConfigList = processConfig.getEdgeConfigList();
@@ -47,16 +45,16 @@ public class SfDefaultOrphanComponentCleaner<NI, EI, PCI,
                                processConfig,
                                null,
                                processContext,
-                               executionGlobalContext.getMainExecutionProcessContext(),
+                               validationGlobalContext.getMainProcessValidationContext(),
                                processEngineConfig);
 
         List<PCG> subProcessConfigList = processConfig.getSubProcessConfigList();
         if (CollectionUtils.isNotEmpty(subProcessConfigList)) {
-            List<SfExecutionProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI>> subExecutionProcessContextList = executionGlobalContext.getSubExecutionProcessContextList();
+            List<SfValidationProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI>> subValidationProcessContextList = validationGlobalContext.getSubValidationProcessContextList();
             int size = subProcessConfigList.size();
             for (int i = 0; i < size; i++) {
                 PCG subProcessConfig = subProcessConfigList.get(i);
-                SfExecutionProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> subExecutionProcessContext = subExecutionProcessContextList.get(
+                SfValidationProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> subValidationProcessContext = subValidationProcessContextList.get(
                         i);
                 List<NC> subNodeConfigList = subProcessConfig.getNodeConfigList();
                 List<EC> subEdgeConfigList = subProcessConfig.getEdgeConfigList();
@@ -65,7 +63,7 @@ public class SfDefaultOrphanComponentCleaner<NI, EI, PCI,
                                        processConfig,
                                        subProcessConfig,
                                        processContext,
-                                       subExecutionProcessContext, processEngineConfig);
+                                       subValidationProcessContext, processEngineConfig);
             }
         }
     }
@@ -75,7 +73,7 @@ public class SfDefaultOrphanComponentCleaner<NI, EI, PCI,
                                         PC processConfig,
                                         PCG processConfigGraph,
                                         SfProcessContext<NI, EI, PCI, NC, EC, PCG, PC, PEI> processContext,
-                                        SfExecutionProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> executionProcessContext,
+                                        SfValidationProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> processValidationContext,
                                         SfProcessEngineConfig processEngineConfig) {
         if (CollectionUtils.isNullOrEmpty(edgeConfigList)) {
             Iterator<NC> iterator = nodeConfigList.iterator();
@@ -96,9 +94,8 @@ public class SfDefaultOrphanComponentCleaner<NI, EI, PCI,
         Set<NI> visitedNodeSet = new HashSet<>();
         Deque<SfComponentConfig> stack = new ArrayDeque<>();
 
-        SfExecutionProcessInternalContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> executionInternalContext = executionProcessContext.getExecutionInternalContext();
-        stack.push(executionInternalContext.getStartNodeConfig());
-        Map<NI, NC> nodeConfigMap = executionInternalContext.getNodeConfigMap();
+        stack.push(processValidationContext.getStartNodeConfig());
+        Map<NI, NC> nodeConfigMap = processValidationContext.getNodeConfigMap();
         while (!stack.isEmpty()) {
             SfComponentConfig current = stack.pop();
             if (current instanceof SfAbstractNodeConfig) {
@@ -109,7 +106,7 @@ public class SfDefaultOrphanComponentCleaner<NI, EI, PCI,
 
                     if (nodeConfig.isSubProcessNode()) {
                         Set<PCI> subProcessConfigIdSet = SfDefaultBasicValidator.getSubProcessConfigIdSet(
-                                executionProcessContext);
+                                processValidationContext);
                         subProcessConfigIdSet.add(nodeConfig.getProcessId());
                     }
 
