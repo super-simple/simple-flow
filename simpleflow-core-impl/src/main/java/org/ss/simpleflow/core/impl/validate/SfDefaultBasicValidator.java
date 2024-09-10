@@ -96,13 +96,13 @@ public class SfDefaultBasicValidator<NI, EI, PCI,
 
         }
 
-        collectReferencedSubProcess(processConfig, processContext, validationGlobalContext, processEngineConfig);
-
-        cleanUnreferencedSubProcess(processConfig, subProcessConfigList, validationGlobalContext);
-
         if (processEngineConfig.isCleanOrphanNode()) {
             orphanComponentValidate(processConfig, processContext, validationGlobalContext, processEngineConfig);
         }
+
+        collectReferencedSubProcess(processConfig, processContext, validationGlobalContext, processEngineConfig);
+
+        cleanUnreferencedSubProcess(processConfig, subProcessConfigList, validationGlobalContext);
     }
 
     private void orphanComponentValidate(PC processConfig,
@@ -163,12 +163,12 @@ public class SfDefaultBasicValidator<NI, EI, PCI,
         Set<NI> visitedNodeSet = new HashSet<>();
         Deque<SfComponentConfig> stack = new ArrayDeque<>();
 
+        int nodeConfigCount = 1;
+        int edgeConfigCount = 0;
         stack.push(processValidationContext.getStartNodeConfig());
         Map<NI, NC> nodeConfigMap = processValidationContext.getNodeConfigMap();
 
         int nodeConfigListSize = nodeConfigList.size();
-        int nodeConfigCount = 1;
-        int edgeConfigCount = 0;
         while (!stack.isEmpty()) {
             SfComponentConfig current = stack.pop();
             if (current instanceof SfAbstractNodeConfig) {

@@ -18,7 +18,6 @@ public class SfAbstractNodeConfig<NI, PCI> implements SfNodeConfig<NI, PCI> {
     protected Map<String, SfNodeResult> resultMap;
     protected Set<String> enumGatewayEnumSet;
     protected PCI processId;
-    private SfNodeIndexEntry nodeIndexEntry;
 
     @Override
     public NI getId() {
@@ -104,14 +103,6 @@ public class SfAbstractNodeConfig<NI, PCI> implements SfNodeConfig<NI, PCI> {
 
     public void setEnumGatewayEnumSet(Set<String> enumGatewayEnumSet) {
         this.enumGatewayEnumSet = enumGatewayEnumSet;
-    }
-
-    public void setNodeIndexEntry(SfNodeIndexEntry nodeIndexEntry) {
-        this.nodeIndexEntry = nodeIndexEntry;
-    }
-
-    public SfNodeIndexEntry getNodeIndexEntry() {
-        return nodeIndexEntry;
     }
 
     public void setProcessId(PCI processId) {

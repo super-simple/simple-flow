@@ -1,10 +1,13 @@
 package org.ss.simpleflow.core.context;
 
 import org.ss.simpleflow.core.edge.SfAbstractEdgeConfig;
+import org.ss.simpleflow.core.edge.SfEdgeIndexEntry;
 import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
+import org.ss.simpleflow.core.node.SfNodeIndexEntry;
 import org.ss.simpleflow.core.processconfig.SfAbstractProcessConfig;
 import org.ss.simpleflow.core.processconfig.SfProcessConfigGraph;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -20,6 +23,10 @@ public abstract class SfValidationProcessContext<NI, EI, PCI,
     protected Map<NI, NC> nodeConfigMap;
 
     protected Set<PCI> subProcessConfigIdSet;
+
+    protected List<SfNodeIndexEntry> nodeIndexEntryList;
+
+    protected List<SfEdgeIndexEntry> edgeIndexEntryList;
 
     public NC getStartNodeConfig() {
         return startNodeConfig;
@@ -44,4 +51,21 @@ public abstract class SfValidationProcessContext<NI, EI, PCI,
     public void setSubProcessConfigIdSet(Set<PCI> subProcessConfigIdSet) {
         this.subProcessConfigIdSet = subProcessConfigIdSet;
     }
+
+    public List<SfNodeIndexEntry> getNodeIndexEntryList() {
+        return nodeIndexEntryList;
+    }
+
+    public void setNodeIndexEntryList(List<SfNodeIndexEntry> nodeIndexEntryList) {
+        this.nodeIndexEntryList = nodeIndexEntryList;
+    }
+
+    public List<SfEdgeIndexEntry> getEdgeIndexEntryList() {
+        return edgeIndexEntryList;
+    }
+
+    public void setEdgeIndexEntryList(List<SfEdgeIndexEntry> edgeIndexEntryList) {
+        this.edgeIndexEntryList = edgeIndexEntryList;
+    }
+
 }

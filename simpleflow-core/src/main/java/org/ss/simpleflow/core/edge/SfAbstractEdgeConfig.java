@@ -9,7 +9,6 @@ public class SfAbstractEdgeConfig<EI, NI> implements SfEdgeConfig<EI, NI> {
     protected String edgeType;
     protected String fromResultKey;
     protected String toParameterKey;
-    private SfEdgeIndexEntry edgeIndexEntry;
 
     @Override
     public EI getId() {
@@ -65,19 +64,15 @@ public class SfAbstractEdgeConfig<EI, NI> implements SfEdgeConfig<EI, NI> {
         this.toParameterKey = toParameterKey;
     }
 
-    public SfEdgeIndexEntry getEdgeIndexEntry() {
-        return edgeIndexEntry;
-    }
-
-    public void setEdgeIndexEntry(SfEdgeIndexEntry edgeIndexEntry) {
-        this.edgeIndexEntry = edgeIndexEntry;
-    }
-
     public boolean isControlEdge() {
         return SfEdgeTypeConstant.isControlEdge(edgeType);
     }
 
     public boolean isDataEdge() {
         return SfEdgeTypeConstant.isDataEdge(edgeType);
+    }
+
+    public int fetchEdgeTypeIndex() {
+        return SfEdgeTypeConstant.isControlEdge(edgeType) ? 0 : 1;
     }
 }
