@@ -15,7 +15,7 @@ public interface SfNodeConfig<NI, PCI> extends SfComponentConfig {
 
     String getEventType();
 
-    long getMaxLoopCount();
+    long getMaxExecuteCount();
 
     boolean isResultNode();
 

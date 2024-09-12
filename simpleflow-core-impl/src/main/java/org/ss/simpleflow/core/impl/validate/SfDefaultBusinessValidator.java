@@ -1,15 +1,17 @@
 package org.ss.simpleflow.core.impl.validate;
 
 import org.ss.simpleflow.common.CollectionUtils;
+import org.ss.simpleflow.common.IntList;
+import org.ss.simpleflow.core.constant.SfComponentIndexTypeConstant;
 import org.ss.simpleflow.core.context.SfProcessContext;
 import org.ss.simpleflow.core.context.SfValidationGlobalContext;
 import org.ss.simpleflow.core.context.SfValidationProcessContext;
 import org.ss.simpleflow.core.edge.SfAbstractEdgeConfig;
-import org.ss.simpleflow.core.edge.SfEdgeIndexEntry;
 import org.ss.simpleflow.core.impl.exceptional.SfProcessConfigException;
 import org.ss.simpleflow.core.impl.exceptional.SfProcessConfigExceptionCode;
+import org.ss.simpleflow.core.impl.util.StackUtils;
+import org.ss.simpleflow.core.index.SfIndexEntry;
 import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
-import org.ss.simpleflow.core.node.SfNodeIndexEntry;
 import org.ss.simpleflow.core.processconfig.SfAbstractProcessConfig;
 import org.ss.simpleflow.core.processconfig.SfProcessConfigGraph;
 import org.ss.simpleflow.core.processengine.SfProcessEngineConfig;
@@ -70,9 +72,53 @@ public class SfDefaultBusinessValidator<NI, EI, PCI,
                                  SfProcessEngineConfig processEngineConfig) {
         generateIndex(nodeConfigList, edgeConfigList, validationProcessContext);
 
-        List<SfEdgeIndexEntry> edgeIndexEntryList = validationProcessContext.getEdgeIndexEntryList();
+        List<SfIndexEntry> edgeIndexEntryList = validationProcessContext.getEdgeIndexEntryList();
         int nodeConfigListSize = nodeConfigList.size();
-        CollectionUtils.collect(edgeIndexEntryList, )
+        List<SfIndexEntry> controlLineList = CollectionUtils.collect(edgeIndexEntryList,
+                                                                     SfIndexEntry::isControlEdge);
+        List<List<SfIndexEntry>> allOutgoingControlEdgeList = new ArrayList<>(nodeConfigListSize);
+        for (int i = 0; i < nodeConfigListSize; i++) {
+            allOutgoingControlEdgeList.add(new ArrayList<>());
+        }
+        for (SfIndexEntry edgeIndexEntry : controlLineList) {
+            int fromNodeConfigIndex = edgeIndexEntry.getFromNodeConfigIndex();
+            List<SfIndexEntry> outgoingControlEdgeList = allOutgoingControlEdgeList.get(fromNodeConfigIndex);
+            outgoingControlEdgeList.add(edgeIndexEntry);
+        }
+
+        validationProcessContext.setAllOutgoingControlEdgeList(allOutgoingControlEdgeList);
+
+        computeLoopExpansion(validationProcessContext);
+    }
+
+    private void computeLoopExpansion(
+            SfValidationProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> validationProcessContext) {
+        List<SfIndexEntry> nodeIndexEntryList = validationProcessContext.getNodeIndexEntryList();
+        int nodeConfigListSize = nodeIndexEntryList.size();
+
+        List<List<SfIndexEntry>> allOutgoingControlEdgeList = validationProcessContext.getAllOutgoingControlEdgeList();
+
+        Deque<SfIndexEntry> stack = new ArrayDeque<>();
+        Integer startNodeConfigIndex = validationProcessContext.getStartNodeConfigIndex();
+        stack.push(nodeIndexEntryList.get(startNodeConfigIndex));
+
+        byte[] visitedNodeArray = new byte[nodeConfigListSize];
+        IntList loopStartNodeList = new IntList();
+        while (!stack.isEmpty()) {
+            SfIndexEntry current = stack.pop();
+            if (current.getIndexType() == SfComponentIndexTypeConstant.INDEX_TYPE_NODE) {
+                int selfIndex = current.getSelfIndex();
+                byte visited = visitedNodeArray[selfIndex];
+                if (visited == 0) {
+                    visitedNodeArray[selfIndex] = 1;
+                    StackUtils.pushAllToStack(stack, allOutgoingControlEdgeList.get(selfIndex));
+                } else {
+                    loopStartNodeList.add(selfIndex);
+                }
+            } else {
+                stack.push(nodeIndexEntryList.get(current.getToNodeConfigIndex()));
+            }
+        }
     }
 
     private void generateIndex(
@@ -80,13 +126,18 @@ public class SfDefaultBusinessValidator<NI, EI, PCI,
             List<EC> edgeConfigList,
             SfValidationProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> validationProcessContext) {
         int nodeConfigListSize = nodeConfigList.size();
-        List<SfNodeIndexEntry> nodeIndexEntryList = new ArrayList<>(nodeConfigListSize);
+        List<SfIndexEntry> nodeIndexEntryList = new ArrayList<>(nodeConfigListSize);
         Map<NI, Integer> nodeConfigIndexMap = new HashMap<>(nodeConfigListSize);
         for (int i = 0; i < nodeConfigListSize; i++) {
-            SfNodeIndexEntry nodeIndexEntry = new SfNodeIndexEntry();
-            nodeIndexEntry.setNodeIndex(i);
+            SfIndexEntry nodeIndexEntry = new SfIndexEntry();
+            nodeIndexEntry.setIndexTypeNode();
+            nodeIndexEntry.setSelfIndex(i);
             nodeIndexEntryList.add(nodeIndexEntry);
-            nodeConfigIndexMap.put(nodeConfigList.get(i).getId(), i);
+            NC nodeConfig = nodeConfigList.get(i);
+            if (nodeConfig.isStartNode()) {
+                validationProcessContext.setStartNodeConfigIndex(i);
+            }
+            nodeConfigIndexMap.put(nodeConfig.getId(), i);
         }
 
         validationProcessContext.setNodeIndexEntryList(nodeIndexEntryList);
@@ -96,15 +147,15 @@ public class SfDefaultBusinessValidator<NI, EI, PCI,
         }
 
         int edgeConfigListSize = edgeConfigList.size();
-        List<SfEdgeIndexEntry> edgeIndexEntryList = new ArrayList<>(edgeConfigListSize);
+        List<SfIndexEntry> edgeIndexEntryList = new ArrayList<>(edgeConfigListSize);
         for (int i = 0; i < edgeConfigListSize; i++) {
             EC edgeConfig = edgeConfigList.get(i);
-            SfEdgeIndexEntry edgeIndexEntry = new SfEdgeIndexEntry();
-
-            edgeIndexEntry.setEdgeTypeIndex(edgeConfig.fetchEdgeTypeIndex());
+            SfIndexEntry edgeIndexEntry = new SfIndexEntry();
+            edgeIndexEntry.setIndexTypeEdge();
 
             edgeIndexEntryList.add(edgeIndexEntry);
-            edgeIndexEntry.setEdgeIndex(i);
+            edgeIndexEntry.setEdgeTypeIndexControl();
+            edgeIndexEntry.setSelfIndex(i);
 
             NI fromNodeId = edgeConfig.getFromNodeId();
             NI toNodeId = edgeConfig.getToNodeId();

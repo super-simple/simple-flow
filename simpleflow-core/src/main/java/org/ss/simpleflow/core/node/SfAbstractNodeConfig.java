@@ -12,7 +12,7 @@ public class SfAbstractNodeConfig<NI, PCI> implements SfNodeConfig<NI, PCI> {
     protected String nodeType;
     protected String eventCode;
     protected String eventType;
-    protected long maxLoopCount = 0L;
+    protected long maxExecuteCount = 1L;
     protected boolean resultNode = false;
     protected Map<String, SfNodeParameter> parameterMap;
     protected Map<String, SfNodeResult> resultMap;
@@ -40,8 +40,8 @@ public class SfAbstractNodeConfig<NI, PCI> implements SfNodeConfig<NI, PCI> {
     }
 
     @Override
-    public long getMaxLoopCount() {
-        return maxLoopCount;
+    public long getMaxExecuteCount() {
+        return maxExecuteCount;
     }
 
     @Override
@@ -85,8 +85,8 @@ public class SfAbstractNodeConfig<NI, PCI> implements SfNodeConfig<NI, PCI> {
         this.eventType = eventType;
     }
 
-    public void setMaxLoopCount(long maxLoopCount) {
-        this.maxLoopCount = maxLoopCount;
+    public void setMaxExecuteCount(long maxExecuteCount) {
+        this.maxExecuteCount = maxExecuteCount;
     }
 
     public void setResultNode(boolean resultNode) {

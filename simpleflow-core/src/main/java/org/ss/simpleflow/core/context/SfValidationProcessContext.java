@@ -1,9 +1,8 @@
 package org.ss.simpleflow.core.context;
 
 import org.ss.simpleflow.core.edge.SfAbstractEdgeConfig;
-import org.ss.simpleflow.core.edge.SfEdgeIndexEntry;
+import org.ss.simpleflow.core.index.SfIndexEntry;
 import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
-import org.ss.simpleflow.core.node.SfNodeIndexEntry;
 import org.ss.simpleflow.core.processconfig.SfAbstractProcessConfig;
 import org.ss.simpleflow.core.processconfig.SfProcessConfigGraph;
 
@@ -20,13 +19,17 @@ public abstract class SfValidationProcessContext<NI, EI, PCI,
 
     protected NC startNodeConfig;
 
+    protected Integer startNodeConfigIndex;
+
     protected Map<NI, NC> nodeConfigMap;
 
     protected Set<PCI> subProcessConfigIdSet;
 
-    protected List<SfNodeIndexEntry> nodeIndexEntryList;
+    protected List<SfIndexEntry> nodeIndexEntryList;
 
-    protected List<SfEdgeIndexEntry> edgeIndexEntryList;
+    protected List<SfIndexEntry> edgeIndexEntryList;
+
+    protected List<List<SfIndexEntry>> allOutgoingControlEdgeList;
 
     public NC getStartNodeConfig() {
         return startNodeConfig;
@@ -34,6 +37,14 @@ public abstract class SfValidationProcessContext<NI, EI, PCI,
 
     public void setStartNodeConfig(NC startNodeConfig) {
         this.startNodeConfig = startNodeConfig;
+    }
+
+    public Integer getStartNodeConfigIndex() {
+        return startNodeConfigIndex;
+    }
+
+    public void setStartNodeConfigIndex(Integer startNodeConfigIndex) {
+        this.startNodeConfigIndex = startNodeConfigIndex;
     }
 
     public Map<NI, NC> getNodeConfigMap() {
@@ -52,20 +63,28 @@ public abstract class SfValidationProcessContext<NI, EI, PCI,
         this.subProcessConfigIdSet = subProcessConfigIdSet;
     }
 
-    public List<SfNodeIndexEntry> getNodeIndexEntryList() {
+    public List<SfIndexEntry> getNodeIndexEntryList() {
         return nodeIndexEntryList;
     }
 
-    public void setNodeIndexEntryList(List<SfNodeIndexEntry> nodeIndexEntryList) {
+    public void setNodeIndexEntryList(List<SfIndexEntry> nodeIndexEntryList) {
         this.nodeIndexEntryList = nodeIndexEntryList;
     }
 
-    public List<SfEdgeIndexEntry> getEdgeIndexEntryList() {
+    public List<SfIndexEntry> getEdgeIndexEntryList() {
         return edgeIndexEntryList;
     }
 
-    public void setEdgeIndexEntryList(List<SfEdgeIndexEntry> edgeIndexEntryList) {
+    public void setEdgeIndexEntryList(List<SfIndexEntry> edgeIndexEntryList) {
         this.edgeIndexEntryList = edgeIndexEntryList;
+    }
+
+    public List<List<SfIndexEntry>> getAllOutgoingControlEdgeList() {
+        return allOutgoingControlEdgeList;
+    }
+
+    public void setAllOutgoingControlEdgeList(List<List<SfIndexEntry>> allOutgoingControlEdgeList) {
+        this.allOutgoingControlEdgeList = allOutgoingControlEdgeList;
     }
 
 }
