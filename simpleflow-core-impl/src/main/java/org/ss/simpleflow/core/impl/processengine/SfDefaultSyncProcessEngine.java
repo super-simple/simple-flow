@@ -9,7 +9,6 @@ import org.ss.simpleflow.core.aspect.SfProcessAspect;
 import org.ss.simpleflow.core.context.*;
 import org.ss.simpleflow.core.edge.SfAbstractEdgeConfig;
 import org.ss.simpleflow.core.factory.*;
-import org.ss.simpleflow.core.impl.util.SfValidationGlobalContextUtils;
 import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
 import org.ss.simpleflow.core.processconfig.SfAbstractProcessConfig;
 import org.ss.simpleflow.core.processconfig.SfProcessConfigGraph;
@@ -162,12 +161,13 @@ public class SfDefaultSyncProcessEngine<NI, EI, PCI,
         }
         processContext.setProcessExecutionId(actualExecutionId);
 
+        SfVariableContext processVariableContext = new SfDefaultVariableContext();
         if (CollectionUtils.isNotEmpty(processAspectList)) {
             for (SfProcessAspect<NI, EI, PCI,
                     NC, EC, PCG,
                     PC, PEI> processAspect : processAspectList) {
                 try {
-                    processAspect.before(params, processContext);
+                    processAspect.before(params, processContext, processVariableContext);
                 } catch (Exception e) {
                     LOG.error("processAspect occur error", e);
                 }
@@ -175,8 +175,14 @@ public class SfDefaultSyncProcessEngine<NI, EI, PCI,
         }
 
         SfValidationGlobalContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> validationGlobalContext =
-                SfValidationGlobalContextUtils.createValidationGlobalContext(processConfig, contextFactory);
+                createValidationGlobalContext(processConfig, contextFactory);
         validateManager.validate(processConfig, processContext, validationGlobalContext, processEngineConfig);
+
+        SfExecutionGlobalContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> executionGlobalContext =
+                createExecutionGlobalContext(processConfig,
+                                             processVariableContext,
+                                             validationGlobalContext,
+                                             contextFactory);
 
         return null;
     }
@@ -187,6 +193,8 @@ public class SfDefaultSyncProcessEngine<NI, EI, PCI,
             PCG, PC, NEI,
             EEI, PEI> createExecutionGlobalContext(
             PC processConfig,
+            SfVariableContext processVariableContext,
+            SfValidationGlobalContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> validationGlobalContext,
             SfContextFactory<NI, EI, PCI,
                     NC, EC,
                     PCG, PC,
@@ -225,5 +233,26 @@ public class SfDefaultSyncProcessEngine<NI, EI, PCI,
     @Override
     public SfProcessReturn<PEI> runProcess(PC processConfig, Map<String, Object> params) {
         return runProcess(processConfig, params, null);
+    }
+
+    public SfValidationGlobalContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI>
+    createValidationGlobalContext(PC processConfig,
+                                  SfContextFactory<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> contextFactory) {
+        SfValidationGlobalContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> validationGlobalContext = contextFactory.createValidationGlobalContext();
+        SfValidationProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> mainProcessValidationContext = contextFactory.createProcessValidationContext();
+        validationGlobalContext.setMainProcessValidationContext(mainProcessValidationContext);
+
+        List<PCG> subProcessConfigList = processConfig.getSubProcessConfigList();
+        if (CollectionUtils.isNotEmpty(subProcessConfigList)) {
+            int size = subProcessConfigList.size();
+            List<SfValidationProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI>> subExecutionProcessContextList = new ArrayList<>(
+                    size);
+            validationGlobalContext.setSubValidationProcessContextList(subExecutionProcessContextList);
+            for (int i = 0; i < size; i++) {
+                SfValidationProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> processValidationContext = contextFactory.createProcessValidationContext();
+                subExecutionProcessContextList.add(processValidationContext);
+            }
+        }
+        return validationGlobalContext;
     }
 }

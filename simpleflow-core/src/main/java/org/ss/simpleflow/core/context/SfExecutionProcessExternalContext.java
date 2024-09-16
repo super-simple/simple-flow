@@ -14,7 +14,7 @@ public abstract class SfExecutionProcessExternalContext<NI, EI, PCI,
         PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC, PCG>,
         NEI, EEI, PEI> {
 
-    protected SfProcessVariableContext processVariableContext;
+    protected SfVariableContext processVariableContext;
     protected List<SfNodeFunctionContext> nodeFunctionContextList;
 
 }

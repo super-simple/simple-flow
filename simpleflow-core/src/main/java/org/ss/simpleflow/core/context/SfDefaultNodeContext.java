@@ -2,9 +2,9 @@ package org.ss.simpleflow.core.context;
 
 import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
 
-public abstract class SfAbstractNodeContext<NI, PCI, NEI,
+public abstract class SfDefaultNodeContext<NI, PCI, NEI,
         NC extends SfAbstractNodeConfig<NI, PCI>>
-        extends SfAbstractVariableContext
+        extends SfDefaultVariableContext
         implements SfNodeContext<NI, PCI, NEI, NC> {
 
     protected NEI nodeExecutionId;

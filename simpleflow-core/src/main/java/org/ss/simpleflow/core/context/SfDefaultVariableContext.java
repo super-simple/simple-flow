@@ -3,7 +3,7 @@ package org.ss.simpleflow.core.context;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class SfAbstractVariableContext implements SfVariableContext {
+public class SfDefaultVariableContext implements SfVariableContext {
 
     private Map<String, Object> variables;
 
