@@ -3,7 +3,7 @@ package org.ss.simpleflow.core.factory;
 import org.ss.simpleflow.core.context.SfEdgeContext;
 import org.ss.simpleflow.core.context.SfProcessContext;
 import org.ss.simpleflow.core.edge.SfAbstractEdgeConfig;
-import org.ss.simpleflow.core.edge.SfControEdge;
+import org.ss.simpleflow.core.edge.SfControlEdge;
 import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
 import org.ss.simpleflow.core.processconfig.SfAbstractProcessConfig;
 import org.ss.simpleflow.core.processconfig.SfProcessConfigGraph;
@@ -15,7 +15,7 @@ public interface SfControlEdgeFactory<NI, EI, PCI,
         PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC, PCG>,
         EEI, PEI> {
 
-    SfControEdge<NI, EI, PCI, NC,
+    SfControlEdge<NI, EI, PCI, NC,
             EC, PCG, PC, EEI, PEI>
     createControlEdge(
             SfEdgeContext<NI, EI, EEI, EC> edgeContext,

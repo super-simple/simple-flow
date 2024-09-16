@@ -19,7 +19,7 @@ public abstract class SfValidationProcessContext<NI, EI, PCI,
 
     protected NC startNodeConfig;
 
-    protected Integer startNodeConfigIndex;
+    protected int startNodeConfigIndex;
 
     protected Map<NI, NC> nodeConfigMap;
 
@@ -39,11 +39,11 @@ public abstract class SfValidationProcessContext<NI, EI, PCI,
         this.startNodeConfig = startNodeConfig;
     }
 
-    public Integer getStartNodeConfigIndex() {
+    public int getStartNodeConfigIndex() {
         return startNodeConfigIndex;
     }
 
-    public void setStartNodeConfigIndex(Integer startNodeConfigIndex) {
+    public void setStartNodeConfigIndex(int startNodeConfigIndex) {
         this.startNodeConfigIndex = startNodeConfigIndex;
     }
 

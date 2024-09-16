@@ -2,7 +2,6 @@ package org.ss.simpleflow.core.impl.validate;
 
 import org.ss.simpleflow.common.CollectionUtils;
 import org.ss.simpleflow.common.IntList;
-import org.ss.simpleflow.core.constant.SfComponentIndexTypeConstant;
 import org.ss.simpleflow.core.context.SfProcessContext;
 import org.ss.simpleflow.core.context.SfValidationGlobalContext;
 import org.ss.simpleflow.core.context.SfValidationProcessContext;
@@ -106,7 +105,7 @@ public class SfDefaultBusinessValidator<NI, EI, PCI,
         IntList loopStartNodeList = new IntList();
         while (!stack.isEmpty()) {
             SfIndexEntry current = stack.pop();
-            if (current.getIndexType() == SfComponentIndexTypeConstant.INDEX_TYPE_NODE) {
+            if (current.isNode()) {
                 int selfIndex = current.getSelfIndex();
                 byte visited = visitedNodeArray[selfIndex];
                 if (visited == 0) {

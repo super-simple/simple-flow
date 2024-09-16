@@ -12,7 +12,7 @@ public interface SfProcessContext<NI, EI, PCI,
         EC extends SfAbstractEdgeConfig<EI, NI>,
         PCG extends SfProcessConfigGraph<NI, EI, PCI, NC, EC>,
         PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC, PCG>,
-        PEI> extends SfVariableContext, Serializable {
+        PEI> extends Serializable {
 
     void setParentProcessContext(SfProcessContext<NI, EI, PCI,
             NC, EC,
