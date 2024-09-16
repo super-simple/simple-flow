@@ -161,7 +161,7 @@ public class SfDefaultSyncProcessEngine<NI, EI, PCI,
         }
         processContext.setProcessExecutionId(actualExecutionId);
 
-        SfVariableContext processVariableContext = new SfDefaultVariableContext();
+        SfProcessVariableContext processVariableContext = new SfDefaultProcessVariableContext();
         if (CollectionUtils.isNotEmpty(processAspectList)) {
             for (SfProcessAspect<NI, EI, PCI,
                     NC, EC, PCG,

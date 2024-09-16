@@ -2,9 +2,9 @@ package org.ss.simpleflow.core.context;
 
 import org.ss.simpleflow.core.edge.SfAbstractEdgeConfig;
 
-public abstract class SfDefaultEdgeContext<NI, EI, EEI, EC
+public abstract class SfAbstractEdgeContext<NI, EI, EEI, EC
         extends SfAbstractEdgeConfig<EI, NI>>
-        extends SfDefaultVariableContext
+        extends SfAbstractVariableContext
         implements SfEdgeContext<NI, EI, EEI, EC> {
 
     protected EEI edgeExecutionId;
