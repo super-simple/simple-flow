@@ -27,4 +27,51 @@ public abstract class SfExecutionProcessInternalContext<NI, EI, PCI,
 
     protected List<List<SfIndexEntry>> allOutgoingControlEdgeList;
 
+    public SfProcessContext<NI, EI, PCI, NC, EC, PCG, PC, PEI> getProcessContext() {
+        return processContext;
+    }
+
+    public void setProcessContext(SfProcessContext<NI, EI, PCI, NC, EC, PCG, PC, PEI> processContext) {
+        this.processContext = processContext;
+    }
+
+    public int getProcessConfigIndex() {
+        return processConfigIndex;
+    }
+
+    public void setProcessConfigIndex(int processConfigIndex) {
+        this.processConfigIndex = processConfigIndex;
+    }
+
+    public int getStartNodeConfigIndex() {
+        return startNodeConfigIndex;
+    }
+
+    public void setStartNodeConfigIndex(int startNodeConfigIndex) {
+        this.startNodeConfigIndex = startNodeConfigIndex;
+    }
+
+    public List<SfIndexEntry> getNodeIndexEntryList() {
+        return nodeIndexEntryList;
+    }
+
+    public void setNodeIndexEntryList(List<SfIndexEntry> nodeIndexEntryList) {
+        this.nodeIndexEntryList = nodeIndexEntryList;
+    }
+
+    public List<SfIndexEntry> getEdgeIndexEntryList() {
+        return edgeIndexEntryList;
+    }
+
+    public void setEdgeIndexEntryList(List<SfIndexEntry> edgeIndexEntryList) {
+        this.edgeIndexEntryList = edgeIndexEntryList;
+    }
+
+    public List<List<SfIndexEntry>> getAllOutgoingControlEdgeList() {
+        return allOutgoingControlEdgeList;
+    }
+
+    public void setAllOutgoingControlEdgeList(List<List<SfIndexEntry>> allOutgoingControlEdgeList) {
+        this.allOutgoingControlEdgeList = allOutgoingControlEdgeList;
+    }
 }

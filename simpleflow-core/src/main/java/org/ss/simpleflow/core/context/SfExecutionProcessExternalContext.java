@@ -17,4 +17,19 @@ public abstract class SfExecutionProcessExternalContext<NI, EI, PCI,
     protected SfVariableContext processVariableContext;
     protected List<SfNodeFunctionContext> nodeFunctionContextList;
 
+    public SfVariableContext getProcessVariableContext() {
+        return processVariableContext;
+    }
+
+    public void setProcessVariableContext(SfVariableContext processVariableContext) {
+        this.processVariableContext = processVariableContext;
+    }
+
+    public List<SfNodeFunctionContext> getNodeFunctionContextList() {
+        return nodeFunctionContextList;
+    }
+
+    public void setNodeFunctionContextList(List<SfNodeFunctionContext> nodeFunctionContextList) {
+        this.nodeFunctionContextList = nodeFunctionContextList;
+    }
 }
