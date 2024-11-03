@@ -1,7 +1,7 @@
 package org.ss.simpleflow.core.impl.validate;
 
+import org.ss.simpleflow.common.ArrayUtils;
 import org.ss.simpleflow.common.CollectionUtils;
-import org.ss.simpleflow.common.MapUtils;
 import org.ss.simpleflow.common.MultiMapUtils;
 import org.ss.simpleflow.core.component.SfComponentConfig;
 import org.ss.simpleflow.core.context.SfProcessContext;
@@ -121,7 +121,7 @@ public class SfDefaultOrphanComponentCleaner<NI, EI, PCI,
         nodeConfigList.removeIf(nodeConfig -> !visitedNodeSet.contains(nodeConfig.getId()));
         if (CollectionUtils.isNotEmpty(edgeConfigList)) {
 
-            Map<NI, Set<String>> parameterKeySetMap = new HashMap<>();
+            Map<NI, Set<Integer>> parameterKeySetMap = new HashMap<>();
             Iterator<EC> edgeConfigListIterator = edgeConfigList.iterator();
             while (edgeConfigListIterator.hasNext()) {
                 EC next = edgeConfigListIterator.next();
@@ -130,19 +130,27 @@ public class SfDefaultOrphanComponentCleaner<NI, EI, PCI,
                 }
                 if (next.isDataEdge()) {
                     NI fromNodeId = next.getFromNodeId();
-                    Set<String> parameterKeySet = parameterKeySetMap.computeIfAbsent(fromNodeId, k -> new HashSet<>());
-                    parameterKeySet.add(next.getFromResultKey());
+                    Set<Integer> parameterKeySet = parameterKeySetMap.computeIfAbsent(fromNodeId, k -> new HashSet<>());
+                    parameterKeySet.add(next.getFromResultIndex());
                 }
             }
 
             for (NC nodeConfig : nodeConfigList) {
-                Map<String, SfNodeParameter> parameterMap = nodeConfig.getParameterMap();
-                if (MapUtils.isNotEmpty(parameterMap)) {
-                    Set<String> parameterKeySet = parameterKeySetMap.get(nodeConfig.getId());
-                    if (CollectionUtils.isNullOrEmpty(parameterKeySet)) {
-                        nodeConfig.setParameterMap(null);
+                SfNodeParameter[] parameter = nodeConfig.getParameter();
+                if (ArrayUtils.isNotEmpty(parameter)) {
+                    Set<Integer> parameterIndexSet = parameterKeySetMap.get(nodeConfig.getId());
+                    if (CollectionUtils.isNullOrEmpty(parameterIndexSet)) {
+                        nodeConfig.setParameter(null);
                     } else {
-                        parameterMap.keySet().removeIf(parameterKey -> !parameterKeySet.contains(parameterKey));
+                        int[] indexArray = new int[parameter.length];
+                        for (Integer parameterIndex : parameterIndexSet) {
+                            indexArray[parameterIndex] = 1;
+                        }
+                        for (int i = 0; i < parameter.length; i++) {
+                            if (indexArray[i] == 0) {
+                                parameter[i] = null;
+                            }
+                        }
                     }
                 }
             }

@@ -4,7 +4,6 @@ import org.ss.simpleflow.core.constant.SfBuiltInEventCodeConstant;
 import org.ss.simpleflow.core.constant.SfEventTypeConstant;
 import org.ss.simpleflow.core.constant.SfNodeTypeConstant;
 
-import java.util.Map;
 import java.util.Set;
 
 public class SfAbstractNodeConfig<NI, PCI> implements SfNodeConfig<NI, PCI> {
@@ -14,8 +13,8 @@ public class SfAbstractNodeConfig<NI, PCI> implements SfNodeConfig<NI, PCI> {
     protected String eventType;
     protected long maxExecuteCount = 1L;
     protected boolean resultNode = false;
-    protected Map<String, SfNodeParameter> parameterMap;
-    protected Map<String, SfNodeResult> resultMap;
+    protected SfNodeParameter[] parameter;
+    protected SfNodeResult[] result;
     protected Set<String> enumGatewayEnumSet;
     protected PCI processId;
 
@@ -50,13 +49,13 @@ public class SfAbstractNodeConfig<NI, PCI> implements SfNodeConfig<NI, PCI> {
     }
 
     @Override
-    public Map<String, SfNodeParameter> getParameterMap() {
-        return parameterMap;
+    public SfNodeParameter[] getParameter() {
+        return parameter;
     }
 
     @Override
-    public Map<String, SfNodeResult> getResultMap() {
-        return resultMap;
+    public SfNodeResult[] getResult() {
+        return result;
     }
 
     @Override
@@ -93,12 +92,12 @@ public class SfAbstractNodeConfig<NI, PCI> implements SfNodeConfig<NI, PCI> {
         this.resultNode = resultNode;
     }
 
-    public void setParameterMap(Map<String, SfNodeParameter> parameterMap) {
-        this.parameterMap = parameterMap;
+    public void setParameter(SfNodeParameter[] parameter) {
+        this.parameter = parameter;
     }
 
-    public void setResultMap(Map<String, SfNodeResult> resultMap) {
-        this.resultMap = resultMap;
+    public void setResult(SfNodeResult[] result) {
+        this.result = result;
     }
 
     public void setEnumGatewayEnumSet(Set<String> enumGatewayEnumSet) {

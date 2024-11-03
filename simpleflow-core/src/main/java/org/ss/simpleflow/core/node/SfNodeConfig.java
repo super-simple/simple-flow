@@ -2,7 +2,6 @@ package org.ss.simpleflow.core.node;
 
 import org.ss.simpleflow.core.component.SfComponentConfig;
 
-import java.util.Map;
 import java.util.Set;
 
 public interface SfNodeConfig<NI, PCI> extends SfComponentConfig {
@@ -19,9 +18,9 @@ public interface SfNodeConfig<NI, PCI> extends SfComponentConfig {
 
     boolean isResultNode();
 
-    Map<String, SfNodeParameter> getParameterMap();
+    SfNodeParameter[] getParameter();
 
-    Map<String, SfNodeResult> getResultMap();
+    SfNodeResult[] getResult();
 
     Set<String> getEnumGatewayEnumSet();
 

@@ -12,8 +12,8 @@ public interface SfEdgeConfig<EI, NI> extends SfComponentConfig {
 
     String getEdgeType();
 
-    String getFromResultKey();
+    int getFromResultIndex();
 
-    String getToParameterKey();
+    int getToParameterIndex();
 
 }

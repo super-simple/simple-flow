@@ -1,5 +1,6 @@
 package org.ss.simpleflow.core.impl.validate;
 
+import org.ss.simpleflow.common.ArrayUtils;
 import org.ss.simpleflow.common.CollectionUtils;
 import org.ss.simpleflow.common.MapUtils;
 import org.ss.simpleflow.common.MultiMapUtils;
@@ -360,14 +361,15 @@ public class SfDefaultBasicValidator<NI, EI, PCI,
                         controlEdgeDistinctIdSet.add(uniqueKey);
                     }
                 } else {
-                    String fromResultKey = edgeConfig.getFromResultKey();
+                    int fromResultIndex = edgeConfig.getFromResultIndex();
                     NC fromNodeConfig = nodeConfigMap.get(fromNodeId);
-                    Map<String, SfNodeResult> resultMap = fromNodeConfig.getResultMap();
+                    SfNodeResult[] result = fromNodeConfig.getResult();
                     boolean wrongFromResultKey = false;
-                    if (MapUtils.isNullOrEmpty(resultMap)) {
+                    if (ArrayUtils.isNullOrEmpty(result)) {
                         wrongFromResultKey = true;
                     } else {
-                        if (!resultMap.containsKey(fromResultKey)) {
+                        int maxIndex = result.length - 1;
+                        if (fromResultIndex < 0 || fromResultIndex > maxIndex) {
                             wrongFromResultKey = true;
                         }
                     }
@@ -380,14 +382,15 @@ public class SfDefaultBasicValidator<NI, EI, PCI,
                                                         processEngineConfig);
                     }
 
-                    String toParameterKey = edgeConfig.getToParameterKey();
+                    int toParameterIndex = edgeConfig.getToParameterIndex();
                     NC toNodeConfig = nodeConfigMap.get(toNodeId);
-                    Map<String, SfNodeParameter> parameterMap = toNodeConfig.getParameterMap();
+                    SfNodeParameter[] parameter = toNodeConfig.getParameter();
                     boolean wrongToParameterKey = false;
-                    if (MapUtils.isNullOrEmpty(parameterMap)) {
+                    if (ArrayUtils.isNullOrEmpty(parameter)) {
                         wrongToParameterKey = true;
                     } else {
-                        if (!parameterMap.containsKey(toParameterKey)) {
+                        int maxIndex = parameter.length - 1;
+                        if (toParameterIndex < 0 || toParameterIndex > maxIndex) {
                             wrongToParameterKey = true;
                         }
                     }
@@ -400,8 +403,8 @@ public class SfDefaultBasicValidator<NI, EI, PCI,
                                                         processEngineConfig);
                     }
 
-                    String uniqueKey = fromNodeId.toString() + fromResultKey +
-                            toNodeId.toString() + toParameterKey;
+                    String uniqueKey = fromNodeId.toString() + fromResultIndex +
+                            toNodeId.toString() + toParameterIndex;
                     if (dataEdgeDistinctIdSet.contains(uniqueKey)) {
                         throw new SfEdgeConfigException(SfEdgeConfigExceptionCode.DATA_EDGE_REPEAT,
                                                         edgeConfig,

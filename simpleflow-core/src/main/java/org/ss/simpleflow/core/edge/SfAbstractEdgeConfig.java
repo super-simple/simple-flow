@@ -7,8 +7,8 @@ public class SfAbstractEdgeConfig<EI, NI> implements SfEdgeConfig<EI, NI> {
     protected NI fromNodeId;
     protected NI toNodeId;
     protected String edgeType;
-    protected String fromResultKey;
-    protected String toParameterKey;
+    protected int fromResultIndex;
+    protected int toParameterIndex;
 
     @Override
     public EI getId() {
@@ -31,13 +31,13 @@ public class SfAbstractEdgeConfig<EI, NI> implements SfEdgeConfig<EI, NI> {
     }
 
     @Override
-    public String getFromResultKey() {
-        return fromResultKey;
+    public int getFromResultIndex() {
+        return fromResultIndex;
     }
 
     @Override
-    public String getToParameterKey() {
-        return toParameterKey;
+    public int getToParameterIndex() {
+        return toParameterIndex;
     }
 
     public void setId(EI id) {
@@ -56,12 +56,12 @@ public class SfAbstractEdgeConfig<EI, NI> implements SfEdgeConfig<EI, NI> {
         this.edgeType = edgeType;
     }
 
-    public void setFromResultKey(String fromResultKey) {
-        this.fromResultKey = fromResultKey;
+    public void setFromResultIndex(int fromResultIndex) {
+        this.fromResultIndex = fromResultIndex;
     }
 
-    public void setToParameterKey(String toParameterKey) {
-        this.toParameterKey = toParameterKey;
+    public void setToParameterIndex(int toParameterIndex) {
+        this.toParameterIndex = toParameterIndex;
     }
 
     public boolean isControlEdge() {

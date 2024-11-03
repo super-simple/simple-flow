@@ -62,18 +62,18 @@ public class SfDefaultEdgeConfigValidator<NI, EI, PCI, NC extends SfAbstractNode
                 break;
             }
             case (SfEdgeTypeConstant.DATA): {
-                String fromResultKey = edgeConfig.getFromResultKey();
-                if (StringUtils.isNullOrEmpty(fromResultKey)) {
-                    throw new SfEdgeConfigException(SfEdgeConfigExceptionCode.NO_FROM_RESULT_KEY,
+                int fromResultIndex = edgeConfig.getFromResultIndex();
+                if (fromResultIndex < 0) {
+                    throw new SfEdgeConfigException(SfEdgeConfigExceptionCode.ILLEGAL_RESULT_INDEX,
                                                     edgeConfig,
                                                     processConfig,
                                                     null,
                                                     processContext,
                                                     processEngineConfig);
                 }
-                String toParameterKey = edgeConfig.getToParameterKey();
-                if (StringUtils.isNullOrEmpty(toParameterKey)) {
-                    throw new SfEdgeConfigException(SfEdgeConfigExceptionCode.NO_TO_PARAMETER_KEY,
+                int toParameterIndex = edgeConfig.getToParameterIndex();
+                if (toParameterIndex < 0) {
+                    throw new SfEdgeConfigException(SfEdgeConfigExceptionCode.ILLEGAL_PARAMETER_INDEX,
                                                     edgeConfig,
                                                     processConfig,
                                                     null,
