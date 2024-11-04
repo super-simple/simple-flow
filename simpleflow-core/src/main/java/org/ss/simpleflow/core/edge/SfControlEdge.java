@@ -8,8 +8,6 @@ import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
 import org.ss.simpleflow.core.processconfig.SfAbstractProcessConfig;
 import org.ss.simpleflow.core.processconfig.SfProcessConfigGraph;
 
-import java.util.Map;
-
 public interface SfControlEdge<NI, EI, PCI,
         NC extends SfAbstractNodeConfig<NI, PCI>,
         EC extends SfAbstractEdgeConfig<EI, NI>,
@@ -17,7 +15,7 @@ public interface SfControlEdge<NI, EI, PCI,
         PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC, PCG>,
         EEI, PEI> extends SfComponent {
 
-    boolean executeControlEdge(Map<String, Object> params,
+    boolean executeControlEdge(Object[] params,
                                SfEdgeContext<NI, EI, EEI, EC> edgeContext,
                                SfProcessContext<NI, EI, PCI, NC,
                                        EC, PCG, PC, PEI> processContext,

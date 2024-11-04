@@ -15,7 +15,7 @@ public interface SfDataEdge<NI, EI, PCI,
         PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC, PCG>,
         EEI, PEI> extends SfComponent {
 
-    Object executeDataEdge(Object source,
+    Object executeDataEdge(Object[] source,
                            SfEdgeContext<NI, EI, EEI, EC> edgeContext,
                            SfProcessContext<NI, EI, PCI, NC,
                                    EC, PCG, PC, PEI> processContext,

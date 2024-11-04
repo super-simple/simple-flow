@@ -9,8 +9,6 @@ import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
 import org.ss.simpleflow.core.processconfig.SfAbstractProcessConfig;
 import org.ss.simpleflow.core.processconfig.SfProcessConfigGraph;
 
-import java.util.Map;
-
 public interface SfEnumGateway<NI, EI, PCI,
         NC extends SfAbstractNodeConfig<NI, PCI>,
         EC extends SfAbstractEdgeConfig<EI, NI>,
@@ -18,7 +16,7 @@ public interface SfEnumGateway<NI, EI, PCI,
         PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC, PCG>,
         NEI, PEI> extends SfComponent {
 
-    String executeEnumGateway(Map<String, Object> params,
+    String executeEnumGateway(Object[] params,
                               SfNodeContext<NI, PCI, NEI, NC> nodeContext,
                               SfProcessContext<NI, EI, PCI, NC,
                                       EC, PCG, PC, PEI> processContext,

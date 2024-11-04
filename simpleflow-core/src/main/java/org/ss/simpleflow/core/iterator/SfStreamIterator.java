@@ -14,11 +14,11 @@ import java.util.Map;
 
 public interface SfStreamIterator<NI, EI, PCI, NC extends SfAbstractNodeConfig<NI, PCI>, EC extends SfAbstractEdgeConfig<EI, NI>, PCG extends SfProcessConfigGraph<NI, EI, PCI, NC, EC>, PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC, PCG>, NEI, PEI> extends SfComponent {
 
-    List<Map<String, Object>> map(Map<String, Object> params,
+    List<Map<String, Object>> map(Object[] params,
                                   SfNodeContext<NI, PCI, NEI, NC> nodeContext,
                                   SfProcessContext<NI, EI, PCI, NC, EC, PCG, PC, PEI> processContext) throws Exception;
 
-    default void collect(Map<String, Object> params,
+    default void collect(Object[] params,
                          Map<String, Object> resultMap,
                          SfNodeContext<NI, PCI, NEI, NC> nodeContext,
                          SfProcessContext<NI, EI, PCI, NC, EC, PCG, PC, PEI> processContext,

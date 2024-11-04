@@ -18,7 +18,7 @@ public interface SfEvent<NI, EI, PCI,
         PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC, PCG>,
         NEI, PEI> extends SfComponent {
 
-    Map<String, Object> executeEvent(Map<String, Object> params,
+    Map<String, Object> executeEvent(Object[] params,
                                      SfNodeContext<NI, PCI, NEI, NC> nodeContext,
                                      SfProcessContext<NI, EI, PCI, NC,
                                              EC, PCG, PC, PEI> processContext,
