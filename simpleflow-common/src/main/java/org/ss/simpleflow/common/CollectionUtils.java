@@ -15,8 +15,8 @@ public class CollectionUtils {
         return collection != null && !collection.isEmpty();
     }
 
-    public static <T> List<T> collect(Collection<T> originalList, Predicate<T> predicate) {
-        List<T> result = new ArrayList<>();
+    public static <T> List<T> collect(Collection<T> originalList, Predicate<T> predicate, int newListSize) {
+        List<T> result = new ArrayList<>(newListSize);
         for (T item : originalList) {
             if (predicate.test(item)) {
                 result.add(item);

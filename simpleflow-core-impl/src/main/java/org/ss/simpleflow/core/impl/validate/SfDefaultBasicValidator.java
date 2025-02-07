@@ -157,7 +157,7 @@ public class SfDefaultBasicValidator<NI, EI, PCI,
         }
 
         List<EC> controlEdgeList = CollectionUtils.collect(edgeConfigList,
-                                                           SfAbstractEdgeConfig::isControlEdge);
+                                                           SfAbstractEdgeConfig::isControlEdge, edgeConfigListSize / 2);
         Map<NI, List<EC>> outgoingControlEdgeMap = MultiMapUtils.index(controlEdgeList,
                                                                        SfAbstractEdgeConfig::getFromNodeId);
 

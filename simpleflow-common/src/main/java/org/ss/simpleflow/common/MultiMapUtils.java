@@ -9,7 +9,7 @@ public class MultiMapUtils {
         if (CollectionUtils.isNullOrEmpty(values)) {
             return Collections.emptyMap();
         }
-        Map<K, List<V>> result = new HashMap<>();
+        Map<K, List<V>> result = new HashMap<>(values.size());
         for (V value : values) {
             K apply = keyFunction.apply(value);
             List<V> vs = result.computeIfAbsent(apply, k -> new ArrayList<>());

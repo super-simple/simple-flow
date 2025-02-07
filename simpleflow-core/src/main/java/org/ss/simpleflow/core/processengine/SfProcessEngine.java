@@ -1,5 +1,6 @@
 package org.ss.simpleflow.core.processengine;
 
+import org.ss.simpleflow.core.context.SfExecutionGlobalContext;
 import org.ss.simpleflow.core.context.SfProcessExecuteResult;
 import org.ss.simpleflow.core.edge.SfAbstractEdgeConfig;
 import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
@@ -15,15 +16,16 @@ public interface SfProcessEngine<NI, EI, PCI,
         PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC, PCG>,
         NEI, EEI, PEI> {
 
-    SfProcessExecuteResult<PEI> runProcess(PC processConfig,
+    SfProcessExecuteResult<PEI> runProcess(SfExecutionGlobalContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> globalContext,
                                            PEI executionId,
                                            Map<String, Object> params,
                                            Map<String, Object> env);
 
-    SfProcessExecuteResult<PEI> runProcess(PC processConfig,
+    SfProcessExecuteResult<PEI> runProcess(SfExecutionGlobalContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> globalContext,
                                            Map<String, Object> params,
                                            Map<String, Object> env);
 
-    SfProcessExecuteResult<PEI> runProcess(PC processConfig, Map<String, Object> params);
+    SfProcessExecuteResult<PEI> runProcess(SfExecutionGlobalContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> globalContext,
+                                           Map<String, Object> params);
 
 }

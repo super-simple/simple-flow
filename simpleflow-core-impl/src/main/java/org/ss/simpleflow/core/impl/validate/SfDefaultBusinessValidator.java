@@ -74,7 +74,8 @@ public class SfDefaultBusinessValidator<NI, EI, PCI,
         List<SfIndexEntry> edgeIndexEntryList = validationProcessContext.getEdgeIndexEntryList();
         int nodeConfigListSize = nodeConfigList.size();
         List<SfIndexEntry> controlLineList = CollectionUtils.collect(edgeIndexEntryList,
-                                                                     SfIndexEntry::isControlEdge);
+                                                                     SfIndexEntry::isControlEdge,
+                                                                     edgeIndexEntryList.size() / 2);
         List<List<SfIndexEntry>> allOutgoingControlEdgeList = new ArrayList<>(nodeConfigListSize);
         for (int i = 0; i < nodeConfigListSize; i++) {
             allOutgoingControlEdgeList.add(new ArrayList<>());

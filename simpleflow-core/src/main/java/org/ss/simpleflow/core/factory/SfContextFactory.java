@@ -45,5 +45,5 @@ public interface SfContextFactory<NI, EI, PCI,
             PCG, PC,
             NEI, EEI, PEI> createProcessValidationContext();
 
-    SfProcessExecuteResult<PEI> createProcessReturn();
+    SfProcessExecuteResult<PEI> createProcessExecuteResult();
 }

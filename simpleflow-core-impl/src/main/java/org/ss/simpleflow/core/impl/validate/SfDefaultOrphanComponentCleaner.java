@@ -87,7 +87,8 @@ public class SfDefaultOrphanComponentCleaner<NI, EI, PCI,
         }
 
         List<EC> controlEdgeList = CollectionUtils.collect(edgeConfigList,
-                                                           SfAbstractEdgeConfig::isControlEdge);
+                                                           SfAbstractEdgeConfig::isControlEdge,
+                                                           edgeConfigList.size() / 2);
         Map<NI, List<EC>> outgoingControlEdgeMap = MultiMapUtils.index(controlEdgeList,
                                                                        SfAbstractEdgeConfig::getFromNodeId);
 
