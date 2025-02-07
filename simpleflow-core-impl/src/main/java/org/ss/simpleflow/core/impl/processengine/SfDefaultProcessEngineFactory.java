@@ -9,21 +9,21 @@ import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
 import org.ss.simpleflow.core.processconfig.SfAbstractProcessConfig;
 import org.ss.simpleflow.core.processconfig.SfProcessConfigGraph;
 import org.ss.simpleflow.core.processengine.SfComponentExecutionIdGenerator;
+import org.ss.simpleflow.core.processengine.SfProcessEngine;
 import org.ss.simpleflow.core.processengine.SfProcessEngineConfig;
 import org.ss.simpleflow.core.processengine.SfProcessExecutionIdGenerator;
-import org.ss.simpleflow.core.processengine.SfSyncProcessEngine;
 import org.ss.simpleflow.core.validate.SfValidateManager;
 
 import java.util.List;
 
-public class SfDefaultSyncProcessEngineFactory<NI, EI, PCI,
+public class SfDefaultProcessEngineFactory<NI, EI, PCI,
         NC extends SfAbstractNodeConfig<NI, PCI>,
         EC extends SfAbstractEdgeConfig<EI, NI>,
         PCG extends SfProcessConfigGraph<NI, EI, PCI, NC, EC>,
         PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC, PCG>,
-        NEI, EEI, PEI> implements SfSyncProcessEngineFactory<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> {
+        NEI, EEI, PEI> implements SfProcessEngineFactory<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> {
     @Override
-    public SfSyncProcessEngine<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> createSyncProcessEngine(
+    public SfProcessEngine<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> createProcessEngine(
             SfProcessEngineConfig processEngineConfig,
             SfControlEdgeFactory<NI, EI, PCI, NC, EC, PCG, PC, EEI, PEI> controlEdgeFactory,
             SfDataEdgeFactory<NI, EI, PCI, NC, EC, PCG, PC, EEI, PEI> dataEdgeFactory,
@@ -40,12 +40,12 @@ public class SfDefaultSyncProcessEngineFactory<NI, EI, PCI,
             List<SfEdgeAspect<NI, EI, PCI, NC, EC, PCG, PC, EEI, PEI>> edgeAspectList,
             List<SfNodeAspect<NI, EI, PCI, NC, EC, PCG, PC, NEI, PEI>> nodeAspectList,
             List<SfProcessAspect<NI, EI, PCI, NC, EC, PCG, PC, PEI>> processAspectList) {
-        return new SfDefaultSyncProcessEngine<>(processEngineConfig, controlEdgeFactory, dataEdgeFactory,
-                                                eventFactory, nodeFactory, enumGatewayFactory,
-                                                streamIteratorFactory, gatewayFactory, aroundIteratorFactory,
-                                                validateManager,
-                                                componentExecutionIdGenerator, processExecutionIdGenerator,
-                                                contextFactory,
-                                                edgeAspectList, nodeAspectList, processAspectList);
+        return new SfDefaultProcessEngine<>(processEngineConfig, controlEdgeFactory, dataEdgeFactory,
+                                            eventFactory, nodeFactory, enumGatewayFactory,
+                                            streamIteratorFactory, gatewayFactory, aroundIteratorFactory,
+                                            validateManager,
+                                            componentExecutionIdGenerator, processExecutionIdGenerator,
+                                            contextFactory,
+                                            edgeAspectList, nodeAspectList, processAspectList);
     }
 }

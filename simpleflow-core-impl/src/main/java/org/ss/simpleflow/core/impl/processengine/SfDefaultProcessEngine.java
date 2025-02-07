@@ -14,25 +14,25 @@ import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
 import org.ss.simpleflow.core.processconfig.SfAbstractProcessConfig;
 import org.ss.simpleflow.core.processconfig.SfProcessConfigGraph;
 import org.ss.simpleflow.core.processengine.SfComponentExecutionIdGenerator;
+import org.ss.simpleflow.core.processengine.SfProcessEngine;
 import org.ss.simpleflow.core.processengine.SfProcessEngineConfig;
 import org.ss.simpleflow.core.processengine.SfProcessExecutionIdGenerator;
-import org.ss.simpleflow.core.processengine.SfSyncProcessEngine;
 import org.ss.simpleflow.core.validate.SfValidateManager;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class SfDefaultSyncProcessEngine<NI, EI, PCI,
+public class SfDefaultProcessEngine<NI, EI, PCI,
         NC extends SfAbstractNodeConfig<NI, PCI>,
         EC extends SfAbstractEdgeConfig<EI, NI>,
         PCG extends SfProcessConfigGraph<NI, EI, PCI, NC, EC>,
         PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC, PCG>,
         NEI, EEI, PEI>
-        implements SfSyncProcessEngine<NI, EI, PCI, NC, EC, PCG,
+        implements SfProcessEngine<NI, EI, PCI, NC, EC, PCG,
         PC, NEI, EEI, PEI> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SfDefaultSyncProcessEngine.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SfDefaultProcessEngine.class);
 
     private final SfProcessEngineConfig processEngineConfig;
 
@@ -56,22 +56,22 @@ public class SfDefaultSyncProcessEngine<NI, EI, PCI,
     private final List<SfNodeAspect<NI, EI, PCI, NC, EC, PCG, PC, NEI, PEI>> nodeAspectList;
     private final List<SfProcessAspect<NI, EI, PCI, NC, EC, PCG, PC, PEI>> processAspectList;
 
-    SfDefaultSyncProcessEngine(SfProcessEngineConfig processEngineConfig,
-                               SfControlEdgeFactory<NI, EI, PCI, NC, EC, PCG, PC, EEI, PEI> controlEdgeFactory,
-                               SfDataEdgeFactory<NI, EI, PCI, NC, EC, PCG, PC, EEI, PEI> dataEdgeFactory,
-                               SfEventFactory<NI, EI, PCI, NC, EC, PCG, PC, NEI, PEI> eventFactory,
-                               SfNodeFactory<NI, EI, PCI, NC, EC, PCG, PC, NEI, PEI> nodeFactory,
-                               SfEnumGatewayFactory<NI, EI, PCI, NC, EC, PCG, PC, NEI, PEI> enumGatewayFactory,
-                               SfStreamIteratorFactory<NI, EI, PCI, NC, EC, PCG, PC, NEI, PEI> streamIteratorFactory,
-                               SfGatewayFactory<NI, EI, PCI, NC, EC, PCG, PC, NEI, PEI> gatewayFactory,
-                               SfAroundIteratorFactory<NI, EI, PCI, NC, EC, PCG, PC, NEI, PEI> aroundIteratorFactory,
-                               SfValidateManager<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> validateManager,
-                               SfComponentExecutionIdGenerator<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> componentExecutionIdGenerator,
-                               SfProcessExecutionIdGenerator<NI, EI, PCI, NC, EC, PCG, PC, PEI> processExecutionIdGenerator,
-                               SfContextFactory<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> contextFactory,
-                               List<SfEdgeAspect<NI, EI, PCI, NC, EC, PCG, PC, EEI, PEI>> edgeAspectList,
-                               List<SfNodeAspect<NI, EI, PCI, NC, EC, PCG, PC, NEI, PEI>> nodeAspectList,
-                               List<SfProcessAspect<NI, EI, PCI, NC, EC, PCG, PC, PEI>> processAspectList) {
+    SfDefaultProcessEngine(SfProcessEngineConfig processEngineConfig,
+                           SfControlEdgeFactory<NI, EI, PCI, NC, EC, PCG, PC, EEI, PEI> controlEdgeFactory,
+                           SfDataEdgeFactory<NI, EI, PCI, NC, EC, PCG, PC, EEI, PEI> dataEdgeFactory,
+                           SfEventFactory<NI, EI, PCI, NC, EC, PCG, PC, NEI, PEI> eventFactory,
+                           SfNodeFactory<NI, EI, PCI, NC, EC, PCG, PC, NEI, PEI> nodeFactory,
+                           SfEnumGatewayFactory<NI, EI, PCI, NC, EC, PCG, PC, NEI, PEI> enumGatewayFactory,
+                           SfStreamIteratorFactory<NI, EI, PCI, NC, EC, PCG, PC, NEI, PEI> streamIteratorFactory,
+                           SfGatewayFactory<NI, EI, PCI, NC, EC, PCG, PC, NEI, PEI> gatewayFactory,
+                           SfAroundIteratorFactory<NI, EI, PCI, NC, EC, PCG, PC, NEI, PEI> aroundIteratorFactory,
+                           SfValidateManager<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> validateManager,
+                           SfComponentExecutionIdGenerator<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> componentExecutionIdGenerator,
+                           SfProcessExecutionIdGenerator<NI, EI, PCI, NC, EC, PCG, PC, PEI> processExecutionIdGenerator,
+                           SfContextFactory<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> contextFactory,
+                           List<SfEdgeAspect<NI, EI, PCI, NC, EC, PCG, PC, EEI, PEI>> edgeAspectList,
+                           List<SfNodeAspect<NI, EI, PCI, NC, EC, PCG, PC, NEI, PEI>> nodeAspectList,
+                           List<SfProcessAspect<NI, EI, PCI, NC, EC, PCG, PC, PEI>> processAspectList) {
         if (processEngineConfig == null) {
             throw new IllegalArgumentException("SfProcessEngineConfig can not be null");
         }
@@ -143,10 +143,10 @@ public class SfDefaultSyncProcessEngine<NI, EI, PCI,
     }
 
     @Override
-    public SfProcessReturn<PEI> runProcess(PC processConfig,
-                                           PEI executionId,
-                                           Map<String, Object> params,
-                                           Map<String, Object> env) {
+    public SfProcessExecuteResult<PEI> runProcess(PC processConfig,
+                                                  PEI executionId,
+                                                  Map<String, Object> params,
+                                                  Map<String, Object> env) {
         if (processConfig == null) {
             throw new NullPointerException("processConfig can not be null");
         }
@@ -234,14 +234,14 @@ public class SfDefaultSyncProcessEngine<NI, EI, PCI,
     }
 
     @Override
-    public SfProcessReturn<PEI> runProcess(PC processConfig,
-                                           Map<String, Object> params,
-                                           Map<String, Object> env) {
+    public SfProcessExecuteResult<PEI> runProcess(PC processConfig,
+                                                  Map<String, Object> params,
+                                                  Map<String, Object> env) {
         return runProcess(processConfig, null, params, env);
     }
 
     @Override
-    public SfProcessReturn<PEI> runProcess(PC processConfig, Map<String, Object> params) {
+    public SfProcessExecuteResult<PEI> runProcess(PC processConfig, Map<String, Object> params) {
         return runProcess(processConfig, params, null);
     }
 

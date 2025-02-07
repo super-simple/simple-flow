@@ -2,7 +2,7 @@ package org.ss.simpleflow.core.context;
 
 import java.util.Map;
 
-public abstract class SfProcessReturn<PEI> {
+public abstract class SfProcessExecuteResult<PEI> {
     protected PEI executionId;
     protected Map<String, Object> resultMap;
     protected Map<String, Object> env;
