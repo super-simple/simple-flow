@@ -16,7 +16,7 @@ public interface ListMap<K, V> {
 
     List<V> values();
 
-    List<Entry<K, V>> entrySet();
+    List<Entry<K, V>> entryList();
 
     Set<K> keySet();
 

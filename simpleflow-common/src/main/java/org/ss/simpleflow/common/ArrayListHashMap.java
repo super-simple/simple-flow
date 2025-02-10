@@ -58,7 +58,7 @@ public class ArrayListHashMap<K, V> implements ListMap<K, V> {
     }
 
     @Override
-    public List<ListMap.Entry<K, V>> entrySet() {
+    public List<ListMap.Entry<K, V>> entryList() {
         return entries;
     }
 
