@@ -5,7 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.ss.simpleflow.core.aspect.SfEdgeAspect;
 import org.ss.simpleflow.core.aspect.SfNodeAspect;
 import org.ss.simpleflow.core.aspect.SfProcessAspect;
-import org.ss.simpleflow.core.context.SfExecutionGlobalContext;
+import org.ss.simpleflow.core.context.SfExecutionProcessContext;
+import org.ss.simpleflow.core.context.SfExecutionProcessInternalContext;
+import org.ss.simpleflow.core.context.SfExecutionWholeContext;
 import org.ss.simpleflow.core.context.SfProcessExecuteResult;
 import org.ss.simpleflow.core.edge.SfAbstractEdgeConfig;
 import org.ss.simpleflow.core.factory.*;
@@ -141,26 +143,30 @@ public class SfDefaultProcessEngine<NI, EI, PCI,
     }
 
     @Override
-    public SfProcessExecuteResult<PEI> runProcess(SfExecutionGlobalContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> globalContext,
+    public SfProcessExecuteResult<PEI> runProcess(SfExecutionWholeContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> wholeContext,
                                                   PEI executionId,
                                                   Map<String, Object> params,
                                                   Map<String, Object> env) {
+
+        SfExecutionProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> mainExecutionProcessContext = wholeContext.getMainExecutionProcessContext();
+        SfExecutionProcessInternalContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> executionInternalContext = mainExecutionProcessContext.getExecutionInternalContext();
+        int startNodeConfigIndex = executionInternalContext.getStartNodeConfigIndex();
 
 
         return null;
     }
 
     @Override
-    public SfProcessExecuteResult<PEI> runProcess(SfExecutionGlobalContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> globalContext,
+    public SfProcessExecuteResult<PEI> runProcess(SfExecutionWholeContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> wholeContext,
                                                   Map<String, Object> params,
                                                   Map<String, Object> env) {
-        return runProcess(globalContext, null, params, env);
+        return runProcess(wholeContext, null, params, env);
     }
 
     @Override
-    public SfProcessExecuteResult<PEI> runProcess(SfExecutionGlobalContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> globalContext,
+    public SfProcessExecuteResult<PEI> runProcess(SfExecutionWholeContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> wholeContext,
                                                   Map<String, Object> params) {
-        return runProcess(globalContext, params, null);
+        return runProcess(wholeContext, params, null);
     }
 
 }

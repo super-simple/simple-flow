@@ -1,6 +1,6 @@
 package org.ss.simpleflow.core.processengine;
 
-import org.ss.simpleflow.core.context.SfExecutionGlobalContext;
+import org.ss.simpleflow.core.context.SfExecutionWholeContext;
 import org.ss.simpleflow.core.edge.SfAbstractEdgeConfig;
 import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
 import org.ss.simpleflow.core.processconfig.SfAbstractProcessConfig;
@@ -13,6 +13,6 @@ public interface SfProcessValidateAndPreprocess<NI, EI, PCI,
         PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC, PCG>,
         NEI, EEI, PEI> {
 
-    SfExecutionGlobalContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> validateAndPreprocess(PC processConfig);
+    SfExecutionWholeContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> validateAndPreprocess(PC processConfig);
 
 }

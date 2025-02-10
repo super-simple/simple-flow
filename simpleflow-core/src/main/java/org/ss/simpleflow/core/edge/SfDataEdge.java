@@ -1,5 +1,6 @@
 package org.ss.simpleflow.core.edge;
 
+import org.ss.simpleflow.common.ListMap;
 import org.ss.simpleflow.core.component.SfComponent;
 import org.ss.simpleflow.core.context.SfEdgeContext;
 import org.ss.simpleflow.core.context.SfProcessContext;
@@ -15,7 +16,7 @@ public interface SfDataEdge<NI, EI, PCI,
         PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC, PCG>,
         EEI, PEI> extends SfComponent {
 
-    Object executeDataEdge(Object[] source,
+    Object executeDataEdge(ListMap<String, Object> params,
                            SfEdgeContext<NI, EI, EEI, EC> edgeContext,
                            SfProcessContext<NI, EI, PCI, NC,
                                    EC, PCG, PC, PEI> processContext,

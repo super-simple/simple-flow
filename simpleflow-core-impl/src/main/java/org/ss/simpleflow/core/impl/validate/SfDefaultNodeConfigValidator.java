@@ -22,7 +22,7 @@ public class SfDefaultNodeConfigValidator<NI, EI, PCI, NC extends SfAbstractNode
                               SfProcessEngineConfig processEngineConfig) {
         NI nodeId = nodeConfig.getId();
         if (nodeId == null) {
-            throw new SfNodeConfigException(SfNodeConfigExceptionCode.NO_NI,
+            throw new SfNodeConfigException(SfNodeConfigExceptionCode.NO_ID,
                                             nodeConfig,
                                             processConfig,
                                             null,

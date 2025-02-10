@@ -5,8 +5,8 @@ import org.ss.simpleflow.common.CollectionUtils;
 import org.ss.simpleflow.common.MultiMapUtils;
 import org.ss.simpleflow.core.component.SfComponentConfig;
 import org.ss.simpleflow.core.context.SfProcessContext;
-import org.ss.simpleflow.core.context.SfValidationGlobalContext;
 import org.ss.simpleflow.core.context.SfValidationProcessContext;
+import org.ss.simpleflow.core.context.SfValidationWholeContext;
 import org.ss.simpleflow.core.edge.SfAbstractEdgeConfig;
 import org.ss.simpleflow.core.impl.util.StackUtils;
 import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
@@ -34,7 +34,7 @@ public class SfDefaultOrphanComponentCleaner<NI, EI, PCI,
                                      SfProcessContext<NI, EI, PCI,
                                              NC, EC,
                                              PCG, PC, PEI> processContext,
-                                     SfValidationGlobalContext<NI, EI, PCI,
+                                     SfValidationWholeContext<NI, EI, PCI,
                                              NC, EC,
                                              PCG, PC, NEI, EEI, PEI> validationGlobalContext,
                                      SfProcessEngineConfig processEngineConfig) {

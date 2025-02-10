@@ -3,8 +3,8 @@ package org.ss.simpleflow.core.impl.validate;
 import org.ss.simpleflow.common.CollectionUtils;
 import org.ss.simpleflow.common.IntList;
 import org.ss.simpleflow.core.context.SfProcessContext;
-import org.ss.simpleflow.core.context.SfValidationGlobalContext;
 import org.ss.simpleflow.core.context.SfValidationProcessContext;
+import org.ss.simpleflow.core.context.SfValidationWholeContext;
 import org.ss.simpleflow.core.edge.SfAbstractEdgeConfig;
 import org.ss.simpleflow.core.impl.exceptional.SfProcessConfigException;
 import org.ss.simpleflow.core.impl.exceptional.SfProcessConfigExceptionCode;
@@ -26,7 +26,7 @@ public class SfDefaultBusinessValidator<NI, EI, PCI,
 
     public void businessValidate(PC processConfig,
                                  SfProcessContext<NI, EI, PCI, NC, EC, PCG, PC, PEI> processContext,
-                                 SfValidationGlobalContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> validationGlobalContext,
+                                 SfValidationWholeContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> validationGlobalContext,
                                  SfProcessEngineConfig processEngineConfig) {
 
         validateProcessCircularReference(processContext,
@@ -169,7 +169,7 @@ public class SfDefaultBusinessValidator<NI, EI, PCI,
 
     private void validateProcessCircularReference(
             SfProcessContext<NI, EI, PCI, NC, EC, PCG, PC, PEI> processContext,
-            SfValidationGlobalContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> validationGlobalContext,
+            SfValidationWholeContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> validationGlobalContext,
             SfProcessEngineConfig processEngineConfig) {
         SfValidationProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> mainProcessValidationContext = validationGlobalContext.getMainProcessValidationContext();
         Set<PCI> mainSubProcessConfigIdSet = mainProcessValidationContext.getSubProcessConfigIdSet();

@@ -1,7 +1,7 @@
 package org.ss.simpleflow.core.impl.validate;
 
 import org.ss.simpleflow.core.context.SfProcessContext;
-import org.ss.simpleflow.core.context.SfValidationGlobalContext;
+import org.ss.simpleflow.core.context.SfValidationWholeContext;
 import org.ss.simpleflow.core.edge.SfAbstractEdgeConfig;
 import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
 import org.ss.simpleflow.core.processconfig.SfAbstractProcessConfig;
@@ -37,7 +37,7 @@ public class SfDefaultValidateManager<NI, EI, PCI,
                          SfProcessContext<NI, EI, PCI,
                                  NC, EC,
                                  PCG, PC, PEI> processContext,
-                         SfValidationGlobalContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> validationGlobalContext,
+                         SfValidationWholeContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> validationGlobalContext,
                          SfProcessEngineConfig processEngineConfig) {
         basicValidator.basicValidate(processConfig, processContext, validationGlobalContext, processEngineConfig);
         businessValidator.businessValidate(processConfig, processContext, validationGlobalContext, processEngineConfig);

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public abstract class SfValidationGlobalContext<NI, EI, PCI,
+public abstract class SfValidationWholeContext<NI, EI, PCI,
         NC extends SfAbstractNodeConfig<NI, PCI>,
         EC extends SfAbstractEdgeConfig<EI, NI>,
         PCG extends SfProcessConfigGraph<NI, EI, PCI, NC, EC>,

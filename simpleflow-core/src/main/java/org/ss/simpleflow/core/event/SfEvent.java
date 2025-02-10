@@ -1,5 +1,6 @@
 package org.ss.simpleflow.core.event;
 
+import org.ss.simpleflow.common.ListMap;
 import org.ss.simpleflow.core.component.SfComponent;
 import org.ss.simpleflow.core.context.SfNodeContext;
 import org.ss.simpleflow.core.context.SfProcessContext;
@@ -18,7 +19,7 @@ public interface SfEvent<NI, EI, PCI,
         PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC, PCG>,
         NEI, PEI> extends SfComponent {
 
-    Map<String, Object> executeEvent(Object[] params,
+    Map<String, Object> executeEvent(ListMap<String, Object> params,
                                      SfNodeContext<NI, PCI, NEI, NC> nodeContext,
                                      SfProcessContext<NI, EI, PCI, NC,
                                              EC, PCG, PC, PEI> processContext,

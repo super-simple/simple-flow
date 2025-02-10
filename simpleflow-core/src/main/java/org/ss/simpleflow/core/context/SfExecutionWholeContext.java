@@ -7,7 +7,7 @@ import org.ss.simpleflow.core.processconfig.SfProcessConfigGraph;
 
 import java.util.List;
 
-public abstract class SfExecutionGlobalContext<NI, EI, PCI,
+public abstract class SfExecutionWholeContext<NI, EI, PCI,
         NC extends SfAbstractNodeConfig<NI, PCI>,
         EC extends SfAbstractEdgeConfig<EI, NI>,
         PCG extends SfProcessConfigGraph<NI, EI, PCI, NC, EC>,
