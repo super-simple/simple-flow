@@ -4,8 +4,18 @@ import java.util.*;
 
 public class ArrayListHashMap<K, V> implements ListMap<K, V> {
 
-    private final List<ListMap.Entry<K, V>> entries = new ArrayList<>();
-    private final Map<K, Integer> keyToIndex = new HashMap<>();
+    private final List<ListMap.Entry<K, V>> entries;
+    private final Map<K, Integer> keyToIndex;
+
+    public ArrayListHashMap() {
+        this.entries = new ArrayList<>();
+        this.keyToIndex = new HashMap<>();
+    }
+
+    public ArrayListHashMap(int initSize) {
+        this.entries = new ArrayList<>(initSize);
+        this.keyToIndex = new HashMap<>(initSize);
+    }
 
     @Override
     public void put(K key, V value) {
@@ -42,8 +52,10 @@ public class ArrayListHashMap<K, V> implements ListMap<K, V> {
 
     @Override
     public V removeByKey(K key) {
-        Integer index = keyToIndex.get(key);
-        if (index == null) return null;
+        Integer index = keyToIndex.remove(key);
+        if (index == null) {
+            return null;
+        }
         ListMap.Entry<K, V> removedEntry = entries.remove(index.intValue());
         return removedEntry.getValue();
     }
@@ -72,7 +84,7 @@ public class ArrayListHashMap<K, V> implements ListMap<K, V> {
         return entries.size();
     }
 
-    private static class Entry<K, V> implements ListMap.Entry<K, V> {
+    public static class Entry<K, V> implements ListMap.Entry<K, V> {
         K key;
         V value;
 
