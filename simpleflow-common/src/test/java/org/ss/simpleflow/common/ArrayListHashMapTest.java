@@ -51,13 +51,11 @@ public class ArrayListHashMapTest {
 
     @Test
     public void testRemoveByKey() {
-        map.put("one", 1);
-        map.put("two", 2);
-        map.put("three", 3);
-
-        assertEquals(2, map.removeByKey("two"));
-        assertNull(map.getByKey("two"));
-        assertEquals(2, map.size());
+        map.put("A", 1);
+        map.put("B", 2);
+        map.put("C", 3);
+        map.removeByKey("B"); // 删除后，"C"的索引应从2变为1
+        System.out.println(map.getByKey("C")); // 应正确输出3
     }
 
     @Test

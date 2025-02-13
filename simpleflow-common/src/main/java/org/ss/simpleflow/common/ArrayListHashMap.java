@@ -47,6 +47,11 @@ public class ArrayListHashMap<K, V> implements ListMap<K, V> {
     public V removeByIndex(int index) {
         ListMap.Entry<K, V> removedEntry = entries.remove(index);
         keyToIndex.remove(removedEntry.getKey());
+
+        // 修复点：更新后续元素的索引
+        for (int i = index; i < entries.size(); i++) {
+            keyToIndex.put(entries.get(i).getKey(), i);
+        }
         return removedEntry.getValue();
     }
 
@@ -57,6 +62,11 @@ public class ArrayListHashMap<K, V> implements ListMap<K, V> {
             return null;
         }
         ListMap.Entry<K, V> removedEntry = entries.remove(index.intValue());
+
+        // 修复点：更新后续元素的索引
+        for (int i = index; i < entries.size(); i++) {
+            keyToIndex.put(entries.get(i).getKey(), i);
+        }
         return removedEntry.getValue();
     }
 
