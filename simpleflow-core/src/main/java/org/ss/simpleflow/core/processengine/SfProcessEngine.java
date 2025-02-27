@@ -1,7 +1,7 @@
 package org.ss.simpleflow.core.processengine;
 
-import org.ss.simpleflow.core.context.SfExecutionWholeContext;
 import org.ss.simpleflow.core.context.SfProcessExecuteResult;
+import org.ss.simpleflow.core.context.SfWholePreprocessData;
 import org.ss.simpleflow.core.edge.SfAbstractEdgeConfig;
 import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
 import org.ss.simpleflow.core.processconfig.SfAbstractProcessConfig;
@@ -14,16 +14,16 @@ public interface SfProcessEngine<NI, EI, PCI,
         PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC>,
         NEI, EEI, PEI> {
 
-    SfProcessExecuteResult<PEI> runProcess(SfExecutionWholeContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> wholeContext,
+    SfProcessExecuteResult<PEI> runProcess(SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> wholePreprocessData,
                                            PEI executionId,
                                            Map<String, Object> params,
                                            Map<String, Object> env);
 
-    SfProcessExecuteResult<PEI> runProcess(SfExecutionWholeContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> wholeContext,
+    SfProcessExecuteResult<PEI> runProcess(SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> wholePreprocessData,
                                            Map<String, Object> params,
                                            Map<String, Object> env);
 
-    SfProcessExecuteResult<PEI> runProcess(SfExecutionWholeContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> wholeContext,
+    SfProcessExecuteResult<PEI> runProcess(SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> wholePreprocessData,
                                            Map<String, Object> params);
 
 }

@@ -5,10 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.ss.simpleflow.core.aspect.SfEdgeAspect;
 import org.ss.simpleflow.core.aspect.SfNodeAspect;
 import org.ss.simpleflow.core.aspect.SfProcessAspect;
-import org.ss.simpleflow.core.context.SfExecutionProcessContext;
-import org.ss.simpleflow.core.context.SfExecutionProcessInternalContext;
-import org.ss.simpleflow.core.context.SfExecutionWholeContext;
 import org.ss.simpleflow.core.context.SfProcessExecuteResult;
+import org.ss.simpleflow.core.context.SfProcessPreprocessData;
+import org.ss.simpleflow.core.context.SfWholePreprocessData;
 import org.ss.simpleflow.core.edge.SfAbstractEdgeConfig;
 import org.ss.simpleflow.core.factory.*;
 import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
@@ -132,17 +131,15 @@ public class SfDefaultProcessEngine<NI, EI, PCI,
     }
 
     @Override
-    public final SfProcessExecuteResult<PEI> runProcess(SfExecutionWholeContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> wholeContext,
+    public final SfProcessExecuteResult<PEI> runProcess(SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> wholePreprocessData,
                                                         PEI executionId,
                                                         Map<String, Object> params,
                                                         Map<String, Object> env) {
 
-        SfExecutionProcessContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> mainExecutionProcessContext = wholeContext.getMainExecutionProcessContext();
-        SfExecutionProcessInternalContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> executionInternalContext = mainExecutionProcessContext.getExecutionInternalContext();
+        SfProcessPreprocessData<NI, EI, PCI, NC, EC, PC> mainExecutionProcessContext = wholePreprocessData.getMainExecutionProcessContext();
 
-
-        int startNodeConfigIndex = executionInternalContext.getStartNodeConfigIndex();
-        List<NC> nodeConfigList = executionInternalContext.getNodeConfigList();
+        int startNodeConfigIndex = mainExecutionProcessContext.getStartNodeConfigIndex();
+        List<NC> nodeConfigList = mainExecutionProcessContext.getNodeConfigList();
         NC nc = nodeConfigList.get(startNodeConfigIndex);
 
 
@@ -150,20 +147,20 @@ public class SfDefaultProcessEngine<NI, EI, PCI,
     }
 
     @Override
-    public final SfProcessExecuteResult<PEI> runProcess(SfExecutionWholeContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> wholeContext,
+    public final SfProcessExecuteResult<PEI> runProcess(SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> wholePreprocessData,
                                                         Map<String, Object> params,
                                                         Map<String, Object> env) {
-        return runProcess(wholeContext, null, params, env);
+        return runProcess(wholePreprocessData, null, params, env);
     }
 
     @Override
-    public final SfProcessExecuteResult<PEI> runProcess(SfExecutionWholeContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> wholeContext,
+    public final SfProcessExecuteResult<PEI> runProcess(SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> wholePreprocessData,
                                                         Map<String, Object> params) {
-        return runProcess(wholeContext, params, null);
+        return runProcess(wholePreprocessData, params, null);
     }
 
 
-    private void initContext(SfExecutionWholeContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> wholeContext) {
+    private void initContext(SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> wholePreprocessData) {
     }
 
 }
