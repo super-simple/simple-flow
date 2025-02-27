@@ -56,11 +56,8 @@ public class SfDefaultBusinessValidator<NI, EI, PCI,
         List<EC> edgeConfigList = processConfig.getEdgeConfigList();
         generateIndex(nodeConfigList, edgeConfigList, validationProcessContext);
 
-        List<SfIndexEntry> edgeIndexEntryList = validationProcessContext.getEdgeIndexEntryList();
         int nodeConfigListSize = nodeConfigList.size();
-        List<SfIndexEntry> controlLineList = CollectionUtils.collect(edgeIndexEntryList,
-                                                                     SfIndexEntry::isControlEdge,
-                                                                     edgeIndexEntryList.size() / 2);
+        List<SfIndexEntry> controlLineList = validationProcessContext.getControlEdgeIndexEntryList();
         List<List<SfIndexEntry>> allOutgoingControlEdgeList = new ArrayList<>(nodeConfigListSize);
         for (int i = 0; i < nodeConfigListSize; i++) {
             allOutgoingControlEdgeList.add(new ArrayList<>());
@@ -133,12 +130,17 @@ public class SfDefaultBusinessValidator<NI, EI, PCI,
 
         int edgeConfigListSize = edgeConfigList.size();
         List<SfIndexEntry> edgeIndexEntryList = new ArrayList<>(edgeConfigListSize);
+        List<SfIndexEntry> controlEdgeIndexEntryList = new ArrayList<>(validationProcessContext.getControlEdgeCount());
         for (int i = 0; i < edgeConfigListSize; i++) {
             EC edgeConfig = edgeConfigList.get(i);
             SfIndexEntry edgeIndexEntry = new SfIndexEntry();
             edgeIndexEntry.setIndexTypeEdge();
 
             edgeIndexEntryList.add(edgeIndexEntry);
+            if (edgeConfig.isControlEdge()) {
+                controlEdgeIndexEntryList.add(edgeIndexEntry);
+            }
+
             edgeIndexEntry.setEdgeTypeIndexControl();
             edgeIndexEntry.setSelfIndex(i);
 
@@ -150,6 +152,7 @@ public class SfDefaultBusinessValidator<NI, EI, PCI,
         }
 
         validationProcessContext.setEdgeIndexEntryList(edgeIndexEntryList);
+        validationProcessContext.setControlEdgeIndexEntryList(controlEdgeIndexEntryList);
     }
 
     private void validateProcessCircularReference(
@@ -169,8 +172,9 @@ public class SfDefaultBusinessValidator<NI, EI, PCI,
                                 referencedProcessConfigId);
                         if (CollectionUtils.isNotEmpty(processConfigIdSet)) {
                             if (processConfigIdSet.contains(processConfigId)) {
-                                throw new SfProcessConfigException(SfProcessConfigExceptionCode.CIRCULAR_REFERENCE,
-                                                                   //todo
+                                throw new SfProcessConfigException("process[" + processConfigId + "] and [" +
+                                                                           referencedProcessConfigId + "] exist circular reference",
+                                                                   SfProcessConfigExceptionCode.CIRCULAR_REFERENCE,
                                                                    null,
                                                                    processEngineConfig);
                             }

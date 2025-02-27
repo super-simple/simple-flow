@@ -87,21 +87,32 @@ public class SfDefaultProcessValidateAndPreprocess<NI, EI, PCI,
 
         SfValidationProcessContext<NI, EI, PCI, NC, EC, PC> mainProcessValidationContext = validationWholeContext.getMainValidationProcessContext();
         SfProcessPreprocessData<NI, EI, PCI, NC, EC, PC> mainExecutionProcessContext = dataFactory.createProcessPreprocessData();
+        assignProcessPreprocessData(mainProcessValidationContext, mainExecutionProcessContext);
         wholePreprocessData.setMainExecutionProcessContext(mainExecutionProcessContext);
         mainExecutionProcessContext.setProcessConfigIndex(SfProcessConfigIndexConstant.MAIN_PROCESS_CONFIG_INDEX);
 
         List<PC> subProcessConfigList = wholeProcessConfig.getSubProcessConfigList();
+
         if (CollectionUtils.isNotEmpty(subProcessConfigList)) {
+            List<SfValidationProcessContext<NI, EI, PCI, NC, EC, PC>> subValidationProcessContextList = validationWholeContext.getSubValidationProcessContextList();
             int size = subProcessConfigList.size();
             List<SfProcessPreprocessData<NI, EI, PCI, NC, EC, PC>> subExecutionProcessContextList = new ArrayList<>(
                     size);
             wholePreprocessData.setSubExecutionProcessContextList(subExecutionProcessContextList);
             for (int i = 0; i < size; i++) {
+                SfValidationProcessContext<NI, EI, PCI, NC, EC, PC> subValidationProcessContext = subValidationProcessContextList.get(
+                        i);
                 SfProcessPreprocessData<NI, EI, PCI, NC, EC, PC> subExecutionProcessContext = dataFactory.createProcessPreprocessData();
+                assignProcessPreprocessData(subValidationProcessContext, subExecutionProcessContext);
                 subExecutionProcessContextList.add(subExecutionProcessContext);
             }
         }
         return wholePreprocessData;
+    }
+
+    private void assignProcessPreprocessData(SfValidationProcessContext<NI, EI, PCI, NC, EC, PC> mainProcessValidationContext,
+                                             SfProcessPreprocessData<NI, EI, PCI, NC, EC, PC> mainExecutionProcessContext) {
+        mainExecutionProcessContext.setStartNodeConfigIndex(mainExecutionProcessContext.getStartNodeConfigIndex());
     }
 
 }

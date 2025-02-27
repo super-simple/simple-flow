@@ -270,6 +270,8 @@ public class SfDefaultBasicValidator<NI, EI, PCI,
             Set<EI> edgeIdSet = new HashSet<>(edgeConfigList.size());
             Set<String> controlEdgeDistinctIdSet = new HashSet<>();
             Set<String> dataEdgeDistinctIdSet = new HashSet<>();
+            int controlEdgeCount = 0;
+            int dataEdgeCount = 0;
             for (EC edgeConfig : edgeConfigList) {
                 edgeConfigValidator.basicValidate(edgeConfig, processConfig, processEngineConfig);
                 if (edgeConfigCustomValidator != null) {
@@ -311,6 +313,7 @@ public class SfDefaultBasicValidator<NI, EI, PCI,
                     } else {
                         controlEdgeDistinctIdSet.add(uniqueKey);
                     }
+                    controlEdgeCount++;
                 } else {
                     int fromResultIndex = edgeConfig.getFromResultIndex();
                     NC fromNodeConfig = nodeConfigMap.get(fromNodeId);
@@ -360,8 +363,11 @@ public class SfDefaultBasicValidator<NI, EI, PCI,
                     } else {
                         dataEdgeDistinctIdSet.add(uniqueKey);
                     }
+                    dataEdgeCount++;
                 }
             }
+            processValidationContext.setControlEdgeCount(controlEdgeCount);
+            processValidationContext.setDataEdgeCount(dataEdgeCount);
         }
     }
 

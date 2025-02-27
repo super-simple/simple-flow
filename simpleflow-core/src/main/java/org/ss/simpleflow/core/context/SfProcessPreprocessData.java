@@ -13,6 +13,7 @@ public abstract class SfProcessPreprocessData<NI, EI, PCI,
         PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC>> {
     protected PC processConfig;
     protected int processConfigIndex;
+    protected NC startNodeConfig;
     protected int startNodeConfigIndex;
     protected List<NC> nodeConfigList;
     protected List<EC> edgeConfigList;
@@ -20,12 +21,28 @@ public abstract class SfProcessPreprocessData<NI, EI, PCI,
     protected List<SfIndexEntry> edgeIndexEntryList;
     protected List<List<SfIndexEntry>> allOutgoingControlEdgeList;
 
+    public PC getProcessConfig() {
+        return processConfig;
+    }
+
+    public void setProcessConfig(PC processConfig) {
+        this.processConfig = processConfig;
+    }
+
     public int getProcessConfigIndex() {
         return processConfigIndex;
     }
 
     public void setProcessConfigIndex(int processConfigIndex) {
         this.processConfigIndex = processConfigIndex;
+    }
+
+    public NC getStartNodeConfig() {
+        return startNodeConfig;
+    }
+
+    public void setStartNodeConfig(NC startNodeConfig) {
+        this.startNodeConfig = startNodeConfig;
     }
 
     public int getStartNodeConfigIndex() {

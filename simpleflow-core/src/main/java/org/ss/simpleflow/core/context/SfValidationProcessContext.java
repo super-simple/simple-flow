@@ -13,9 +13,10 @@ public abstract class SfValidationProcessContext<NI, EI, PCI,
         NC extends SfAbstractNodeConfig<NI, PCI>,
         EC extends SfAbstractEdgeConfig<EI, NI>,
         PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC>> {
-
     protected NC startNodeConfig;
     protected int startNodeConfigIndex;
+    protected int controlEdgeCount;
+    protected int dataEdgeCount;
 
     protected Map<NI, NC> nodeConfigMap;
 
@@ -24,6 +25,8 @@ public abstract class SfValidationProcessContext<NI, EI, PCI,
     protected List<SfIndexEntry> nodeIndexEntryList;
 
     protected List<SfIndexEntry> edgeIndexEntryList;
+
+    protected List<SfIndexEntry> controlEdgeIndexEntryList;
 
     protected List<List<SfIndexEntry>> allOutgoingControlEdgeList;
 
@@ -41,6 +44,22 @@ public abstract class SfValidationProcessContext<NI, EI, PCI,
 
     public void setStartNodeConfigIndex(int startNodeConfigIndex) {
         this.startNodeConfigIndex = startNodeConfigIndex;
+    }
+
+    public int getControlEdgeCount() {
+        return controlEdgeCount;
+    }
+
+    public void setControlEdgeCount(int controlEdgeCount) {
+        this.controlEdgeCount = controlEdgeCount;
+    }
+
+    public int getDataEdgeCount() {
+        return dataEdgeCount;
+    }
+
+    public void setDataEdgeCount(int dataEdgeCount) {
+        this.dataEdgeCount = dataEdgeCount;
     }
 
     public Map<NI, NC> getNodeConfigMap() {
@@ -73,6 +92,14 @@ public abstract class SfValidationProcessContext<NI, EI, PCI,
 
     public void setEdgeIndexEntryList(List<SfIndexEntry> edgeIndexEntryList) {
         this.edgeIndexEntryList = edgeIndexEntryList;
+    }
+
+    public List<SfIndexEntry> getControlEdgeIndexEntryList() {
+        return controlEdgeIndexEntryList;
+    }
+
+    public void setControlEdgeIndexEntryList(List<SfIndexEntry> controlEdgeIndexEntryList) {
+        this.controlEdgeIndexEntryList = controlEdgeIndexEntryList;
     }
 
     public List<List<SfIndexEntry>> getAllOutgoingControlEdgeList() {
