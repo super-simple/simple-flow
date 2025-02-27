@@ -8,20 +8,18 @@ import org.ss.simpleflow.core.impl.exceptional.SfEdgeConfigException;
 import org.ss.simpleflow.core.impl.exceptional.SfEdgeConfigExceptionCode;
 import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
 import org.ss.simpleflow.core.processconfig.SfAbstractProcessConfig;
-import org.ss.simpleflow.core.processconfig.SfProcessConfigGraph;
 import org.ss.simpleflow.core.processengine.SfProcessEngineConfig;
 
-public class SfDefaultEdgeConfigValidator<NI, EI, PCI, NC extends SfAbstractNodeConfig<NI, PCI>, EC extends SfAbstractEdgeConfig<EI, NI>, PCG extends SfProcessConfigGraph<NI, EI, PCI, NC, EC>, PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC, PCG>, PEI> {
+public class SfDefaultEdgeConfigValidator<NI, EI, PCI, NC extends SfAbstractNodeConfig<NI, PCI>, EC extends SfAbstractEdgeConfig<EI, NI>, PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC>, PEI> {
 
     public void basicValidate(EC edgeConfig,
                               PC processConfig,
-                              SfProcessContext<NI, EI, PCI, NC, EC, PCG, PC, PEI> processContext,
+                              SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> processContext,
                               SfProcessEngineConfig processEngineConfig) {
         EI edgeId = edgeConfig.getId();
         if (edgeId == null) {
             throw new SfEdgeConfigException(SfEdgeConfigExceptionCode.NO_EI,
                                             edgeConfig,
-                                            processConfig,
                                             null,
                                             processContext,
                                             processEngineConfig);
@@ -31,7 +29,6 @@ public class SfDefaultEdgeConfigValidator<NI, EI, PCI, NC extends SfAbstractNode
         if (StringUtils.isNullOrEmpty(edgeType)) {
             throw new SfEdgeConfigException(SfEdgeConfigExceptionCode.NO_EDGE_TYPE,
                                             edgeConfig,
-                                            processConfig,
                                             null,
                                             processContext,
                                             processEngineConfig);
@@ -41,7 +38,6 @@ public class SfDefaultEdgeConfigValidator<NI, EI, PCI, NC extends SfAbstractNode
         if (fromNodeId == null) {
             throw new SfEdgeConfigException(SfEdgeConfigExceptionCode.NO_FROM_NI,
                                             edgeConfig,
-                                            processConfig,
                                             null,
                                             processContext,
                                             processEngineConfig);
@@ -50,7 +46,6 @@ public class SfDefaultEdgeConfigValidator<NI, EI, PCI, NC extends SfAbstractNode
         if (toNodeId == null) {
             throw new SfEdgeConfigException(SfEdgeConfigExceptionCode.NO_TO_NI,
                                             edgeConfig,
-                                            processConfig,
                                             null,
                                             processContext,
                                             processEngineConfig);
@@ -66,7 +61,6 @@ public class SfDefaultEdgeConfigValidator<NI, EI, PCI, NC extends SfAbstractNode
                 if (fromResultIndex < 0) {
                     throw new SfEdgeConfigException(SfEdgeConfigExceptionCode.ILLEGAL_RESULT_INDEX,
                                                     edgeConfig,
-                                                    processConfig,
                                                     null,
                                                     processContext,
                                                     processEngineConfig);
@@ -75,7 +69,6 @@ public class SfDefaultEdgeConfigValidator<NI, EI, PCI, NC extends SfAbstractNode
                 if (toParameterIndex < 0) {
                     throw new SfEdgeConfigException(SfEdgeConfigExceptionCode.ILLEGAL_PARAMETER_INDEX,
                                                     edgeConfig,
-                                                    processConfig,
                                                     null,
                                                     processContext,
                                                     processEngineConfig);
@@ -86,8 +79,6 @@ public class SfDefaultEdgeConfigValidator<NI, EI, PCI, NC extends SfAbstractNode
                 throw new SfEdgeConfigException("unknown edge type [" + edgeType + ']',
                                                 SfEdgeConfigExceptionCode.WRONG_EDGE_TYPE,
                                                 edgeConfig,
-                                                processConfig,
-                                                null,
                                                 processContext,
                                                 processEngineConfig);
             }

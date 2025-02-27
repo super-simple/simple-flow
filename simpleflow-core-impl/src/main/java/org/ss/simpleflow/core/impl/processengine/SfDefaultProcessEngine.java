@@ -13,7 +13,6 @@ import org.ss.simpleflow.core.edge.SfAbstractEdgeConfig;
 import org.ss.simpleflow.core.factory.*;
 import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
 import org.ss.simpleflow.core.processconfig.SfAbstractProcessConfig;
-import org.ss.simpleflow.core.processconfig.SfProcessConfigGraph;
 import org.ss.simpleflow.core.processengine.SfComponentExecutionIdGenerator;
 import org.ss.simpleflow.core.processengine.SfProcessEngine;
 import org.ss.simpleflow.core.processengine.SfProcessEngineConfig;
@@ -26,52 +25,52 @@ import java.util.Map;
 public class SfDefaultProcessEngine<NI, EI, PCI,
         NC extends SfAbstractNodeConfig<NI, PCI>,
         EC extends SfAbstractEdgeConfig<EI, NI>,
-        PCG extends SfProcessConfigGraph<NI, EI, PCI, NC, EC>,
-        PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC, PCG>,
+
+        PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC>,
         NEI, EEI, PEI>
-        implements SfProcessEngine<NI, EI, PCI, NC, EC, PCG,
+        implements SfProcessEngine<NI, EI, PCI, NC, EC,
         PC, NEI, EEI, PEI> {
 
     private static final Logger LOG = LoggerFactory.getLogger(SfDefaultProcessEngine.class);
 
     private final SfProcessEngineConfig processEngineConfig;
 
-    private final SfControlEdgeFactory<NI, EI, PCI, NC, EC, PCG, PC, EEI, PEI> controlEdgeFactory;
-    private final SfDataEdgeFactory<NI, EI, PCI, NC, EC, PCG, PC, EEI, PEI> dataEdgeFactory;
-    private final SfEventFactory<NI, EI, PCI, NC, EC, PCG, PC, NEI, PEI> eventFactory;
-    private final SfNodeFactory<NI, EI, PCI, NC, EC, PCG, PC, NEI, PEI> nodeFactory;
-    private final SfEnumGatewayFactory<NI, EI, PCI, NC, EC, PCG, PC, NEI, PEI> enumGatewayFactory;
-    private final SfStreamIteratorFactory<NI, EI, PCI, NC, EC, PCG, PC, NEI, PEI> streamIteratorFactory;
-    private final SfGatewayFactory<NI, EI, PCI, NC, EC, PCG, PC, NEI, PEI> gatewayFactory;
-    private final SfAroundIteratorFactory<NI, EI, PCI, NC, EC, PCG, PC, NEI, PEI> aroundIteratorFactory;
+    private final SfControlEdgeFactory<NI, EI, PCI, NC, EC, PC, EEI, PEI> controlEdgeFactory;
+    private final SfDataEdgeFactory<NI, EI, PCI, NC, EC, PC, EEI, PEI> dataEdgeFactory;
+    private final SfEventFactory<NI, EI, PCI, NC, EC, PC, NEI, PEI> eventFactory;
+    private final SfNodeFactory<NI, EI, PCI, NC, EC, PC, NEI, PEI> nodeFactory;
+    private final SfEnumGatewayFactory<NI, EI, PCI, NC, EC, PC, NEI, PEI> enumGatewayFactory;
+    private final SfStreamIteratorFactory<NI, EI, PCI, NC, EC, PC, NEI, PEI> streamIteratorFactory;
+    private final SfGatewayFactory<NI, EI, PCI, NC, EC, PC, NEI, PEI> gatewayFactory;
+    private final SfAroundIteratorFactory<NI, EI, PCI, NC, EC, PC, NEI, PEI> aroundIteratorFactory;
 
-    private final SfValidateManager<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> validateManager;
+    private final SfValidateManager<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> validateManager;
 
-    private final SfComponentExecutionIdGenerator<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> componentExecutionIdGenerator;
-    private final SfProcessExecutionIdGenerator<NI, EI, PCI, NC, EC, PCG, PC, PEI> processExecutionIdGenerator;
+    private final SfComponentExecutionIdGenerator<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> componentExecutionIdGenerator;
+    private final SfProcessExecutionIdGenerator<NI, EI, PCI, NC, EC, PC, PEI> processExecutionIdGenerator;
 
-    private final SfContextFactory<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> contextFactory;
+    private final SfContextFactory<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> contextFactory;
 
-    private final List<SfEdgeAspect<NI, EI, PCI, NC, EC, PCG, PC, EEI, PEI>> edgeAspectList;
-    private final List<SfNodeAspect<NI, EI, PCI, NC, EC, PCG, PC, NEI, PEI>> nodeAspectList;
-    private final List<SfProcessAspect<NI, EI, PCI, NC, EC, PCG, PC, PEI>> processAspectList;
+    private final List<SfEdgeAspect<NI, EI, PCI, NC, EC, PC, EEI, PEI>> edgeAspectList;
+    private final List<SfNodeAspect<NI, EI, PCI, NC, EC, PC, NEI, PEI>> nodeAspectList;
+    private final List<SfProcessAspect<NI, EI, PCI, NC, EC, PC, PEI>> processAspectList;
 
     SfDefaultProcessEngine(SfProcessEngineConfig processEngineConfig,
-                           SfControlEdgeFactory<NI, EI, PCI, NC, EC, PCG, PC, EEI, PEI> controlEdgeFactory,
-                           SfDataEdgeFactory<NI, EI, PCI, NC, EC, PCG, PC, EEI, PEI> dataEdgeFactory,
-                           SfEventFactory<NI, EI, PCI, NC, EC, PCG, PC, NEI, PEI> eventFactory,
-                           SfNodeFactory<NI, EI, PCI, NC, EC, PCG, PC, NEI, PEI> nodeFactory,
-                           SfEnumGatewayFactory<NI, EI, PCI, NC, EC, PCG, PC, NEI, PEI> enumGatewayFactory,
-                           SfStreamIteratorFactory<NI, EI, PCI, NC, EC, PCG, PC, NEI, PEI> streamIteratorFactory,
-                           SfGatewayFactory<NI, EI, PCI, NC, EC, PCG, PC, NEI, PEI> gatewayFactory,
-                           SfAroundIteratorFactory<NI, EI, PCI, NC, EC, PCG, PC, NEI, PEI> aroundIteratorFactory,
-                           SfValidateManager<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> validateManager,
-                           SfComponentExecutionIdGenerator<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> componentExecutionIdGenerator,
-                           SfProcessExecutionIdGenerator<NI, EI, PCI, NC, EC, PCG, PC, PEI> processExecutionIdGenerator,
-                           SfContextFactory<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> contextFactory,
-                           List<SfEdgeAspect<NI, EI, PCI, NC, EC, PCG, PC, EEI, PEI>> edgeAspectList,
-                           List<SfNodeAspect<NI, EI, PCI, NC, EC, PCG, PC, NEI, PEI>> nodeAspectList,
-                           List<SfProcessAspect<NI, EI, PCI, NC, EC, PCG, PC, PEI>> processAspectList) {
+                           SfControlEdgeFactory<NI, EI, PCI, NC, EC, PC, EEI, PEI> controlEdgeFactory,
+                           SfDataEdgeFactory<NI, EI, PCI, NC, EC, PC, EEI, PEI> dataEdgeFactory,
+                           SfEventFactory<NI, EI, PCI, NC, EC, PC, NEI, PEI> eventFactory,
+                           SfNodeFactory<NI, EI, PCI, NC, EC, PC, NEI, PEI> nodeFactory,
+                           SfEnumGatewayFactory<NI, EI, PCI, NC, EC, PC, NEI, PEI> enumGatewayFactory,
+                           SfStreamIteratorFactory<NI, EI, PCI, NC, EC, PC, NEI, PEI> streamIteratorFactory,
+                           SfGatewayFactory<NI, EI, PCI, NC, EC, PC, NEI, PEI> gatewayFactory,
+                           SfAroundIteratorFactory<NI, EI, PCI, NC, EC, PC, NEI, PEI> aroundIteratorFactory,
+                           SfValidateManager<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> validateManager,
+                           SfComponentExecutionIdGenerator<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> componentExecutionIdGenerator,
+                           SfProcessExecutionIdGenerator<NI, EI, PCI, NC, EC, PC, PEI> processExecutionIdGenerator,
+                           SfContextFactory<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> contextFactory,
+                           List<SfEdgeAspect<NI, EI, PCI, NC, EC, PC, EEI, PEI>> edgeAspectList,
+                           List<SfNodeAspect<NI, EI, PCI, NC, EC, PC, NEI, PEI>> nodeAspectList,
+                           List<SfProcessAspect<NI, EI, PCI, NC, EC, PC, PEI>> processAspectList) {
         if (processEngineConfig == null) {
             throw new IllegalArgumentException("SfProcessEngineConfig can not be null");
         }
@@ -143,30 +142,38 @@ public class SfDefaultProcessEngine<NI, EI, PCI,
     }
 
     @Override
-    public SfProcessExecuteResult<PEI> runProcess(SfExecutionWholeContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> wholeContext,
-                                                  PEI executionId,
-                                                  Map<String, Object> params,
-                                                  Map<String, Object> env) {
+    public final SfProcessExecuteResult<PEI> runProcess(SfExecutionWholeContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> wholeContext,
+                                                        PEI executionId,
+                                                        Map<String, Object> params,
+                                                        Map<String, Object> env) {
 
-        SfExecutionProcessContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> mainExecutionProcessContext = wholeContext.getMainExecutionProcessContext();
-        SfExecutionProcessInternalContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> executionInternalContext = mainExecutionProcessContext.getExecutionInternalContext();
+        SfExecutionProcessContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> mainExecutionProcessContext = wholeContext.getMainExecutionProcessContext();
+        SfExecutionProcessInternalContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> executionInternalContext = mainExecutionProcessContext.getExecutionInternalContext();
+
+
         int startNodeConfigIndex = executionInternalContext.getStartNodeConfigIndex();
+        List<NC> nodeConfigList = executionInternalContext.getNodeConfigList();
+        NC nc = nodeConfigList.get(startNodeConfigIndex);
 
 
         return null;
     }
 
     @Override
-    public SfProcessExecuteResult<PEI> runProcess(SfExecutionWholeContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> wholeContext,
-                                                  Map<String, Object> params,
-                                                  Map<String, Object> env) {
+    public final SfProcessExecuteResult<PEI> runProcess(SfExecutionWholeContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> wholeContext,
+                                                        Map<String, Object> params,
+                                                        Map<String, Object> env) {
         return runProcess(wholeContext, null, params, env);
     }
 
     @Override
-    public SfProcessExecuteResult<PEI> runProcess(SfExecutionWholeContext<NI, EI, PCI, NC, EC, PCG, PC, NEI, EEI, PEI> wholeContext,
-                                                  Map<String, Object> params) {
+    public final SfProcessExecuteResult<PEI> runProcess(SfExecutionWholeContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> wholeContext,
+                                                        Map<String, Object> params) {
         return runProcess(wholeContext, params, null);
+    }
+
+
+    private void initContext(SfExecutionWholeContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> wholeContext) {
     }
 
 }

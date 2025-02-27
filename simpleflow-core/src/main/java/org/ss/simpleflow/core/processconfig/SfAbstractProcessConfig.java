@@ -7,14 +7,11 @@ import java.util.List;
 
 public abstract class SfAbstractProcessConfig<NI, EI, PCI,
         NC extends SfAbstractNodeConfig<NI, PCI>,
-        EC extends SfAbstractEdgeConfig<EI, NI>,
-        PCG extends SfProcessConfigGraph<NI, EI, PCI, NC, EC>> implements SfProcessConfig<NI, EI, PCI, NC, EC, PCG> {
+        EC extends SfAbstractEdgeConfig<EI, NI>> implements SfProcessConfig<NI, EI, PCI, NC, EC> {
 
     protected PCI id;
     protected List<NC> nodeConfigList;
     protected List<EC> edgeConfigList;
-    protected List<PCG> subProcessConfigList;
-
 
     public void setId(PCI id) {
         this.id = id;
@@ -41,15 +38,6 @@ public abstract class SfAbstractProcessConfig<NI, EI, PCI,
     @Override
     public List<EC> getEdgeConfigList() {
         return edgeConfigList;
-    }
-
-    public void setSubProcessConfigList(List<PCG> subProcessConfigList) {
-        this.subProcessConfigList = subProcessConfigList;
-    }
-
-    @Override
-    public List<PCG> getSubProcessConfigList() {
-        return subProcessConfigList;
     }
 
 }

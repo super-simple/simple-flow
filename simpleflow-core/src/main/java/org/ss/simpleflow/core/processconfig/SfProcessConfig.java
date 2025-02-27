@@ -7,10 +7,12 @@ import java.util.List;
 
 public interface SfProcessConfig<NI, EI, PCI,
         NC extends SfAbstractNodeConfig<NI, PCI>,
-        EC extends SfAbstractEdgeConfig<EI, NI>,
-        PCG extends SfProcessConfigGraph<NI, EI, PCI, NC, EC>>
-        extends SfProcessConfigGraph<NI, EI, PCI, NC, EC> {
+        EC extends SfAbstractEdgeConfig<EI, NI>> {
 
-    List<PCG> getSubProcessConfigList();
+    PCI getId();
+
+    List<NC> getNodeConfigList();
+
+    List<EC> getEdgeConfigList();
 
 }

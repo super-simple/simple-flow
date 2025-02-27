@@ -9,23 +9,23 @@ import org.ss.simpleflow.core.impl.exceptional.SfNodeConfigException;
 import org.ss.simpleflow.core.impl.exceptional.SfNodeConfigExceptionCode;
 import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
 import org.ss.simpleflow.core.processconfig.SfAbstractProcessConfig;
-import org.ss.simpleflow.core.processconfig.SfProcessConfigGraph;
 import org.ss.simpleflow.core.processengine.SfProcessEngineConfig;
 
 import java.util.Set;
 
-public class SfDefaultNodeConfigValidator<NI, EI, PCI, NC extends SfAbstractNodeConfig<NI, PCI>, EC extends SfAbstractEdgeConfig<EI, NI>, PCG extends SfProcessConfigGraph<NI, EI, PCI, NC, EC>, PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC, PCG>, PEI> {
+public class SfDefaultNodeConfigValidator<NI, EI, PCI,
+        NC extends SfAbstractNodeConfig<NI, PCI>,
+        EC extends SfAbstractEdgeConfig<EI, NI>,
+        PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC>, PEI> {
 
     public void basicValidate(NC nodeConfig,
                               PC processConfig,
-                              SfProcessContext<NI, EI, PCI, NC, EC, PCG, PC, PEI> processContext,
+                              SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> processContext,
                               SfProcessEngineConfig processEngineConfig) {
         NI nodeId = nodeConfig.getId();
         if (nodeId == null) {
             throw new SfNodeConfigException(SfNodeConfigExceptionCode.NO_ID,
                                             nodeConfig,
-                                            processConfig,
-                                            null,
                                             processContext,
                                             processEngineConfig);
         }
@@ -34,8 +34,6 @@ public class SfDefaultNodeConfigValidator<NI, EI, PCI, NC extends SfAbstractNode
         if (StringUtils.isNullOrEmpty(nodeType)) {
             throw new SfNodeConfigException(SfNodeConfigExceptionCode.NO_NODE_TYPE,
                                             nodeConfig,
-                                            processConfig,
-                                            null,
                                             processContext,
                                             processEngineConfig);
         }
@@ -47,16 +45,12 @@ public class SfDefaultNodeConfigValidator<NI, EI, PCI, NC extends SfAbstractNode
                 if (StringUtils.isNullOrEmpty(eventCode)) {
                     throw new SfNodeConfigException(SfNodeConfigExceptionCode.NO_EVENT_CODE,
                                                     nodeConfig,
-                                                    processConfig,
-                                                    null,
                                                     processContext,
                                                     processEngineConfig);
                 }
                 if (nodeConfig.isLegalEventType()) {
                     throw new SfNodeConfigException(SfNodeConfigExceptionCode.NO_EVENT_TYPE,
                                                     nodeConfig,
-                                                    processConfig,
-                                                    null,
                                                     processContext,
                                                     processEngineConfig);
                 }
@@ -67,8 +61,6 @@ public class SfDefaultNodeConfigValidator<NI, EI, PCI, NC extends SfAbstractNode
                 if (CollectionUtils.isNullOrEmpty(gatewayEnumSet)) {
                     throw new SfNodeConfigException(SfNodeConfigExceptionCode.NO_GATEWAY_ENUM_SET,
                                                     nodeConfig,
-                                                    processConfig,
-                                                    null,
                                                     processContext,
                                                     processEngineConfig);
                 }
@@ -79,8 +71,6 @@ public class SfDefaultNodeConfigValidator<NI, EI, PCI, NC extends SfAbstractNode
                 if (processId == null) {
                     throw new SfNodeConfigException(SfNodeConfigExceptionCode.NO_PROCESS_ID,
                                                     nodeConfig,
-                                                    processConfig,
-                                                    null,
                                                     processContext,
                                                     processEngineConfig);
                 }
@@ -96,8 +86,6 @@ public class SfDefaultNodeConfigValidator<NI, EI, PCI, NC extends SfAbstractNode
                 throw new SfNodeConfigException("unknown node type [" + nodeType + ']',
                                                 SfNodeConfigExceptionCode.WRONG_NODE_TYPE,
                                                 nodeConfig,
-                                                processConfig,
-                                                null,
                                                 processContext,
                                                 processEngineConfig);
             }
