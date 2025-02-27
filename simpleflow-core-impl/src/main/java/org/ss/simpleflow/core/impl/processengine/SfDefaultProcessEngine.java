@@ -135,13 +135,11 @@ public class SfDefaultProcessEngine<NI, EI, PCI,
                                                         PEI executionId,
                                                         Map<String, Object> params,
                                                         Map<String, Object> env) {
-
         SfProcessPreprocessData<NI, EI, PCI, NC, EC, PC> mainExecutionProcessContext = wholePreprocessData.getMainExecutionProcessContext();
 
         int startNodeConfigIndex = mainExecutionProcessContext.getStartNodeConfigIndex();
         List<NC> nodeConfigList = mainExecutionProcessContext.getNodeConfigList();
         NC nc = nodeConfigList.get(startNodeConfigIndex);
-
 
         return null;
     }

@@ -42,7 +42,6 @@ public class SfDefaultProcessValidateAndPreprocess<NI, EI, PCI,
     @Override
     public SfWholePreprocessData<NI, EI, PCI, NC, EC, PC>
     validateAndPreprocess(SfWholeProcessConfig<NI, EI, PCI, NC, EC, PC> wholeProcessConfig) {
-
         if (wholeProcessConfig == null) {
             throw new NullPointerException("wholeProcessConfig can not be null");
         }
@@ -51,16 +50,12 @@ public class SfDefaultProcessValidateAndPreprocess<NI, EI, PCI,
             throw new NullPointerException("mainProcessConfig can not be null");
         }
 
-
         SfValidationWholeContext<NI, EI, PCI, NC, EC, PC> validationGlobalContext =
                 createValidationWholeContext(wholeProcessConfig, dataFactory);
+
         validateManager.validate(wholeProcessConfig, validationGlobalContext, processEngineConfig);
 
-        SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> executionGlobalContext =
-                createExecutionGlobalContext(wholeProcessConfig,
-                                             validationGlobalContext,
-                                             dataFactory);
-        return executionGlobalContext;
+        return createExecutionGlobalContext(wholeProcessConfig, validationGlobalContext, dataFactory);
     }
 
     public SfValidationWholeContext<NI, EI, PCI, NC, EC, PC>
