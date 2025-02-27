@@ -7,14 +7,13 @@ import org.ss.simpleflow.core.processconfig.SfAbstractProcessConfig;
 public abstract class SfAbstractProcessContext<NI, EI, PCI,
         NC extends SfAbstractNodeConfig<NI, PCI>, EC extends SfAbstractEdgeConfig<EI, NI>,
         PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC>, PEI>
+        extends SfValidationProcessContext<NI, EI, PCI, NC, EC, PC>
         implements SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> {
 
     protected SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> processContext;
 
     protected PEI processExecutionId;
-
     protected PC processConfig;
-
     protected PCI processConfigId;
 
     @Override

@@ -1,8 +1,9 @@
 package org.ss.simpleflow.core.context;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public interface SfVariableContext {
+public interface SfVariableContext extends Serializable {
 
     void setVariable(String key, Object value);
 

@@ -57,12 +57,8 @@ public class SfDefaultBasicValidator<NI, EI, PCI,
         processConfigValidator.basicValidate(wholeProcessConfig, processEngineConfig);
 
         PC mainProcessConfig = wholeProcessConfig.getMainProcessConfig();
-        List<NC> nodeConfigList = mainProcessConfig.getNodeConfigList();
-        List<EC> edgeConfigList = mainProcessConfig.getEdgeConfigList();
         SfValidationProcessContext<NI, EI, PCI, NC, EC, PC> mainProcessValidationContext = validationGlobalContext.getMainProcessValidationContext();
-        validateNodeAndEdge(nodeConfigList,
-                            edgeConfigList,
-                            mainProcessConfig,
+        validateNodeAndEdge(mainProcessConfig,
                             mainProcessValidationContext,
                             processEngineConfig);
 
@@ -74,9 +70,7 @@ public class SfDefaultBasicValidator<NI, EI, PCI,
                 SfValidationProcessContext<NI, EI, PCI, NC, EC, PC> subValidationProcessContext = subValidationProcessContextList.get(
                         i);
                 PC subProcessConfig = subProcessConfigList.get(i);
-                validateNodeAndEdge(subProcessConfig.getNodeConfigList(),
-                                    subProcessConfig.getEdgeConfigList(),
-                                    subProcessConfig,
+                validateNodeAndEdge(subProcessConfig,
                                     subValidationProcessContext,
                                     processEngineConfig);
             }
@@ -246,11 +240,11 @@ public class SfDefaultBasicValidator<NI, EI, PCI,
         }
     }
 
-    private void validateNodeAndEdge(List<NC> nodeConfigList,
-                                     List<EC> edgeConfigList,
-                                     PC processConfig,
+    private void validateNodeAndEdge(PC processConfig,
                                      SfValidationProcessContext<NI, EI, PCI, NC, EC, PC> processValidationContext,
                                      SfProcessEngineConfig processEngineConfig) {
+        List<NC> nodeConfigList = processConfig.getNodeConfigList();
+        List<EC> edgeConfigList = processConfig.getEdgeConfigList();
         Set<NI> nodeIdSet = validateNode(nodeConfigList,
                                          processConfig,
                                          processValidationContext,

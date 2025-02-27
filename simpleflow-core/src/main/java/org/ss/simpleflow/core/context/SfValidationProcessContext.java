@@ -15,7 +15,6 @@ public abstract class SfValidationProcessContext<NI, EI, PCI,
         PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC>> {
 
     protected NC startNodeConfig;
-
     protected int startNodeConfigIndex;
 
     protected Map<NI, NC> nodeConfigMap;

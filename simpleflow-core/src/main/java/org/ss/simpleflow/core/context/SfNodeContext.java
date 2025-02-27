@@ -2,11 +2,9 @@ package org.ss.simpleflow.core.context;
 
 import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
 
-import java.io.Serializable;
-
 public interface SfNodeContext<NI, PCI, NEI,
         NC extends SfAbstractNodeConfig<NI, PCI>>
-        extends SfVariableContext, Serializable {
+        extends SfVariableContext {
 
     void setNodeExecutionId(NEI nodeExecutionId);
 
