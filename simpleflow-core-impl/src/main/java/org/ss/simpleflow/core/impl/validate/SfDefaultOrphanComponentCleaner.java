@@ -4,7 +4,6 @@ import org.ss.simpleflow.common.ArrayUtils;
 import org.ss.simpleflow.common.CollectionUtils;
 import org.ss.simpleflow.common.MultiMapUtils;
 import org.ss.simpleflow.core.component.SfComponentConfig;
-import org.ss.simpleflow.core.context.SfProcessContext;
 import org.ss.simpleflow.core.context.SfValidationProcessContext;
 import org.ss.simpleflow.core.context.SfValidationWholeContext;
 import org.ss.simpleflow.core.edge.SfAbstractEdgeConfig;
@@ -21,53 +20,37 @@ import java.util.*;
 public class SfDefaultOrphanComponentCleaner<NI, EI, PCI,
         NC extends SfAbstractNodeConfig<NI, PCI>,
         EC extends SfAbstractEdgeConfig<EI, NI>,
-        PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC>,
-        NEI, EEI, PEI>
+        PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC>>
         implements SfOrphanComponentCleaner<NI, EI, PCI,
-        NC, EC, PC,
-        NEI, EEI, PEI> {
+        NC, EC, PC> {
 
     @Override
     public void cleanOrphanComponent(SfWholeProcessConfig<NI, EI, PCI, NC, EC, PC> wholeProcessConfig,
-                                     SfProcessContext<NI, EI, PCI,
-                                             NC, EC,
-                                             PC, PEI> processContext,
-                                     SfValidationWholeContext<NI, EI, PCI,
-                                             NC, EC,
-                                             PC, NEI, EEI, PEI> validationGlobalContext,
+                                     SfValidationWholeContext<NI, EI, PCI, NC, EC, PC> validationGlobalContext,
                                      SfProcessEngineConfig processEngineConfig) {
         PC mainProcessConfig = wholeProcessConfig.getMainProcessConfig();
-        List<NC> nodeConfigList = mainProcessConfig.getNodeConfigList();
-        List<EC> edgeConfigList = mainProcessConfig.getEdgeConfigList();
-        cleanOrphanNodeAndEdge(nodeConfigList,
-                               edgeConfigList,
-                               processContext,
+        cleanOrphanNodeAndEdge(mainProcessConfig,
                                validationGlobalContext.getMainProcessValidationContext(),
                                processEngineConfig);
 
         List<PC> subProcessConfigList = wholeProcessConfig.getSubProcessConfigList();
         if (CollectionUtils.isNotEmpty(subProcessConfigList)) {
-            List<SfValidationProcessContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI>> subValidationProcessContextList = validationGlobalContext.getSubValidationProcessContextList();
+            List<SfValidationProcessContext<NI, EI, PCI, NC, EC, PC>> subValidationProcessContextList = validationGlobalContext.getSubValidationProcessContextList();
             int size = subProcessConfigList.size();
             for (int i = 0; i < size; i++) {
                 PC subProcessConfig = subProcessConfigList.get(i);
-                SfValidationProcessContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> subValidationProcessContext = subValidationProcessContextList.get(
+                SfValidationProcessContext<NI, EI, PCI, NC, EC, PC> subValidationProcessContext = subValidationProcessContextList.get(
                         i);
-                List<NC> subNodeConfigList = subProcessConfig.getNodeConfigList();
-                List<EC> subEdgeConfigList = subProcessConfig.getEdgeConfigList();
-                cleanOrphanNodeAndEdge(subNodeConfigList,
-                                       subEdgeConfigList,
-                                       processContext,
-                                       subValidationProcessContext, processEngineConfig);
+                cleanOrphanNodeAndEdge(subProcessConfig, subValidationProcessContext, processEngineConfig);
             }
         }
     }
 
-    private void cleanOrphanNodeAndEdge(List<NC> nodeConfigList,
-                                        List<EC> edgeConfigList,
-                                        SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> processContext,
-                                        SfValidationProcessContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> processValidationContext,
+    private void cleanOrphanNodeAndEdge(PC processConfig,
+                                        SfValidationProcessContext<NI, EI, PCI, NC, EC, PC> processValidationContext,
                                         SfProcessEngineConfig processEngineConfig) {
+        List<EC> edgeConfigList = processConfig.getEdgeConfigList();
+        List<NC> nodeConfigList = processConfig.getNodeConfigList();
         if (CollectionUtils.isNullOrEmpty(edgeConfigList)) {
             Iterator<NC> iterator = nodeConfigList.iterator();
             if (iterator.hasNext()) {

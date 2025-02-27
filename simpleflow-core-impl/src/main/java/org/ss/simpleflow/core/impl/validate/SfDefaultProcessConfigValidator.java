@@ -1,7 +1,6 @@
 package org.ss.simpleflow.core.impl.validate;
 
 import org.ss.simpleflow.common.CollectionUtils;
-import org.ss.simpleflow.core.context.SfProcessContext;
 import org.ss.simpleflow.core.edge.SfAbstractEdgeConfig;
 import org.ss.simpleflow.core.impl.exceptional.SfProcessConfigException;
 import org.ss.simpleflow.core.impl.exceptional.SfProcessConfigExceptionCode;
@@ -18,19 +17,14 @@ public class SfDefaultProcessConfigValidator
         <NI, EI, PCI,
                 NC extends SfAbstractNodeConfig<NI, PCI>,
                 EC extends SfAbstractEdgeConfig<EI, NI>,
-
-                PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC>,
-                PEI> {
+                PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC>> {
     public void basicValidate(SfWholeProcessConfig<NI, EI, PCI, NC, EC, PC> wholeProcessConfig,
-                              SfProcessContext<NI, EI, PCI,
-                                      NC, EC,
-                                      PC, PEI> processContext,
                               SfProcessEngineConfig processEngineConfig) {
         PC mainProcessConfig = wholeProcessConfig.getMainProcessConfig();
         PCI processConfigId = mainProcessConfig.getId();
         if (processConfigId == null) {
             throw new SfProcessConfigException(SfProcessConfigExceptionCode.NO_PROCESS_ID,
-                                               processContext,
+                                               mainProcessConfig,
                                                processEngineConfig);
         }
 
@@ -38,16 +32,16 @@ public class SfDefaultProcessConfigValidator
         if (CollectionUtils.isNotEmpty(subProcessConfigList)) {
             Set<PCI> processConfigIdSet = new HashSet<>(subProcessConfigList.size() + 1);
             processConfigIdSet.add(processConfigId);
-            for (PC processConfigGraph : subProcessConfigList) {
-                PCI subProcessConfigId = processConfigGraph.getId();
+            for (PC subProcessConfig : subProcessConfigList) {
+                PCI subProcessConfigId = subProcessConfig.getId();
                 if (subProcessConfigId == null) {
                     throw new SfProcessConfigException(SfProcessConfigExceptionCode.NO_PROCESS_ID,
-                                                       processContext,
+                                                       subProcessConfig,
                                                        processEngineConfig);
                 }
                 if (processConfigIdSet.contains(subProcessConfigId)) {
                     throw new SfProcessConfigException(SfProcessConfigExceptionCode.ID_REPEAT,
-                                                       processContext,
+                                                       subProcessConfig,
                                                        processEngineConfig);
                 } else {
                     processConfigIdSet.add(subProcessConfigId);

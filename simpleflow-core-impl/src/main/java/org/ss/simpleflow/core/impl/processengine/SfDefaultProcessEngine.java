@@ -17,7 +17,6 @@ import org.ss.simpleflow.core.processengine.SfComponentExecutionIdGenerator;
 import org.ss.simpleflow.core.processengine.SfProcessEngine;
 import org.ss.simpleflow.core.processengine.SfProcessEngineConfig;
 import org.ss.simpleflow.core.processengine.SfProcessExecutionIdGenerator;
-import org.ss.simpleflow.core.validate.SfValidateManager;
 
 import java.util.List;
 import java.util.Map;
@@ -43,9 +42,6 @@ public class SfDefaultProcessEngine<NI, EI, PCI,
     private final SfStreamIteratorFactory<NI, EI, PCI, NC, EC, PC, NEI, PEI> streamIteratorFactory;
     private final SfGatewayFactory<NI, EI, PCI, NC, EC, PC, NEI, PEI> gatewayFactory;
     private final SfAroundIteratorFactory<NI, EI, PCI, NC, EC, PC, NEI, PEI> aroundIteratorFactory;
-
-    private final SfValidateManager<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> validateManager;
-
     private final SfComponentExecutionIdGenerator<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> componentExecutionIdGenerator;
     private final SfProcessExecutionIdGenerator<NI, EI, PCI, NC, EC, PC, PEI> processExecutionIdGenerator;
 
@@ -64,7 +60,6 @@ public class SfDefaultProcessEngine<NI, EI, PCI,
                            SfStreamIteratorFactory<NI, EI, PCI, NC, EC, PC, NEI, PEI> streamIteratorFactory,
                            SfGatewayFactory<NI, EI, PCI, NC, EC, PC, NEI, PEI> gatewayFactory,
                            SfAroundIteratorFactory<NI, EI, PCI, NC, EC, PC, NEI, PEI> aroundIteratorFactory,
-                           SfValidateManager<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> validateManager,
                            SfComponentExecutionIdGenerator<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> componentExecutionIdGenerator,
                            SfProcessExecutionIdGenerator<NI, EI, PCI, NC, EC, PC, PEI> processExecutionIdGenerator,
                            SfContextFactory<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> contextFactory,
@@ -115,11 +110,6 @@ public class SfDefaultProcessEngine<NI, EI, PCI,
             throw new IllegalArgumentException("SfAroundIteratorFactory can not be null");
         }
         this.aroundIteratorFactory = aroundIteratorFactory;
-
-        if (validateManager == null) {
-            throw new IllegalArgumentException("SfValidateManager can not be null");
-        }
-        this.validateManager = validateManager;
 
         if (componentExecutionIdGenerator == null) {
             throw new IllegalArgumentException("SfComponentExecutionIdGenerator can not be null");

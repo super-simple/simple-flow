@@ -26,11 +26,11 @@ public class SfDefaultProcessValidateAndPreprocess<NI, EI, PCI,
 
     private static final Logger LOG = LoggerFactory.getLogger(SfDefaultProcessValidateAndPreprocess.class);
     private final SfProcessEngineConfig processEngineConfig;
-    private final SfValidateManager<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> validateManager;
+    private final SfValidateManager<NI, EI, PCI, NC, EC, PC> validateManager;
     private final SfContextFactory<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> contextFactory;
 
     SfDefaultProcessValidateAndPreprocess(SfProcessEngineConfig processEngineConfig,
-                                          SfValidateManager<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> validateManager,
+                                          SfValidateManager<NI, EI, PCI, NC, EC, PC> validateManager,
                                           SfContextFactory<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> contextFactory) {
         this.processEngineConfig = processEngineConfig;
         this.validateManager = validateManager;
@@ -54,9 +54,9 @@ public class SfDefaultProcessValidateAndPreprocess<NI, EI, PCI,
         processContext.setProcessConfig(mainProcessConfig);
 
 
-        SfValidationWholeContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> validationGlobalContext =
+        SfValidationWholeContext<NI, EI, PCI, NC, EC, PC> validationGlobalContext =
                 createValidationWholeContext(wholeProcessConfig, contextFactory);
-        validateManager.validate(wholeProcessConfig, processContext, validationGlobalContext, processEngineConfig);
+        validateManager.validate(wholeProcessConfig, validationGlobalContext, processEngineConfig);
 
         SfExecutionWholeContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> executionGlobalContext =
                 createExecutionGlobalContext(wholeProcessConfig,
@@ -66,21 +66,21 @@ public class SfDefaultProcessValidateAndPreprocess<NI, EI, PCI,
         return executionGlobalContext;
     }
 
-    public SfValidationWholeContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI>
+    public SfValidationWholeContext<NI, EI, PCI, NC, EC, PC>
     createValidationWholeContext(SfWholeProcessConfig<NI, EI, PCI, NC, EC, PC> wholeProcessConfig,
                                  SfContextFactory<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> contextFactory) {
-        SfValidationWholeContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> validationWholeContext = contextFactory.createValidationWholeContext();
-        SfValidationProcessContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> mainProcessValidationContext = contextFactory.createProcessValidationContext();
+        SfValidationWholeContext<NI, EI, PCI, NC, EC, PC> validationWholeContext = contextFactory.createValidationWholeContext();
+        SfValidationProcessContext<NI, EI, PCI, NC, EC, PC> mainProcessValidationContext = contextFactory.createProcessValidationContext();
         validationWholeContext.setMainProcessValidationContext(mainProcessValidationContext);
 
         List<PC> subProcessConfigList = wholeProcessConfig.getSubProcessConfigList();
         if (CollectionUtils.isNotEmpty(subProcessConfigList)) {
             int size = subProcessConfigList.size();
-            List<SfValidationProcessContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI>> subExecutionProcessContextList = new ArrayList<>(
+            List<SfValidationProcessContext<NI, EI, PCI, NC, EC, PC>> subExecutionProcessContextList = new ArrayList<>(
                     size);
             validationWholeContext.setSubValidationProcessContextList(subExecutionProcessContextList);
             for (int i = 0; i < size; i++) {
-                SfValidationProcessContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> processValidationContext = contextFactory.createProcessValidationContext();
+                SfValidationProcessContext<NI, EI, PCI, NC, EC, PC> processValidationContext = contextFactory.createProcessValidationContext();
                 subExecutionProcessContextList.add(processValidationContext);
             }
         }
@@ -90,11 +90,11 @@ public class SfDefaultProcessValidateAndPreprocess<NI, EI, PCI,
     private SfExecutionWholeContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> createExecutionGlobalContext(
             SfWholeProcessConfig<NI, EI, PCI, NC, EC, PC> wholeProcessConfig,
             SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> processContext,
-            SfValidationWholeContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> validationGlobalContext,
+            SfValidationWholeContext<NI, EI, PCI, NC, EC, PC> validationGlobalContext,
             SfContextFactory<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> contextFactory) {
         SfExecutionWholeContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> executionGlobalContext = contextFactory.createExecutionGlobalContext();
 
-        SfValidationProcessContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> mainProcessValidationContext = validationGlobalContext.getMainProcessValidationContext();
+        SfValidationProcessContext<NI, EI, PCI, NC, EC, PC> mainProcessValidationContext = validationGlobalContext.getMainProcessValidationContext();
         SfExecutionProcessContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> mainExecutionProcessContext = contextFactory.createExecutionProcessContext();
         executionGlobalContext.setMainExecutionProcessContext(mainExecutionProcessContext);
         SfExecutionProcessInternalContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> mainExecutionProcessInternalContext = contextFactory.createExecutionProcessInternalContext();

@@ -15,6 +15,6 @@ public interface SfProcessValidateAndPreprocessFactory<NI, EI, PCI,
 
     SfProcessValidateAndPreprocess<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI>
     createProcessValidateAndPreprocess(SfProcessEngineConfig processEngineConfig,
-                                       SfValidateManager<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> validateManager,
+                                       SfValidateManager<NI, EI, PCI, NC, EC, PC> validateManager,
                                        SfContextFactory<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> contextFactory);
 }

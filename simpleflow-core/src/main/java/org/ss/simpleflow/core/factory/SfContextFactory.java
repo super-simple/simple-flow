@@ -21,9 +21,9 @@ public interface SfContextFactory<NI, EI, PCI, NC extends SfAbstractNodeConfig<N
 
     SfExecutionProcessInternalContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> createExecutionProcessInternalContext();
 
-    SfValidationWholeContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> createValidationWholeContext();
+    SfValidationWholeContext<NI, EI, PCI, NC, EC, PC> createValidationWholeContext();
 
-    SfValidationProcessContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> createProcessValidationContext();
+    SfValidationProcessContext<NI, EI, PCI, NC, EC, PC> createProcessValidationContext();
 
     SfProcessExecuteResult<PEI> createProcessExecuteResult();
 }

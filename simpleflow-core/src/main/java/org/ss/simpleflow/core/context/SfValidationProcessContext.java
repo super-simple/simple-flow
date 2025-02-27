@@ -12,8 +12,7 @@ import java.util.Set;
 public abstract class SfValidationProcessContext<NI, EI, PCI,
         NC extends SfAbstractNodeConfig<NI, PCI>,
         EC extends SfAbstractEdgeConfig<EI, NI>,
-        PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC>,
-        NEI, EEI, PEI> {
+        PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC>> {
 
     protected NC startNodeConfig;
 
