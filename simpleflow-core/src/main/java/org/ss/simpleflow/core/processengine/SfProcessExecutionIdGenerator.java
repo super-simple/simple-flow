@@ -8,7 +8,6 @@ import org.ss.simpleflow.core.processconfig.SfAbstractProcessConfig;
 public interface SfProcessExecutionIdGenerator<NI, EI, PCI,
         NC extends SfAbstractNodeConfig<NI, PCI>,
         EC extends SfAbstractEdgeConfig<EI, NI>,
-
         PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC>,
         PEI> {
 

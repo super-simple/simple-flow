@@ -13,8 +13,7 @@ public interface SfEnumGatewayFactory<NI, EI, PCI,
         PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC>,
         NEI, PEI> {
 
-    SfEnumGateway<NI, EI, PCI, NC,
-            EC, PC, NEI, PEI>
+    SfEnumGateway<NI, EI, PCI, NC, EC, PC, NEI, PEI>
     createEnumGateway(SfNodeContext<NI, PCI, NEI, NC> nodeContext,
                       SfProcessContext<NI, EI, PCI, NC,
                               EC, PC, PEI> processContext);

@@ -13,8 +13,7 @@ public interface SfDataEdgeFactory<NI, EI, PCI,
         PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC>,
         EEI, PEI> {
 
-    SfDataEdge<NI, EI, PCI, NC,
-            EC, PC, EEI, PEI>
+    SfDataEdge<NI, EI, PCI, NC, EC, PC, EEI, PEI>
     createDataEdge(
             SfEdgeContext<NI, EI, EEI, EC> edgeContext,
             SfProcessContext<NI, EI, PCI, NC,

@@ -12,8 +12,7 @@ public interface SfNodeFactory<NI, EI, PCI,
         EC extends SfAbstractEdgeConfig<EI, NI>,
         PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC>,
         NEI, PEI> {
-    SfNode<NI, EI, PCI, NC,
-            EC, PC, NEI, PEI>
+    SfNode<NI, EI, PCI, NC, EC, PC, NEI, PEI>
     createNode(
             SfNodeContext<NI, PCI, NEI, NC> nodeContext,
             SfProcessContext<NI, EI, PCI, NC,
