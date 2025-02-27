@@ -26,16 +26,16 @@ public class SfDefaultOrphanComponentCleaner<NI, EI, PCI,
 
     @Override
     public void cleanOrphanComponent(SfWholeProcessConfig<NI, EI, PCI, NC, EC, PC> wholeProcessConfig,
-                                     SfValidationWholeContext<NI, EI, PCI, NC, EC, PC> validationGlobalContext,
+                                     SfValidationWholeContext<NI, EI, PCI, NC, EC, PC> validationWholeContext,
                                      SfProcessEngineConfig processEngineConfig) {
         PC mainProcessConfig = wholeProcessConfig.getMainProcessConfig();
         cleanOrphanNodeAndEdge(mainProcessConfig,
-                               validationGlobalContext.getMainProcessValidationContext(),
+                               validationWholeContext.getMainValidationProcessContext(),
                                processEngineConfig);
 
         List<PC> subProcessConfigList = wholeProcessConfig.getSubProcessConfigList();
         if (CollectionUtils.isNotEmpty(subProcessConfigList)) {
-            List<SfValidationProcessContext<NI, EI, PCI, NC, EC, PC>> subValidationProcessContextList = validationGlobalContext.getSubValidationProcessContextList();
+            List<SfValidationProcessContext<NI, EI, PCI, NC, EC, PC>> subValidationProcessContextList = validationWholeContext.getSubValidationProcessContextList();
             int size = subProcessConfigList.size();
             for (int i = 0; i < size; i++) {
                 PC subProcessConfig = subProcessConfigList.get(i);

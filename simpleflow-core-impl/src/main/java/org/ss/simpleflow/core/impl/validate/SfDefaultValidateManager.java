@@ -31,11 +31,11 @@ public class SfDefaultValidateManager<NI, EI, PCI,
 
     @Override
     public void validate(SfWholeProcessConfig<NI, EI, PCI, NC, EC, PC> wholeProcessConfig,
-                         SfValidationWholeContext<NI, EI, PCI, NC, EC, PC> validationGlobalContext,
+                         SfValidationWholeContext<NI, EI, PCI, NC, EC, PC> validationWholeContext,
                          SfProcessEngineConfig processEngineConfig) {
-        basicValidator.basicValidate(wholeProcessConfig, validationGlobalContext, processEngineConfig);
+        basicValidator.basicValidate(wholeProcessConfig, validationWholeContext, processEngineConfig);
         businessValidator.businessValidate(wholeProcessConfig,
-                                           validationGlobalContext,
+                                           validationWholeContext,
                                            processEngineConfig);
     }
 

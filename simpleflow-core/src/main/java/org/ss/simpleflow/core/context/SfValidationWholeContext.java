@@ -17,7 +17,7 @@ public abstract class SfValidationWholeContext<NI, EI, PCI,
 
     protected Map<PCI, Set<PCI>> subProcessContainProcessConfigIdMap;
 
-    protected SfValidationProcessContext<NI, EI, PCI, NC, EC, PC> mainProcessValidationContext;
+    protected SfValidationProcessContext<NI, EI, PCI, NC, EC, PC> mainValidationProcessContext;
 
     protected List<SfValidationProcessContext<NI, EI, PCI, NC, EC, PC>> subValidationProcessContextList;
 
@@ -37,12 +37,12 @@ public abstract class SfValidationWholeContext<NI, EI, PCI,
         this.subProcessContainProcessConfigIdMap = subProcessContainProcessConfigIdMap;
     }
 
-    public SfValidationProcessContext<NI, EI, PCI, NC, EC, PC> getMainProcessValidationContext() {
-        return mainProcessValidationContext;
+    public SfValidationProcessContext<NI, EI, PCI, NC, EC, PC> getMainValidationProcessContext() {
+        return mainValidationProcessContext;
     }
 
-    public void setMainProcessValidationContext(SfValidationProcessContext<NI, EI, PCI, NC, EC, PC> mainProcessValidationContext) {
-        this.mainProcessValidationContext = mainProcessValidationContext;
+    public void setMainValidationProcessContext(SfValidationProcessContext<NI, EI, PCI, NC, EC, PC> mainValidationProcessContext) {
+        this.mainValidationProcessContext = mainValidationProcessContext;
     }
 
     public List<SfValidationProcessContext<NI, EI, PCI, NC, EC, PC>> getSubValidationProcessContextList() {

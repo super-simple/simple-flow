@@ -50,12 +50,12 @@ public class SfDefaultProcessValidateAndPreprocess<NI, EI, PCI,
             throw new NullPointerException("mainProcessConfig can not be null");
         }
 
-        SfValidationWholeContext<NI, EI, PCI, NC, EC, PC> validationGlobalContext =
+        SfValidationWholeContext<NI, EI, PCI, NC, EC, PC> validationWholeContext =
                 createValidationWholeContext(wholeProcessConfig, dataFactory);
 
-        validateManager.validate(wholeProcessConfig, validationGlobalContext, processEngineConfig);
+        validateManager.validate(wholeProcessConfig, validationWholeContext, processEngineConfig);
 
-        return createExecutionGlobalContext(wholeProcessConfig, validationGlobalContext, dataFactory);
+        return createExecutionGlobalContext(wholeProcessConfig, validationWholeContext, dataFactory);
     }
 
     public SfValidationWholeContext<NI, EI, PCI, NC, EC, PC>
@@ -63,7 +63,7 @@ public class SfDefaultProcessValidateAndPreprocess<NI, EI, PCI,
                                  SfProcessValidateAndPreprocessDataFactory<NI, EI, PCI, NC, EC, PC> dataFactory) {
         SfValidationWholeContext<NI, EI, PCI, NC, EC, PC> validationWholeContext = dataFactory.createValidationWholeContext();
         SfValidationProcessContext<NI, EI, PCI, NC, EC, PC> mainProcessValidationContext = dataFactory.createValidationProcessContext();
-        validationWholeContext.setMainProcessValidationContext(mainProcessValidationContext);
+        validationWholeContext.setMainValidationProcessContext(mainProcessValidationContext);
 
         List<PC> subProcessConfigList = wholeProcessConfig.getSubProcessConfigList();
         if (CollectionUtils.isNotEmpty(subProcessConfigList)) {
@@ -81,13 +81,13 @@ public class SfDefaultProcessValidateAndPreprocess<NI, EI, PCI,
 
     private SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> createExecutionGlobalContext(
             SfWholeProcessConfig<NI, EI, PCI, NC, EC, PC> wholeProcessConfig,
-            SfValidationWholeContext<NI, EI, PCI, NC, EC, PC> validationGlobalContext,
+            SfValidationWholeContext<NI, EI, PCI, NC, EC, PC> validationWholeContext,
             SfProcessValidateAndPreprocessDataFactory<NI, EI, PCI, NC, EC, PC> dataFactory) {
-        SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> executionGlobalContext = dataFactory.createWholePreprocessData();
+        SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> wholePreprocessData = dataFactory.createWholePreprocessData();
 
-        SfValidationProcessContext<NI, EI, PCI, NC, EC, PC> mainProcessValidationContext = validationGlobalContext.getMainProcessValidationContext();
+        SfValidationProcessContext<NI, EI, PCI, NC, EC, PC> mainProcessValidationContext = validationWholeContext.getMainValidationProcessContext();
         SfProcessPreprocessData<NI, EI, PCI, NC, EC, PC> mainExecutionProcessContext = dataFactory.createProcessPreprocessData();
-        executionGlobalContext.setMainExecutionProcessContext(mainExecutionProcessContext);
+        wholePreprocessData.setMainExecutionProcessContext(mainExecutionProcessContext);
         mainExecutionProcessContext.setProcessConfigIndex(SfProcessConfigIndexConstant.MAIN_PROCESS_CONFIG_INDEX);
 
         List<PC> subProcessConfigList = wholeProcessConfig.getSubProcessConfigList();
@@ -95,13 +95,13 @@ public class SfDefaultProcessValidateAndPreprocess<NI, EI, PCI,
             int size = subProcessConfigList.size();
             List<SfProcessPreprocessData<NI, EI, PCI, NC, EC, PC>> subExecutionProcessContextList = new ArrayList<>(
                     size);
-            executionGlobalContext.setSubExecutionProcessContextList(subExecutionProcessContextList);
+            wholePreprocessData.setSubExecutionProcessContextList(subExecutionProcessContextList);
             for (int i = 0; i < size; i++) {
                 SfProcessPreprocessData<NI, EI, PCI, NC, EC, PC> subExecutionProcessContext = dataFactory.createProcessPreprocessData();
                 subExecutionProcessContextList.add(subExecutionProcessContext);
             }
         }
-        return executionGlobalContext;
+        return wholePreprocessData;
     }
 
 }

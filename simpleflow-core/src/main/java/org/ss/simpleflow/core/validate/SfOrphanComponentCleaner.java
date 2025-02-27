@@ -13,7 +13,7 @@ public interface SfOrphanComponentCleaner<NI, EI, PCI,
         PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC>> {
 
     void cleanOrphanComponent(SfWholeProcessConfig<NI, EI, PCI, NC, EC, PC> wholeProcessConfig,
-                              SfValidationWholeContext<NI, EI, PCI, NC, EC, PC> validationGlobalContext,
+                              SfValidationWholeContext<NI, EI, PCI, NC, EC, PC> validationWholeContext,
                               SfProcessEngineConfig processEngineConfig);
 
 }
