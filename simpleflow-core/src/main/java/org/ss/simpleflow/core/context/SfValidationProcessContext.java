@@ -22,6 +22,9 @@ public abstract class SfValidationProcessContext<NI, EI, PCI,
 
     protected Set<PCI> subProcessConfigIdSet;
 
+    protected List<NC> nodeConfigList;
+    protected List<EC> edgeConfigList;
+
     protected List<SfIndexEntry> nodeIndexEntryList;
 
     protected List<SfIndexEntry> edgeIndexEntryList;
@@ -76,6 +79,22 @@ public abstract class SfValidationProcessContext<NI, EI, PCI,
 
     public void setSubProcessConfigIdSet(Set<PCI> subProcessConfigIdSet) {
         this.subProcessConfigIdSet = subProcessConfigIdSet;
+    }
+
+    public List<NC> getNodeConfigList() {
+        return nodeConfigList;
+    }
+
+    public void setNodeConfigList(List<NC> nodeConfigList) {
+        this.nodeConfigList = nodeConfigList;
+    }
+
+    public List<EC> getEdgeConfigList() {
+        return edgeConfigList;
+    }
+
+    public void setEdgeConfigList(List<EC> edgeConfigList) {
+        this.edgeConfigList = edgeConfigList;
     }
 
     public List<SfIndexEntry> getNodeIndexEntryList() {

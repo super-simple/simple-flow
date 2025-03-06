@@ -23,7 +23,6 @@ import java.util.Map;
 public class SfDefaultProcessEngine<NI, EI, PCI,
         NC extends SfAbstractNodeConfig<NI, PCI>,
         EC extends SfAbstractEdgeConfig<EI, NI>,
-
         PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC>,
         NEI, EEI, PEI>
         implements SfProcessEngine<NI, EI, PCI, NC, EC,
@@ -131,10 +130,10 @@ public class SfDefaultProcessEngine<NI, EI, PCI,
     }
 
     @Override
-    public final SfProcessExecuteResult<PEI> runProcess(SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> wholePreprocessData,
-                                                        PEI executionId,
-                                                        Map<String, Object> params,
-                                                        Map<String, Object> env) {
+    public final SfProcessExecuteResult<PEI> executeProcess(SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> wholePreprocessData,
+                                                            PEI executionId,
+                                                            Map<String, Object> params,
+                                                            Map<String, Object> env) {
         SfProcessPreprocessData<NI, EI, PCI, NC, EC, PC> mainExecutionProcessContext = wholePreprocessData.getMainExecutionProcessContext();
 
         int startNodeConfigIndex = mainExecutionProcessContext.getStartNodeConfigIndex();
@@ -145,16 +144,16 @@ public class SfDefaultProcessEngine<NI, EI, PCI,
     }
 
     @Override
-    public final SfProcessExecuteResult<PEI> runProcess(SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> wholePreprocessData,
-                                                        Map<String, Object> params,
-                                                        Map<String, Object> env) {
-        return runProcess(wholePreprocessData, null, params, env);
+    public final SfProcessExecuteResult<PEI> executeProcess(SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> wholePreprocessData,
+                                                            Map<String, Object> params,
+                                                            Map<String, Object> env) {
+        return executeProcess(wholePreprocessData, null, params, env);
     }
 
     @Override
-    public final SfProcessExecuteResult<PEI> runProcess(SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> wholePreprocessData,
-                                                        Map<String, Object> params) {
-        return runProcess(wholePreprocessData, params, null);
+    public final SfProcessExecuteResult<PEI> executeProcess(SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> wholePreprocessData,
+                                                            Map<String, Object> params) {
+        return executeProcess(wholePreprocessData, params, null);
     }
 
 

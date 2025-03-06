@@ -55,7 +55,9 @@ public class SfDefaultBasicValidator<NI, EI, PCI,
                               SfValidationWholeContext<NI, EI, PCI, NC, EC, PC> validationWholeContext,
                               SfProcessEngineConfig processEngineConfig) {
         processConfigValidator.basicValidate(wholeProcessConfig, processEngineConfig);
-        processConfigCustomValidate.customValidate(wholeProcessConfig, processEngineConfig);
+        if (processConfigCustomValidate != null) {
+            processConfigCustomValidate.customValidate(wholeProcessConfig, processEngineConfig);
+        }
 
         PC mainProcessConfig = wholeProcessConfig.getMainProcessConfig();
         SfValidationProcessContext<NI, EI, PCI, NC, EC, PC> mainProcessValidationContext = validationWholeContext.getMainValidationProcessContext();

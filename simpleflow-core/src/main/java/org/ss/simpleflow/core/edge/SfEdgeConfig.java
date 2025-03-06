@@ -14,6 +14,8 @@ public interface SfEdgeConfig<EI, NI> extends SfComponentConfig {
 
     int getFromResultIndex();
 
+    int getExecutePriority();
+
     int getToParameterIndex();
 
 }

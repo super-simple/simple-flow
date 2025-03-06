@@ -110,9 +110,10 @@ public class SfDefaultProcessValidateAndPreprocess<NI, EI, PCI,
         return wholePreprocessData;
     }
 
-    private void assignProcessPreprocessData(SfValidationProcessContext<NI, EI, PCI, NC, EC, PC> mainProcessValidationContext,
-                                             SfProcessPreprocessData<NI, EI, PCI, NC, EC, PC> mainExecutionProcessContext) {
-        mainExecutionProcessContext.setStartNodeConfigIndex(mainExecutionProcessContext.getStartNodeConfigIndex());
+    private void assignProcessPreprocessData(SfValidationProcessContext<NI, EI, PCI, NC, EC, PC> validationProcessContext,
+                                             SfProcessPreprocessData<NI, EI, PCI, NC, EC, PC> processPreprocessData) {
+        processPreprocessData.setStartNodeConfigIndex(validationProcessContext.getStartNodeConfigIndex());
+        processPreprocessData.setStartNodeConfig(validationProcessContext.getStartNodeConfig());
     }
 
 }

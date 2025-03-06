@@ -14,16 +14,16 @@ public interface SfProcessEngine<NI, EI, PCI,
         PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC>,
         NEI, EEI, PEI> {
 
-    SfProcessExecuteResult<PEI> runProcess(SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> wholePreprocessData,
-                                           PEI executionId,
-                                           Map<String, Object> params,
-                                           Map<String, Object> env);
+    SfProcessExecuteResult<PEI> executeProcess(SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> wholePreprocessData,
+                                               PEI executionId,
+                                               Map<String, Object> params,
+                                               Map<String, Object> env);
 
-    SfProcessExecuteResult<PEI> runProcess(SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> wholePreprocessData,
-                                           Map<String, Object> params,
-                                           Map<String, Object> env);
+    SfProcessExecuteResult<PEI> executeProcess(SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> wholePreprocessData,
+                                               Map<String, Object> params,
+                                               Map<String, Object> env);
 
-    SfProcessExecuteResult<PEI> runProcess(SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> wholePreprocessData,
-                                           Map<String, Object> params);
+    SfProcessExecuteResult<PEI> executeProcess(SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> wholePreprocessData,
+                                               Map<String, Object> params);
 
 }

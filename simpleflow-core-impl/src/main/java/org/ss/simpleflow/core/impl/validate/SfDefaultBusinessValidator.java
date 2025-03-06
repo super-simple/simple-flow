@@ -54,6 +54,7 @@ public class SfDefaultBusinessValidator<NI, EI, PCI,
                                  SfProcessEngineConfig processEngineConfig) {
         List<NC> nodeConfigList = processConfig.getNodeConfigList();
         List<EC> edgeConfigList = processConfig.getEdgeConfigList();
+
         generateIndex(nodeConfigList, edgeConfigList, validationProcessContext);
 
         int nodeConfigListSize = nodeConfigList.size();
