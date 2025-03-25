@@ -7,6 +7,7 @@ public class SfAbstractEdgeConfig<EI, NI> implements SfEdgeConfig<EI, NI> {
     protected NI fromNodeId;
     protected NI toNodeId;
     protected String edgeType;
+    protected int executePriority;
     protected int fromResultIndex;
     protected int toParameterIndex;
 
@@ -36,6 +37,11 @@ public class SfAbstractEdgeConfig<EI, NI> implements SfEdgeConfig<EI, NI> {
     }
 
     @Override
+    public int getExecutePriority() {
+        return executePriority;
+    }
+
+    @Override
     public int getToParameterIndex() {
         return toParameterIndex;
     }
@@ -54,6 +60,10 @@ public class SfAbstractEdgeConfig<EI, NI> implements SfEdgeConfig<EI, NI> {
 
     public void setEdgeType(String edgeType) {
         this.edgeType = edgeType;
+    }
+
+    public void setExecutePriority(int executePriority) {
+        this.executePriority = executePriority;
     }
 
     public void setFromResultIndex(int fromResultIndex) {

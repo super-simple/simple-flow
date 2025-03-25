@@ -12,9 +12,9 @@ public interface SfEdgeConfig<EI, NI> extends SfComponentConfig {
 
     String getEdgeType();
 
-    int getFromResultIndex();
-
     int getExecutePriority();
+
+    int getFromResultIndex();
 
     int getToParameterIndex();
 

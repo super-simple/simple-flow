@@ -10,6 +10,11 @@ public interface SfProcessContext<NI, EI, PCI,
         PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC>,
         PEI> extends SfVariableContext {
 
+    void setRootProcessContext(SfProcessContext<NI, EI, PCI,
+            NC, EC, PC, PEI> rootProcessContext);
+
+    SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> getRootProcessContext();
+
     void setParentProcessContext(SfProcessContext<NI, EI, PCI,
             NC, EC, PC, PEI> processContext);
 
@@ -22,8 +27,4 @@ public interface SfProcessContext<NI, EI, PCI,
     void setProcessConfig(PC processConfig);
 
     PC getProcessConfig();
-
-    void setProcessConfigId(PCI processConfigId);
-
-    PCI getProcessConfigId();
 }

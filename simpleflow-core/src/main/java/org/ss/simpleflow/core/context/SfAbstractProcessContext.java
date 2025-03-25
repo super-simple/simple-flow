@@ -10,20 +10,31 @@ public abstract class SfAbstractProcessContext<NI, EI, PCI,
         extends SfValidationProcessContext<NI, EI, PCI, NC, EC, PC>
         implements SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> {
 
-    protected SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> processContext;
+    protected SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> rootProcessContext;
+    protected SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> parentProcessContext;
 
     protected PEI processExecutionId;
+
     protected PC processConfig;
-    protected PCI processConfigId;
+
+    @Override
+    public void setRootProcessContext(SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> rootProcessContext) {
+        this.rootProcessContext = rootProcessContext;
+    }
+
+    @Override
+    public SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> getRootProcessContext() {
+        return rootProcessContext;
+    }
 
     @Override
     public void setParentProcessContext(SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> processContext) {
-        this.processContext = processContext;
+        this.parentProcessContext = processContext;
     }
 
     @Override
     public SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> getParentProcessContext() {
-        return processContext;
+        return parentProcessContext;
     }
 
     @Override
@@ -44,16 +55,6 @@ public abstract class SfAbstractProcessContext<NI, EI, PCI,
     @Override
     public PC getProcessConfig() {
         return processConfig;
-    }
-
-    @Override
-    public void setProcessConfigId(PCI processConfigId) {
-        this.processConfigId = processConfigId;
-    }
-
-    @Override
-    public PCI getProcessConfigId() {
-        return processConfigId;
     }
 
 }
