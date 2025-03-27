@@ -10,6 +10,10 @@ public interface SfProcessContext<NI, EI, PCI,
         PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC>,
         PEI> extends SfVariableContext {
 
+    void setRoot(boolean root);
+
+    boolean isRoot();
+
     void setRootProcessContext(SfProcessContext<NI, EI, PCI,
             NC, EC, PC, PEI> rootProcessContext);
 

@@ -15,13 +15,13 @@ public interface SfProcessEngine<NI, EI, PCI,
         NEI, EEI, PEI> {
 
     SfProcessExecuteResult<PEI> executeProcess(SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> wholePreprocessData,
-                                               PEI executionId,
+                                               PEI processExecutionId,
                                                Map<String, Object> params,
-                                               Map<String, Object> env);
+                                               Map<String, Object> processVariable);
 
     SfProcessExecuteResult<PEI> executeProcess(SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> wholePreprocessData,
                                                Map<String, Object> params,
-                                               Map<String, Object> env);
+                                               Map<String, Object> processVariable);
 
     SfProcessExecuteResult<PEI> executeProcess(SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> wholePreprocessData,
                                                Map<String, Object> params);

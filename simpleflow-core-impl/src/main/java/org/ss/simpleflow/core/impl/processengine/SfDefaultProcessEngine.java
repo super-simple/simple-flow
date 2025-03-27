@@ -2,9 +2,11 @@ package org.ss.simpleflow.core.impl.processengine;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.ss.simpleflow.common.CollectionUtils;
 import org.ss.simpleflow.core.aspect.SfEdgeAspect;
 import org.ss.simpleflow.core.aspect.SfNodeAspect;
 import org.ss.simpleflow.core.aspect.SfProcessAspect;
+import org.ss.simpleflow.core.context.SfProcessContext;
 import org.ss.simpleflow.core.context.SfProcessExecuteResult;
 import org.ss.simpleflow.core.context.SfProcessPreprocessData;
 import org.ss.simpleflow.core.context.SfWholePreprocessData;
@@ -131,14 +133,26 @@ public class SfDefaultProcessEngine<NI, EI, PCI,
 
     @Override
     public final SfProcessExecuteResult<PEI> executeProcess(SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> wholePreprocessData,
-                                                            PEI executionId,
+                                                            PEI processExecutionId,
                                                             Map<String, Object> params,
-                                                            Map<String, Object> env) {
+                                                            Map<String, Object> processVariable) {
         SfProcessPreprocessData<NI, EI, PCI, NC, EC, PC> mainExecutionProcessContext = wholePreprocessData.getMainExecutionProcessContext();
+        SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> mainProcessContext = contextFactory.createProcessContext();
+        PC mainProcessConfig = mainExecutionProcessContext.getProcessConfig();
+        mainProcessContext.setProcessConfig(mainProcessConfig);
+        mainProcessContext.getVariables().putAll(processVariable);
+        if (processExecutionId != null) {
+            PEI generateProcessExecutionId = processExecutionIdGenerator.generateProcessExecutionId(mainProcessContext);
+            mainProcessContext.setProcessExecutionId(generateProcessExecutionId);
+        }
+        mainProcessContext.setRootProcessContext(mainProcessContext);
+        mainProcessContext.setRoot(true);
 
-        int startNodeConfigIndex = mainExecutionProcessContext.getStartNodeConfigIndex();
-        List<NC> nodeConfigList = mainExecutionProcessContext.getNodeConfigList();
-        NC nc = nodeConfigList.get(startNodeConfigIndex);
+        if (CollectionUtils.isNotEmpty(processAspectList)) {
+            for (SfProcessAspect<NI, EI, PCI, NC, EC, PC, PEI> processAspect : processAspectList) {
+                processAspect.before(params, mainProcessContext);
+            }
+        }
 
         return null;
     }
@@ -146,8 +160,8 @@ public class SfDefaultProcessEngine<NI, EI, PCI,
     @Override
     public final SfProcessExecuteResult<PEI> executeProcess(SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> wholePreprocessData,
                                                             Map<String, Object> params,
-                                                            Map<String, Object> env) {
-        return executeProcess(wholePreprocessData, null, params, env);
+                                                            Map<String, Object> processVariable) {
+        return executeProcess(wholePreprocessData, null, params, processVariable);
     }
 
     @Override
@@ -156,8 +170,8 @@ public class SfDefaultProcessEngine<NI, EI, PCI,
         return executeProcess(wholePreprocessData, params, null);
     }
 
-
     private void initContext(SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> wholePreprocessData) {
+
     }
 
 }
