@@ -7,6 +7,8 @@ public interface SfVariableContext extends Serializable {
 
     void setVariable(String key, Object value);
 
+    void setVariables(Map<String, Object> variables);
+
     Object getVariable(String key);
 
     Object removeVariable(String key);

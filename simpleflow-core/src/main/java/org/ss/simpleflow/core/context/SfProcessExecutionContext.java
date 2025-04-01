@@ -12,10 +12,6 @@ public interface SfProcessExecutionContext<NI, EI, PCI,
         PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC>,
         NEI, EEI, PEI> {
 
-    void setProcessExecutionId(PEI processExecutionId);
-
-    PEI getProcessExecutionId();
-
     void setProcessContext(SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> processContext);
 
     SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> getProcessContext();

@@ -11,23 +11,24 @@ public abstract class SfWholePreprocessData<NI, EI, PCI,
         EC extends SfAbstractEdgeConfig<EI, NI>,
         PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC>> {
 
-    protected SfProcessPreprocessData<NI, EI, PCI, NC, EC, PC> mainExecutionProcessContext;
+    protected SfProcessPreprocessData<NI, EI, PCI, NC, EC, PC> mainProcessPreprocessData;
 
-    protected List<SfProcessPreprocessData<NI, EI, PCI, NC, EC, PC>> subExecutionProcessContextList;
+    protected List<SfProcessPreprocessData<NI, EI, PCI, NC, EC, PC>> subProcessPreprocessDataList;
 
-    public SfProcessPreprocessData<NI, EI, PCI, NC, EC, PC> getMainExecutionProcessContext() {
-        return mainExecutionProcessContext;
+    public SfProcessPreprocessData<NI, EI, PCI, NC, EC, PC> getMainProcessPreprocessData() {
+        return mainProcessPreprocessData;
     }
 
-    public void setMainExecutionProcessContext(SfProcessPreprocessData<NI, EI, PCI, NC, EC, PC> mainExecutionProcessContext) {
-        this.mainExecutionProcessContext = mainExecutionProcessContext;
+    public void setMainProcessPreprocessData(SfProcessPreprocessData<NI, EI, PCI, NC, EC, PC> mainProcessPreprocessData) {
+        this.mainProcessPreprocessData = mainProcessPreprocessData;
     }
 
-    public List<SfProcessPreprocessData<NI, EI, PCI, NC, EC, PC>> getSubExecutionProcessContextList() {
-        return subExecutionProcessContextList;
+    public List<SfProcessPreprocessData<NI, EI, PCI, NC, EC, PC>> getSubProcessPreprocessDataList() {
+        return subProcessPreprocessDataList;
     }
 
-    public void setSubExecutionProcessContextList(List<SfProcessPreprocessData<NI, EI, PCI, NC, EC, PC>> subExecutionProcessContextList) {
-        this.subExecutionProcessContextList = subExecutionProcessContextList;
+    public void setSubProcessPreprocessDataList(List<SfProcessPreprocessData<NI, EI, PCI, NC, EC, PC>> subProcessPreprocessDataList) {
+        this.subProcessPreprocessDataList = subProcessPreprocessDataList;
     }
+
 }

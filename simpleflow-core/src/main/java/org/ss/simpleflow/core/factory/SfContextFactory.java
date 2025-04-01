@@ -1,7 +1,6 @@
 package org.ss.simpleflow.core.factory;
 
-import org.ss.simpleflow.core.context.SfProcessContext;
-import org.ss.simpleflow.core.context.SfProcessExecuteResult;
+import org.ss.simpleflow.core.context.*;
 import org.ss.simpleflow.core.edge.SfAbstractEdgeConfig;
 import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
 import org.ss.simpleflow.core.processconfig.SfAbstractProcessConfig;
@@ -12,11 +11,13 @@ public interface SfContextFactory<NI, EI, PCI,
         PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC>,
         NEI, EEI, PEI> {
 
-    EC createEdgeContext();
+    SfNodeContext<NI, PCI, NEI, NC> createNodeContext();
 
-    NC createNodeContext();
+    SfEdgeContext<NI, EI, EEI, EC> createEdgeContext();
 
     SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> createProcessContext();
 
-    SfProcessExecuteResult<PEI> createProcessExecuteResult();
+    SfProcessExecutionContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> createProcessExecutionContext();
+
+    SfWholeExecutionContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> createWholeExecutionContext();
 }

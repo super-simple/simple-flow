@@ -13,6 +13,11 @@ public abstract class SfAbstractVariableContext implements SfVariableContext {
     }
 
     @Override
+    public void setVariables(Map<String, Object> variables) {
+        this.variables.putAll(variables);
+    }
+
+    @Override
     public Object getVariable(String key) {
         return variables.get(key);
     }

@@ -13,10 +13,9 @@ public abstract class SfProcessPreprocessData<NI, EI, PCI,
         PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC>> {
     protected PC processConfig;
     protected int processConfigIndex;
-    protected NC startNodeConfig;
     protected int startNodeConfigIndex;
-    protected List<NC> nodeConfigList;
-    protected List<EC> edgeConfigList;
+    protected int nodeConfigListSize;
+    protected int edgeConfigListSize;
     protected List<SfIndexEntry> nodeIndexEntryList;
     protected List<SfIndexEntry> edgeIndexEntryList;
     protected List<List<SfIndexEntry>> allOutgoingControlEdgeList;
@@ -37,14 +36,6 @@ public abstract class SfProcessPreprocessData<NI, EI, PCI,
         this.processConfigIndex = processConfigIndex;
     }
 
-    public NC getStartNodeConfig() {
-        return startNodeConfig;
-    }
-
-    public void setStartNodeConfig(NC startNodeConfig) {
-        this.startNodeConfig = startNodeConfig;
-    }
-
     public int getStartNodeConfigIndex() {
         return startNodeConfigIndex;
     }
@@ -53,20 +44,20 @@ public abstract class SfProcessPreprocessData<NI, EI, PCI,
         this.startNodeConfigIndex = startNodeConfigIndex;
     }
 
-    public List<NC> getNodeConfigList() {
-        return nodeConfigList;
+    public int getNodeConfigListSize() {
+        return nodeConfigListSize;
     }
 
-    public void setNodeConfigList(List<NC> nodeConfigList) {
-        this.nodeConfigList = nodeConfigList;
+    public void setNodeConfigListSize(int nodeConfigListSize) {
+        this.nodeConfigListSize = nodeConfigListSize;
     }
 
-    public List<EC> getEdgeConfigList() {
-        return edgeConfigList;
+    public int getEdgeConfigListSize() {
+        return edgeConfigListSize;
     }
 
-    public void setEdgeConfigList(List<EC> edgeConfigList) {
-        this.edgeConfigList = edgeConfigList;
+    public void setEdgeConfigListSize(int edgeConfigListSize) {
+        this.edgeConfigListSize = edgeConfigListSize;
     }
 
     public List<SfIndexEntry> getNodeIndexEntryList() {
