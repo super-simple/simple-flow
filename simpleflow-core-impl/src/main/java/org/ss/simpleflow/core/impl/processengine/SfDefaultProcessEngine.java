@@ -20,13 +20,7 @@ import org.ss.simpleflow.core.processengine.SfProcessExecutionIdGenerator;
 
 import java.util.*;
 
-public class SfDefaultProcessEngine<NI, EI, PCI,
-        NC extends SfAbstractNodeConfig<NI, PCI>,
-        EC extends SfAbstractEdgeConfig<EI, NI>,
-        PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC>,
-        NEI, EEI, PEI>
-        implements SfProcessEngine<NI, EI, PCI, NC, EC,
-        PC, NEI, EEI, PEI> {
+public class SfDefaultProcessEngine<NI, EI, PCI, NC extends SfAbstractNodeConfig<NI, PCI>, EC extends SfAbstractEdgeConfig<EI, NI>, PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC>, NEI, EEI, PEI> implements SfProcessEngine<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> {
 
     private static final Logger LOG = LoggerFactory.getLogger(SfDefaultProcessEngine.class);
 
@@ -130,75 +124,146 @@ public class SfDefaultProcessEngine<NI, EI, PCI,
     }
 
     @Override
-    public final SfProcessExecuteResult<PEI> executeProcess(SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> wholePreprocessData,
-                                                            PEI processExecutionId,
-                                                            ListMap<String, Object> params,
-                                                            Map<String, Object> processVariable) {
+    public final SfProcessExecutionResult<PEI> runProcess(SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> wholePreprocessData,
+                                                          ListMap<String, Object> params) {
+        return runProcess(wholePreprocessData, params, null, null);
+    }
+
+    @Override
+    public final SfProcessExecutionResult<PEI> runProcess(SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> wholePreprocessData,
+                                                          ListMap<String, Object> params,
+                                                          Map<String, Object> processVariable) {
+        return runProcess(wholePreprocessData, params, processVariable, null);
+    }
+
+    @Override
+    public final SfProcessExecutionResult<PEI> runProcess(SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> wholePreprocessData,
+                                                          ListMap<String, Object> params,
+                                                          Map<String, Object> processVariable,
+                                                          PEI processExecutionId) {
         SfProcessPreprocessData<NI, EI, PCI, NC, EC, PC> mainProcessPreprocessData = wholePreprocessData.getMainProcessPreprocessData();
-        SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> mainProcessContext = contextFactory.createProcessContext();
-        PC mainProcessConfig = mainProcessPreprocessData.getProcessConfig();
-        mainProcessContext.setProcessConfig(mainProcessConfig);
-        mainProcessContext.getVariables().putAll(processVariable);
-        if (processExecutionId != null) {
-            PEI generateProcessExecutionId = processExecutionIdGenerator.generateProcessExecutionId(mainProcessContext);
-            mainProcessContext.setProcessExecutionId(generateProcessExecutionId);
-        }
-        mainProcessContext.setRootProcessContext(mainProcessContext);
-        mainProcessContext.setRoot(true);
+        SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> mainProcessContext = initMainProcessContext(
+                mainProcessPreprocessData,
+                processVariable,
+                processExecutionId);
 
-        SfWholeExecutionContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> wholeExecutionContext = contextFactory.createWholeExecutionContext();
-        SfProcessExecutionContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> mainProcessExecutionContext = contextFactory.createProcessExecutionContext();
-        wholeExecutionContext.setMainProcessExecuteContext(mainProcessExecutionContext);
+        SfWholeExecutionContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> wholeExecutionContext = initWholeExecutionContext(
+                wholePreprocessData,
+                mainProcessContext);
 
-        mainProcessExecutionContext.setProcessContext(mainProcessContext);
-        List<SfNodeContext<NI, PCI, NEI, NC>> nodeContextList = new ArrayList<>();
-        mainProcessExecutionContext.setNodeContextList(nodeContextList);
-
-
-        if (CollectionUtils.isNotEmpty(processAspectList)) {
-            for (SfProcessAspect<NI, EI, PCI, NC, EC, PC, PEI> processAspect : processAspectList) {
-                processAspect.before(params, mainProcessContext);
-            }
-        }
-
-        int startNodeConfigIndex = mainProcessPreprocessData.getStartNodeConfigIndex();
-        Deque<SfIndexEntry> stack = new ArrayDeque<>();
-        List<SfIndexEntry> nodeIndexEntryList = mainProcessPreprocessData.getNodeIndexEntryList();
-        SfIndexEntry indexEntry = nodeIndexEntryList.get(startNodeConfigIndex);
-        stack.push(indexEntry);
+        runProcess(wholePreprocessData, wholeExecutionContext);
 
         return null;
     }
 
+
+    private SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> initMainProcessContext(SfProcessPreprocessData<NI, EI, PCI, NC, EC, PC> mainProcessPreprocessData,
+                                                                                  Map<String, Object> processVariable,
+                                                                                  PEI processExecutionId) {
+        SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> mainProcessContext = contextFactory.createProcessContext();
+        PC mainProcessConfig = mainProcessPreprocessData.getProcessConfig();
+        mainProcessContext.setProcessConfig(mainProcessConfig);
+        mainProcessContext.getVariables().putAll(processVariable);
+        mainProcessContext.setRootProcessContext(mainProcessContext);
+        mainProcessContext.setRoot(true);
+        if (processExecutionId != null) {
+            PEI generateProcessExecutionId = processExecutionIdGenerator.generateProcessExecutionId(mainProcessContext);
+            mainProcessContext.setProcessExecutionId(generateProcessExecutionId);
+        }
+        return mainProcessContext;
+    }
+
+    private SfWholeExecutionContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> initWholeExecutionContext(
+            SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> wholePreprocessData,
+            SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> mainProcessContext) {
+        SfWholeExecutionContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> wholeExecutionContext = contextFactory.createWholeExecutionContext();
+        SfProcessPreprocessData<NI, EI, PCI, NC, EC, PC> mainProcessPreprocessData = wholePreprocessData.getMainProcessPreprocessData();
+        SfProcessExecutionContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> mainProcessExecutionContext = initProcessExecutionContext(
+                mainProcessPreprocessData,
+                mainProcessContext);
+        wholeExecutionContext.setMainProcessExecuteContext(mainProcessExecutionContext);
+        List<SfProcessPreprocessData<NI, EI, PCI, NC, EC, PC>> subProcessPreprocessDataList = wholePreprocessData.getSubProcessPreprocessDataList();
+        if (CollectionUtils.isNotEmpty(subProcessPreprocessDataList)) {
+            int size = subProcessPreprocessDataList.size();
+            List<SfProcessExecutionContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI>> subProcessExecutionContextList = new ArrayList<>(
+                    size);
+            wholeExecutionContext.setSubProcessExecutionContextList(subProcessExecutionContextList);
+
+            for (int i = 0; i < subProcessPreprocessDataList.size(); i++) {
+                subProcessExecutionContextList.add(null);
+            }
+        }
+        return wholeExecutionContext;
+    }
+
+    private SfProcessExecutionContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> initProcessExecutionContext(
+            SfProcessPreprocessData<NI, EI, PCI, NC, EC, PC> processPreprocessData,
+            SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> processContext) {
+        SfProcessExecutionContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> processExecutionContext = contextFactory.createProcessExecutionContext();
+
+        processExecutionContext.setProcessContext(processContext);
+        int nodeConfigListSize = processPreprocessData.getNodeConfigListSize();
+        List<SfNodeContext<NI, PCI, NEI, NC>> nodeContextList = new ArrayList<>(nodeConfigListSize);
+        for (int i = 0; i < nodeConfigListSize; i++) {
+            nodeContextList.add(null);
+        }
+        processExecutionContext.setNodeContextList(nodeContextList);
+
+        int edgeConfigListSize = processPreprocessData.getEdgeConfigListSize();
+        ArrayList<SfEdgeContext<NI, EI, EEI, EC>> edgeContextList = new ArrayList<>(edgeConfigListSize);
+        for (int i = 0; i < edgeConfigListSize; i++) {
+            edgeContextList.add(null);
+        }
+        processExecutionContext.setEdgeContextList(edgeContextList);
+        return processExecutionContext;
+    }
+
+    private void runProcess(SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> wholePreprocessData,
+                            SfWholeExecutionContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> wholeExecutionContext) {
+        Deque<Deque<Deque<SfIndexEntry>>> wholeStack = new ArrayDeque<>();
+        Deque<Deque<SfIndexEntry>> processStack = new ArrayDeque<>();
+        Deque<SfIndexEntry> eventStack = new ArrayDeque<>();
+
+        processStack.push(eventStack);
+        wholeStack.push(processStack);
+
+        SfProcessPreprocessData<NI, EI, PCI, NC, EC, PC> mainProcessPreprocessData = wholePreprocessData.getMainProcessPreprocessData();
+        int startNodeConfigIndex = mainProcessPreprocessData.getStartNodeConfigIndex();
+        List<SfIndexEntry> nodeIndexEntryList = mainProcessPreprocessData.getNodeIndexEntryList();
+        SfIndexEntry indexEntry = nodeIndexEntryList.get(startNodeConfigIndex);
+        eventStack.push(indexEntry);
+
+        executeProcess(mainProcessPreprocessData, wholeExecutionContext.getMainProcessExecuteContext(), processStack);
+    }
+
     private void executeProcess(SfProcessPreprocessData<NI, EI, PCI, NC, EC, PC> processPreprocessData,
                                 SfProcessExecutionContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> processExecutionContext,
-                                Deque<SfIndexEntry> stack) {
+                                Deque<Deque<SfIndexEntry>> processStack) {
         List<SfIndexEntry> nodeIndexEntryList = processPreprocessData.getNodeIndexEntryList();
         List<SfIndexEntry> edgeIndexEntryList = processPreprocessData.getEdgeIndexEntryList();
         PC processConfig = processPreprocessData.getProcessConfig();
         List<NC> nodeConfigList = processConfig.getNodeConfigList();
-        while (!stack.isEmpty()) {
-            SfIndexEntry pop = stack.pop();
-            if (pop.isNode()) {
+        List<EC> edgeConfigList = processConfig.getEdgeConfigList();
 
+        while (!processStack.isEmpty()) {
+            Deque<SfIndexEntry> eventStack = processStack.pop();
+            while (!eventStack.isEmpty()) {
+                SfIndexEntry currentIndexEntry = eventStack.pop();
+                if (currentIndexEntry.isNode()) {
+                    int selfIndex = currentIndexEntry.getSelfIndex();
+                    NC nc = nodeConfigList.get(selfIndex);
 
-            } else {
+                } else {
 
+                }
             }
+
+
         }
     }
 
-    @Override
-    public final SfProcessExecuteResult<PEI> executeProcess(SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> wholePreprocessData,
-                                                            ListMap<String, Object> params,
-                                                            Map<String, Object> processVariable) {
-        return executeProcess(wholePreprocessData, null, params, processVariable);
-    }
+    private void getNodeInstance() {
 
-    @Override
-    public final SfProcessExecuteResult<PEI> executeProcess(SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> wholePreprocessData,
-                                                            ListMap<String, Object> params) {
-        return executeProcess(wholePreprocessData, params, null);
     }
 
 }

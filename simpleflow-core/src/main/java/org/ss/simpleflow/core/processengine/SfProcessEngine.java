@@ -1,7 +1,7 @@
 package org.ss.simpleflow.core.processengine;
 
 import org.ss.simpleflow.common.ListMap;
-import org.ss.simpleflow.core.context.SfProcessExecuteResult;
+import org.ss.simpleflow.core.context.SfProcessExecutionResult;
 import org.ss.simpleflow.core.context.SfWholePreprocessData;
 import org.ss.simpleflow.core.edge.SfAbstractEdgeConfig;
 import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
@@ -15,16 +15,16 @@ public interface SfProcessEngine<NI, EI, PCI,
         PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC>,
         NEI, EEI, PEI> {
 
-    SfProcessExecuteResult<PEI> executeProcess(SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> wholePreprocessData,
-                                               PEI processExecutionId,
-                                               ListMap<String, Object> params,
-                                               Map<String, Object> processVariable);
+    SfProcessExecutionResult<PEI> runProcess(SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> wholePreprocessData,
+                                             ListMap<String, Object> params);
 
-    SfProcessExecuteResult<PEI> executeProcess(SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> wholePreprocessData,
-                                               ListMap<String, Object> params,
-                                               Map<String, Object> processVariable);
+    SfProcessExecutionResult<PEI> runProcess(SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> wholePreprocessData,
+                                             ListMap<String, Object> params,
+                                             Map<String, Object> processVariable);
 
-    SfProcessExecuteResult<PEI> executeProcess(SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> wholePreprocessData,
-                                               ListMap<String, Object> params);
+    SfProcessExecutionResult<PEI> runProcess(SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> wholePreprocessData,
+                                             ListMap<String, Object> params,
+                                             Map<String, Object> processVariable,
+                                             PEI processExecutionId);
 
 }
