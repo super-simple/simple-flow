@@ -14,10 +14,9 @@ public interface SfEventFactory<NI, EI, PCI,
         NEI, PEI> {
 
     SfEvent<NI, EI, PCI, NC,
-            EC, PC, NEI, PEI> createEvent(
-            NC nc,
-            SfNodeContext<NI, PCI, NEI, NC> nodeContext,
-            SfProcessContext<NI, EI, PCI, NC,
-                    EC, PC, PEI> processContext);
+            EC, PC, NEI, PEI> createEvent(NC nc,
+                                          SfNodeContext<NI, PCI, NEI, NC> nodeContext,
+                                          PC pc,
+                                          SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> processContext);
 
 }

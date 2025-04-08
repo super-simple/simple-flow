@@ -17,12 +17,17 @@ public interface SfStreamIterator<NI, EI, PCI,
         PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC>, NEI, PEI> extends SfComponent {
 
     List<Map<String, Object>> map(ListMap<String, Object> params,
+                                  NC nc,
                                   SfNodeContext<NI, PCI, NEI, NC> nodeContext,
-                                  SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> processContext) throws Exception;
+                                  PC pc,
+                                  SfProcessContext<NI, EI, PCI, NC,
+                                          EC, PC, PEI> processContext) throws Exception;
 
     default void collect(ListMap<String, Object> params,
                          ListMap<String, Object> resultMap,
+                         NC nc,
                          SfNodeContext<NI, PCI, NEI, NC> nodeContext,
+                         PC pc,
                          SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> processContext) throws Exception {
     }
 

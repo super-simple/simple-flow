@@ -15,7 +15,9 @@ public interface SfDataEdgeFactory<NI, EI, PCI,
 
     SfDataEdge<NI, EI, PCI, NC, EC, PC, EEI, PEI>
     createDataEdge(
+            EC ec,
             SfEdgeContext<NI, EI, EEI, EC> edgeContext,
+            PC pc,
             SfProcessContext<NI, EI, PCI, NC,
                     EC, PC, PEI> processContext);
 

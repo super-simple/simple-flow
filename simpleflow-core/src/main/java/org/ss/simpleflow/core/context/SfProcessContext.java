@@ -28,7 +28,4 @@ public interface SfProcessContext<NI, EI, PCI,
 
     PEI getProcessExecutionId();
 
-    void setProcessConfig(PC processConfig);
-
-    PC getProcessConfig();
 }

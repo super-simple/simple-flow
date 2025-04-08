@@ -88,7 +88,7 @@ public class SfDefaultProcessValidateAndPreprocess<NI, EI, PCI,
         SfValidationProcessContext<NI, EI, PCI, NC, EC, PC> mainProcessValidationContext = validationWholeContext.getMainValidationProcessContext();
         SfProcessPreprocessData<NI, EI, PCI, NC, EC, PC> mainExecutionProcessContext = dataFactory.createProcessPreprocessData();
         assignProcessPreprocessData(mainProcessValidationContext, mainExecutionProcessContext);
-        wholePreprocessData.setMainExecutionProcessContext(mainExecutionProcessContext);
+        wholePreprocessData.setMainProcessPreprocessData(mainExecutionProcessContext);
         mainExecutionProcessContext.setProcessConfigIndex(SfProcessConfigIndexConstant.MAIN_PROCESS_CONFIG_INDEX);
 
         List<PC> subProcessConfigList = wholeProcessConfig.getSubProcessConfigList();
@@ -98,7 +98,7 @@ public class SfDefaultProcessValidateAndPreprocess<NI, EI, PCI,
             int size = subProcessConfigList.size();
             List<SfProcessPreprocessData<NI, EI, PCI, NC, EC, PC>> subExecutionProcessContextList = new ArrayList<>(
                     size);
-            wholePreprocessData.setSubExecutionProcessContextList(subExecutionProcessContextList);
+            wholePreprocessData.setSubProcessPreprocessDataList(subExecutionProcessContextList);
             for (int i = 0; i < size; i++) {
                 SfValidationProcessContext<NI, EI, PCI, NC, EC, PC> subValidationProcessContext = subValidationProcessContextList.get(
                         i);
@@ -113,7 +113,6 @@ public class SfDefaultProcessValidateAndPreprocess<NI, EI, PCI,
     private void assignProcessPreprocessData(SfValidationProcessContext<NI, EI, PCI, NC, EC, PC> validationProcessContext,
                                              SfProcessPreprocessData<NI, EI, PCI, NC, EC, PC> processPreprocessData) {
         processPreprocessData.setStartNodeConfigIndex(validationProcessContext.getStartNodeConfigIndex());
-        processPreprocessData.setStartNodeConfig(validationProcessContext.getStartNodeConfig());
     }
 
 }

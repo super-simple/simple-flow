@@ -9,8 +9,6 @@ public abstract class SfAbstractEdgeContext<NI, EI, EEI, EC
 
     protected EEI edgeExecutionId;
 
-    protected EC edgeConfig;
-
     @Override
     public void setEdgeExecutionId(EEI edgeExecutionId) {
         this.edgeExecutionId = edgeExecutionId;
@@ -21,13 +19,4 @@ public abstract class SfAbstractEdgeContext<NI, EI, EEI, EC
         return edgeExecutionId;
     }
 
-    @Override
-    public void setEdgeConfig(EC edgeConfig) {
-        this.edgeConfig = edgeConfig;
-    }
-
-    @Override
-    public EC getEdgeConfig() {
-        return edgeConfig;
-    }
 }

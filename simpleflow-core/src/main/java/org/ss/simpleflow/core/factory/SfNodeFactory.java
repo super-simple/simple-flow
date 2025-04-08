@@ -13,8 +13,8 @@ public interface SfNodeFactory<NI, EI, PCI,
         PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC>,
         NEI, PEI> {
     SfNode<NI, EI, PCI, NC, EC, PC, NEI, PEI>
-    createNode(
-            SfNodeContext<NI, PCI, NEI, NC> nodeContext,
-            SfProcessContext<NI, EI, PCI, NC,
-                    EC, PC, PEI> processContext);
+    createNode(NC nc,
+               SfNodeContext<NI, PCI, NEI, NC> nodeContext,
+               PC pc,
+               SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> processContext);
 }

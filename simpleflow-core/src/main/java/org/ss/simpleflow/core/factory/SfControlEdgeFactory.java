@@ -15,7 +15,9 @@ public interface SfControlEdgeFactory<NI, EI, PCI,
 
     SfControlEdge<NI, EI, PCI, NC, EC, PC, EEI, PEI>
     createControlEdge(
+            EC ec,
             SfEdgeContext<NI, EI, EEI, EC> edgeContext,
+            PC pc,
             SfProcessContext<NI, EI, PCI, NC,
                     EC, PC, PEI> processContext);
 

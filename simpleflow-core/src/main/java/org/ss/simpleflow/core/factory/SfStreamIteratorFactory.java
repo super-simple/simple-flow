@@ -15,9 +15,9 @@ public interface SfStreamIteratorFactory<NI, EI, PCI,
 
     SfStreamIterator<NI, EI, PCI, NC,
             EC, PC, NEI, PEI>
-    createStreamIterator(
-            SfNodeContext<NI, PCI, NEI, NC> nodeContext,
-            SfProcessContext<NI, EI, PCI, NC,
-                    EC, PC, PEI> processContext);
+    createStreamIterator(NC nc,
+                         SfNodeContext<NI, PCI, NEI, NC> nodeContext,
+                         PC pc,
+                         SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> processContext);
 
 }

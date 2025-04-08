@@ -14,21 +14,29 @@ public interface SfNodeAspect<NI, EI, PCI,
         NEI, PEI> {
 
     void before(ListMap<String, Object> params,
+                NC nc,
                 SfNodeContext<NI, PCI, NEI, NC> nodeContext,
+                PC pc,
                 SfProcessContext<NI, EI, PCI, NC,
                         EC, PC, PEI> processContext);
 
     void afterThrowing(Exception e,
+                       EC ec,
                        SfNodeContext<NI, PCI, NEI, NC> nodeContext,
+                       PC pc,
                        SfProcessContext<NI, EI, PCI, NC,
                                EC, PC, PEI> processContext);
 
     void afterReturning(ListMap<String, Object> result,
+                        NC nc,
                         SfNodeContext<NI, PCI, NEI, NC> nodeContext,
+                        PC pc,
                         SfProcessContext<NI, EI, PCI, NC,
                                 EC, PC, PEI> processContext);
 
-    void afterFinally(SfNodeContext<NI, PCI, NEI, NC> nodeContext,
+    void afterFinally(NC nc,
+                      SfNodeContext<NI, PCI, NEI, NC> nodeContext,
+                      PC pc,
                       SfProcessContext<NI, EI, PCI, NC,
                               EC, PC, PEI> processContext);
 

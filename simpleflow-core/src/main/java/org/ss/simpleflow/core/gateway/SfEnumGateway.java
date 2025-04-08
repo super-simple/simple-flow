@@ -15,7 +15,9 @@ public interface SfEnumGateway<NI, EI, PCI,
         NEI, PEI> extends SfComponent {
 
     String executeEnumGateway(ListMap<String, Object> params,
+                              NC nc,
                               SfNodeContext<NI, PCI, NEI, NC> nodeContext,
+                              PC pc,
                               SfProcessContext<NI, EI, PCI, NC,
                                       EC, PC, PEI> processContext) throws Exception;
 }

@@ -16,8 +16,6 @@ public abstract class SfAbstractProcessContext<NI, EI, PCI,
 
     protected PEI processExecutionId;
 
-    protected PC processConfig;
-
     @Override
     public boolean isRoot() {
         return root;
@@ -56,16 +54,6 @@ public abstract class SfAbstractProcessContext<NI, EI, PCI,
     @Override
     public PEI getProcessExecutionId() {
         return processExecutionId;
-    }
-
-    @Override
-    public void setProcessConfig(PC processConfig) {
-        this.processConfig = processConfig;
-    }
-
-    @Override
-    public PC getProcessConfig() {
-        return processConfig;
     }
 
 }

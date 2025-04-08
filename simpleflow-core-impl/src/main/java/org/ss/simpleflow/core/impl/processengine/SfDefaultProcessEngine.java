@@ -7,11 +7,14 @@ import org.ss.simpleflow.common.ListMap;
 import org.ss.simpleflow.core.aspect.SfEdgeAspect;
 import org.ss.simpleflow.core.aspect.SfNodeAspect;
 import org.ss.simpleflow.core.aspect.SfProcessAspect;
+import org.ss.simpleflow.core.constant.SfNodeTypeConstant;
 import org.ss.simpleflow.core.context.*;
 import org.ss.simpleflow.core.edge.SfAbstractEdgeConfig;
+import org.ss.simpleflow.core.event.SfEvent;
 import org.ss.simpleflow.core.factory.*;
 import org.ss.simpleflow.core.index.SfIndexEntry;
 import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
+import org.ss.simpleflow.core.node.SfNode;
 import org.ss.simpleflow.core.processconfig.SfAbstractProcessConfig;
 import org.ss.simpleflow.core.processengine.SfComponentExecutionIdGenerator;
 import org.ss.simpleflow.core.processengine.SfProcessEngine;
@@ -151,6 +154,9 @@ public class SfDefaultProcessEngine<NI, EI, PCI, NC extends SfAbstractNodeConfig
                 wholePreprocessData,
                 mainProcessContext);
 
+        SfProcessExecutionContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> mainProcessExecuteContext = wholeExecutionContext.getMainProcessExecuteContext();
+        mainProcessExecuteContext.getParamList().set(mainProcessPreprocessData.getStartNodeConfigIndex(), params);
+
         runProcess(wholePreprocessData, wholeExecutionContext);
 
         return null;
@@ -161,8 +167,6 @@ public class SfDefaultProcessEngine<NI, EI, PCI, NC extends SfAbstractNodeConfig
                                                                                   Map<String, Object> processVariable,
                                                                                   PEI processExecutionId) {
         SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> mainProcessContext = contextFactory.createProcessContext();
-        PC mainProcessConfig = mainProcessPreprocessData.getProcessConfig();
-        mainProcessContext.setProcessConfig(mainProcessConfig);
         mainProcessContext.getVariables().putAll(processVariable);
         mainProcessContext.setRootProcessContext(mainProcessContext);
         mainProcessContext.setRoot(true);
@@ -203,18 +207,31 @@ public class SfDefaultProcessEngine<NI, EI, PCI, NC extends SfAbstractNodeConfig
 
         processExecutionContext.setProcessContext(processContext);
         int nodeConfigListSize = processPreprocessData.getNodeConfigListSize();
+
+        List<ListMap<String, Object>> paramList = new ArrayList<>(nodeConfigListSize);
+        processExecutionContext.setParamList(paramList);
+        for (int i = 0; i < nodeConfigListSize; i++) {
+            paramList.add(null);
+        }
+
+        List<ListMap<String, Object>> resultList = new ArrayList<>(nodeConfigListSize);
+        processExecutionContext.setResultList(resultList);
+        for (int i = 0; i < nodeConfigListSize; i++) {
+            resultList.add(null);
+        }
+
         List<SfNodeContext<NI, PCI, NEI, NC>> nodeContextList = new ArrayList<>(nodeConfigListSize);
+        processExecutionContext.setNodeContextList(nodeContextList);
         for (int i = 0; i < nodeConfigListSize; i++) {
             nodeContextList.add(null);
         }
-        processExecutionContext.setNodeContextList(nodeContextList);
 
         int edgeConfigListSize = processPreprocessData.getEdgeConfigListSize();
         ArrayList<SfEdgeContext<NI, EI, EEI, EC>> edgeContextList = new ArrayList<>(edgeConfigListSize);
+        processExecutionContext.setEdgeContextList(edgeContextList);
         for (int i = 0; i < edgeConfigListSize; i++) {
             edgeContextList.add(null);
         }
-        processExecutionContext.setEdgeContextList(edgeContextList);
         return processExecutionContext;
     }
 
@@ -245,25 +262,78 @@ public class SfDefaultProcessEngine<NI, EI, PCI, NC extends SfAbstractNodeConfig
         List<NC> nodeConfigList = processConfig.getNodeConfigList();
         List<EC> edgeConfigList = processConfig.getEdgeConfigList();
 
+        SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> processContext = processExecutionContext.getProcessContext();
+        List<SfNodeContext<NI, PCI, NEI, NC>> nodeContextList = processExecutionContext.getNodeContextList();
+        List<ListMap<String, Object>> paramList = processExecutionContext.getParamList();
+        List<ListMap<String, Object>> resultList = processExecutionContext.getResultList();
         while (!processStack.isEmpty()) {
             Deque<SfIndexEntry> eventStack = processStack.pop();
             while (!eventStack.isEmpty()) {
                 SfIndexEntry currentIndexEntry = eventStack.pop();
+                int selfIndex = currentIndexEntry.getSelfIndex();
                 if (currentIndexEntry.isNode()) {
-                    int selfIndex = currentIndexEntry.getSelfIndex();
                     NC nc = nodeConfigList.get(selfIndex);
+                    SfNodeContext<NI, PCI, NEI, NC> nodeContext = nodeContextList.get(selfIndex);
+                    ListMap<String, Object> paramMap = paramList.get(selfIndex);
+                    ListMap<String, Object> resultMap = executeNode(paramMap,
+                                                                    nc,
+                                                                    nodeContext,
+                                                                    processConfig,
+                                                                    processContext);
 
+                    resultList.set(selfIndex, resultMap);
                 } else {
 
                 }
             }
-
-
         }
     }
 
-    private void getNodeInstance() {
-
+    private ListMap<String, Object> executeNode(ListMap<String, Object> paramMap,
+                                                NC nc,
+                                                SfNodeContext<NI, PCI, NEI, NC> nodeContext,
+                                                PC pc,
+                                                SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> processContext) {
+        String nodeType = nc.getNodeType();
+        ListMap<String, Object> resultMap;
+        switch (nodeType) {
+            case SfNodeTypeConstant.EVENT: {
+                SfEvent<NI, EI, PCI, NC, EC, PC, NEI, PEI> event = eventFactory.createEvent(nc,
+                                                                                            nodeContext,
+                                                                                            pc,
+                                                                                            processContext);
+                try {
+                    resultMap = event.executeEvent(paramMap,
+                                                   nc,
+                                                   nodeContext,
+                                                   pc,
+                                                   processContext);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+                break;
+            }
+            case SfNodeTypeConstant.NODE: {
+                SfNode<NI, EI, PCI, NC, EC, PC, NEI, PEI> node = nodeFactory.createNode(nc,
+                                                                                        nodeContext,
+                                                                                        pc,
+                                                                                        processContext);
+                try {
+                    resultMap = node.executeNode(paramMap,
+                                                 nc,
+                                                 nodeContext,
+                                                 pc,
+                                                 processContext);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+                break;
+            }
+            default: {
+                throw new RuntimeException();
+            }
+        }
+        return resultMap;
     }
 
 }

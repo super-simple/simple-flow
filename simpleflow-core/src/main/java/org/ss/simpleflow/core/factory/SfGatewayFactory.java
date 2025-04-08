@@ -12,7 +12,9 @@ public interface SfGatewayFactory<NI, EI, PCI,
         EC extends SfAbstractEdgeConfig<EI, NI>,
         PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC>,
         NEI, PEI> {
-    SfGateway<NI, EI, PCI, NC, EC, PC, NEI, PEI> createGateway(
-            SfNodeContext<NI, PCI, NEI, NC> nodeContext,
-            SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> processContext);
+    SfGateway<NI, EI, PCI, NC, EC, PC, NEI, PEI>
+    createGateway(NC nc,
+                  SfNodeContext<NI, PCI, NEI, NC> nodeContext,
+                  PC pc,
+                  SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> processContext);
 }

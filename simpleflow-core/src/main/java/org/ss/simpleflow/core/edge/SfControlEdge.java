@@ -14,7 +14,9 @@ public interface SfControlEdge<NI, EI, PCI,
         EEI, PEI> extends SfComponent {
 
     boolean executeControlEdge(ListMap<String, Object> params,
+                               EC ec,
                                SfEdgeContext<NI, EI, EEI, EC> edgeContext,
+                               PC pc,
                                SfProcessContext<NI, EI, PCI, NC,
                                        EC, PC, PEI> processContext) throws Exception;
 

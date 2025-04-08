@@ -14,7 +14,9 @@ public interface SfDataEdge<NI, EI, PCI,
         EEI, PEI> extends SfComponent {
 
     Object executeDataEdge(ListMap<String, Object> params,
+                           EC ec,
                            SfEdgeContext<NI, EI, EEI, EC> edgeContext,
+                           PC pc,
                            SfProcessContext<NI, EI, PCI, NC,
                                    EC, PC, PEI> processContext) throws Exception;
 }

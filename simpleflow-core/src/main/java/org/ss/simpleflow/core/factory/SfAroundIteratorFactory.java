@@ -14,6 +14,8 @@ public interface SfAroundIteratorFactory<NI, EI, PCI,
         NEI, PEI> {
 
     SfAroundIterator<NI, EI, PCI, NC, EC, PC, NEI, PEI>
-    createAroundIterator(SfNodeContext<NI, PCI, NEI, NC> nodeContext,
+    createAroundIterator(NC nc,
+                         SfNodeContext<NI, PCI, NEI, NC> nodeContext,
+                         PC pc,
                          SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> processContext);
 }

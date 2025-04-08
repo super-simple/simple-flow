@@ -13,14 +13,18 @@ public interface SfProcessAspect<NI, EI, PCI,
         PEI> {
 
     void before(ListMap<String, Object> params,
+                PC pc,
                 SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> processContext);
 
     void afterThrowing(Exception e,
+                       PC pc,
                        SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> processContext);
 
     void afterReturning(ListMap<String, Object> result,
+                        PC pc,
                         SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> processContext);
 
-    void afterFinally(SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> processContext);
+    void afterFinally(PC pc,
+                      SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> processContext);
 
 }

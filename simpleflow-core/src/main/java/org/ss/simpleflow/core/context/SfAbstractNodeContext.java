@@ -9,8 +9,6 @@ public abstract class SfAbstractNodeContext<NI, PCI, NEI,
 
     protected NEI nodeExecutionId;
 
-    protected NC nodeConfig;
-
     @Override
     public void setNodeExecutionId(NEI nodeExecutionId) {
         this.nodeExecutionId = nodeExecutionId;
@@ -19,16 +17,6 @@ public abstract class SfAbstractNodeContext<NI, PCI, NEI,
     @Override
     public NEI getNodeExecutionId() {
         return nodeExecutionId;
-    }
-
-    @Override
-    public void setNodeConfig(NC nodeConfig) {
-        this.nodeConfig = nodeConfig;
-    }
-
-    @Override
-    public NC getNodeConfig() {
-        return nodeConfig;
     }
 
 }
