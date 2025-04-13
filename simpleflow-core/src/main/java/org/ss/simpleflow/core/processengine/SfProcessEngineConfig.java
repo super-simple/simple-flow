@@ -6,6 +6,7 @@ public class SfProcessEngineConfig implements Serializable {
 
     private boolean cleanOrphanNode = true;
     private long maxLoopCount = 0;
+    private boolean executeOnDataEdge = false;
 
     public boolean isCleanOrphanNode() {
         return cleanOrphanNode;
@@ -21,5 +22,13 @@ public class SfProcessEngineConfig implements Serializable {
 
     public void setMaxLoopCount(long maxLoopCount) {
         this.maxLoopCount = maxLoopCount;
+    }
+
+    public boolean isExecuteOnDataEdge() {
+        return executeOnDataEdge;
+    }
+
+    public void setExecuteOnDataEdge(boolean executeOnDataEdge) {
+        this.executeOnDataEdge = executeOnDataEdge;
     }
 }

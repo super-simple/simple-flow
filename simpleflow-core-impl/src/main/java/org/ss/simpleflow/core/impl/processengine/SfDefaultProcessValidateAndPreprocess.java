@@ -2,7 +2,6 @@ package org.ss.simpleflow.core.impl.processengine;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.ss.simpleflow.common.CollectionUtils;
 import org.ss.simpleflow.core.constant.SfProcessConfigIndexConstant;
 import org.ss.simpleflow.core.context.SfProcessPreprocessData;
 import org.ss.simpleflow.core.context.SfValidationProcessContext;
@@ -16,9 +15,6 @@ import org.ss.simpleflow.core.processconfig.SfWholeProcessConfig;
 import org.ss.simpleflow.core.processengine.SfProcessEngineConfig;
 import org.ss.simpleflow.core.processengine.SfProcessValidateAndPreprocess;
 import org.ss.simpleflow.core.validate.SfValidateManager;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class SfDefaultProcessValidateAndPreprocess<NI, EI, PCI,
         NC extends SfAbstractNodeConfig<NI, PCI>,
@@ -43,11 +39,16 @@ public class SfDefaultProcessValidateAndPreprocess<NI, EI, PCI,
     public SfWholePreprocessData<NI, EI, PCI, NC, EC, PC>
     validateAndPreprocess(SfWholeProcessConfig<NI, EI, PCI, NC, EC, PC> wholeProcessConfig) {
         if (wholeProcessConfig == null) {
-            throw new NullPointerException("wholeProcessConfig can not be null");
+            throw new IllegalArgumentException("wholeProcessConfig can not be null");
         }
         PC mainProcessConfig = wholeProcessConfig.getMainProcessConfig();
         if (mainProcessConfig == null) {
-            throw new NullPointerException("mainProcessConfig can not be null");
+            throw new IllegalArgumentException("mainProcessConfig can not be null");
+        }
+
+        PC[] subProcessConfigArray = wholeProcessConfig.getSubProcessConfigArray();
+        if (subProcessConfigArray == null) {
+            throw new IllegalArgumentException("subProcessConfigArray can not be null (but can be empty)");
         }
 
         SfValidationWholeContext<NI, EI, PCI, NC, EC, PC> validationWholeContext =
@@ -65,16 +66,13 @@ public class SfDefaultProcessValidateAndPreprocess<NI, EI, PCI,
         SfValidationProcessContext<NI, EI, PCI, NC, EC, PC> mainProcessValidationContext = dataFactory.createValidationProcessContext();
         validationWholeContext.setMainValidationProcessContext(mainProcessValidationContext);
 
-        List<PC> subProcessConfigList = wholeProcessConfig.getSubProcessConfigList();
-        if (CollectionUtils.isNotEmpty(subProcessConfigList)) {
-            int size = subProcessConfigList.size();
-            List<SfValidationProcessContext<NI, EI, PCI, NC, EC, PC>> subExecutionProcessContextList = new ArrayList<>(
-                    size);
-            validationWholeContext.setSubValidationProcessContextList(subExecutionProcessContextList);
-            for (int i = 0; i < size; i++) {
-                SfValidationProcessContext<NI, EI, PCI, NC, EC, PC> processValidationContext = dataFactory.createValidationProcessContext();
-                subExecutionProcessContextList.add(processValidationContext);
-            }
+        PC[] subProcessConfigArray = wholeProcessConfig.getSubProcessConfigArray();
+        int length = subProcessConfigArray.length;
+        @SuppressWarnings("unchecked")
+        SfValidationProcessContext<NI, EI, PCI, NC, EC, PC>[] subExecutionProcessContextArray = new SfValidationProcessContext[length];
+        validationWholeContext.setSubValidationProcessContextArray(subExecutionProcessContextArray);
+        for (int i = 0; i < length; i++) {
+            subExecutionProcessContextArray[i] = dataFactory.createValidationProcessContext();
         }
         return validationWholeContext;
     }
@@ -91,21 +89,17 @@ public class SfDefaultProcessValidateAndPreprocess<NI, EI, PCI,
         wholePreprocessData.setMainProcessPreprocessData(mainExecutionProcessContext);
         mainExecutionProcessContext.setProcessConfigIndex(SfProcessConfigIndexConstant.MAIN_PROCESS_CONFIG_INDEX);
 
-        List<PC> subProcessConfigList = wholeProcessConfig.getSubProcessConfigList();
-
-        if (CollectionUtils.isNotEmpty(subProcessConfigList)) {
-            List<SfValidationProcessContext<NI, EI, PCI, NC, EC, PC>> subValidationProcessContextList = validationWholeContext.getSubValidationProcessContextList();
-            int size = subProcessConfigList.size();
-            List<SfProcessPreprocessData<NI, EI, PCI, NC, EC, PC>> subExecutionProcessContextList = new ArrayList<>(
-                    size);
-            wholePreprocessData.setSubProcessPreprocessDataList(subExecutionProcessContextList);
-            for (int i = 0; i < size; i++) {
-                SfValidationProcessContext<NI, EI, PCI, NC, EC, PC> subValidationProcessContext = subValidationProcessContextList.get(
-                        i);
-                SfProcessPreprocessData<NI, EI, PCI, NC, EC, PC> subExecutionProcessContext = dataFactory.createProcessPreprocessData();
-                assignProcessPreprocessData(subValidationProcessContext, subExecutionProcessContext);
-                subExecutionProcessContextList.add(subExecutionProcessContext);
-            }
+        PC[] subProcessConfigArray = wholeProcessConfig.getSubProcessConfigArray();
+        int length = subProcessConfigArray.length;
+        SfValidationProcessContext<NI, EI, PCI, NC, EC, PC>[] subValidationProcessContextArray = validationWholeContext.getSubValidationProcessContextArray();
+        @SuppressWarnings("unchecked")
+        SfProcessPreprocessData<NI, EI, PCI, NC, EC, PC>[] subExecutionProcessContextArray = new SfProcessPreprocessData[length];
+        wholePreprocessData.setSubProcessPreprocessDataArray(subExecutionProcessContextArray);
+        for (int i = 0; i < length; i++) {
+            SfValidationProcessContext<NI, EI, PCI, NC, EC, PC> subValidationProcessContext = subValidationProcessContextArray[i];
+            SfProcessPreprocessData<NI, EI, PCI, NC, EC, PC> subExecutionProcessContext = dataFactory.createProcessPreprocessData();
+            assignProcessPreprocessData(subValidationProcessContext, subExecutionProcessContext);
+            subExecutionProcessContextArray[i] = subExecutionProcessContext;
         }
         return wholePreprocessData;
     }

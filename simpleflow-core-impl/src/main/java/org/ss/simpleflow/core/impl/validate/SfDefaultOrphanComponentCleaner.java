@@ -33,38 +33,26 @@ public class SfDefaultOrphanComponentCleaner<NI, EI, PCI,
                                validationWholeContext.getMainValidationProcessContext(),
                                processEngineConfig);
 
-        List<PC> subProcessConfigList = wholeProcessConfig.getSubProcessConfigList();
-        if (CollectionUtils.isNotEmpty(subProcessConfigList)) {
-            List<SfValidationProcessContext<NI, EI, PCI, NC, EC, PC>> subValidationProcessContextList = validationWholeContext.getSubValidationProcessContextList();
-            int size = subProcessConfigList.size();
-            for (int i = 0; i < size; i++) {
-                PC subProcessConfig = subProcessConfigList.get(i);
-                SfValidationProcessContext<NI, EI, PCI, NC, EC, PC> subValidationProcessContext = subValidationProcessContextList.get(
-                        i);
-                cleanOrphanNodeAndEdge(subProcessConfig, subValidationProcessContext, processEngineConfig);
-            }
+        PC[] subProcessConfigArray = wholeProcessConfig.getSubProcessConfigArray();
+        SfValidationProcessContext<NI, EI, PCI, NC, EC, PC>[] subValidationProcessContextArray = validationWholeContext.getSubValidationProcessContextArray();
+        int length = subProcessConfigArray.length;
+        for (int i = 0; i < length; i++) {
+            PC subProcessConfig = subProcessConfigArray[i];
+            SfValidationProcessContext<NI, EI, PCI, NC, EC, PC> subValidationProcessContext = subValidationProcessContextArray[i];
+            cleanOrphanNodeAndEdge(subProcessConfig, subValidationProcessContext, processEngineConfig);
         }
     }
 
     private void cleanOrphanNodeAndEdge(PC processConfig,
                                         SfValidationProcessContext<NI, EI, PCI, NC, EC, PC> processValidationContext,
                                         SfProcessEngineConfig processEngineConfig) {
-        List<EC> edgeConfigList = processConfig.getEdgeConfigList();
-        List<NC> nodeConfigList = processConfig.getNodeConfigList();
-        if (CollectionUtils.isNullOrEmpty(edgeConfigList)) {
-            Iterator<NC> iterator = nodeConfigList.iterator();
-            if (iterator.hasNext()) {
-                NC next = iterator.next();
-                if (!next.isStartNode()) {
-                    iterator.remove();
-                }
-            }
-            return;
-        }
+        EC[] edgeConfigArray = processConfig.getEdgeConfigArray();
+        NC[] nodeConfigArray = processConfig.getNodeConfigArray();
 
-        List<EC> controlEdgeList = CollectionUtils.collect(edgeConfigList,
+        int controlEdgeCount = processValidationContext.getControlEdgeCount();
+        List<EC> controlEdgeList = CollectionUtils.collect(edgeConfigArray,
                                                            SfAbstractEdgeConfig::isControlEdge,
-                                                           edgeConfigList.size() / 2);
+                                                           controlEdgeCount);
         Map<NI, List<EC>> outgoingControlEdgeMap = MultiMapUtils.index(controlEdgeList,
                                                                        SfAbstractEdgeConfig::getFromNodeId);
 
@@ -95,24 +83,24 @@ public class SfDefaultOrphanComponentCleaner<NI, EI, PCI,
             }
         }
 
-        nodeConfigList.removeIf(nodeConfig -> !visitedNodeSet.contains(nodeConfig.getId()));
-        if (CollectionUtils.isNotEmpty(edgeConfigList)) {
+        NC[] newNodeConfigArray = removeOrphanNode(nodeConfigArray, visitedNodeSet, processConfig);
+        processConfig.setNodeConfigArray(newNodeConfigArray);
 
+        int length = edgeConfigArray.length;
+        if (length > 0) {
             Map<NI, Set<Integer>> parameterKeySetMap = new HashMap<>();
-            Iterator<EC> edgeConfigListIterator = edgeConfigList.iterator();
-            while (edgeConfigListIterator.hasNext()) {
-                EC next = edgeConfigListIterator.next();
-                if (!visitedNodeSet.contains(next.getFromNodeId()) || !visitedNodeSet.contains(next.getToNodeId())) {
-                    edgeConfigListIterator.remove();
-                }
-                if (next.isDataEdge()) {
-                    NI fromNodeId = next.getFromNodeId();
+            EC[] newEdgeConfigArray = removeOrphanEdge(edgeConfigArray, visitedNodeSet, processConfig);
+            processConfig.setEdgeConfigArray(newEdgeConfigArray);
+
+            for (EC ec : newEdgeConfigArray) {
+                if (ec.isDataEdge()) {
+                    NI fromNodeId = ec.getFromNodeId();
                     Set<Integer> parameterKeySet = parameterKeySetMap.computeIfAbsent(fromNodeId, k -> new HashSet<>());
-                    parameterKeySet.add(next.getFromResultIndex());
+                    parameterKeySet.add(ec.getFromResultIndex());
                 }
             }
 
-            for (NC nodeConfig : nodeConfigList) {
+            for (NC nodeConfig : nodeConfigArray) {
                 SfNodeParameter[] parameter = nodeConfig.getParameter();
                 if (ArrayUtils.isNotEmpty(parameter)) {
                     Set<Integer> parameterIndexSet = parameterKeySetMap.get(nodeConfig.getId());
@@ -132,6 +120,40 @@ public class SfDefaultOrphanComponentCleaner<NI, EI, PCI,
                 }
             }
         }
+    }
+
+    private NC[] removeOrphanNode(NC[] nodeConfigArray, Set<NI> visitedNodeSet, PC pc) {
+        int newLength = 0;
+        for (NC nc : nodeConfigArray) {
+            if (visitedNodeSet.contains(nc.getId())) {
+                newLength++;
+            }
+        }
+        NC[] newNodeConfigArray = pc.createNodeConfigArray(newLength);
+        int index = 0;
+        for (NC nc : nodeConfigArray) {
+            if (visitedNodeSet.contains(nc.getId())) {
+                newNodeConfigArray[index++] = nc;
+            }
+        }
+        return newNodeConfigArray;
+    }
+
+    private EC[] removeOrphanEdge(EC[] edgeConfigArray, Set<NI> visitedNodeSet, PC pc) {
+        int newLength = 0;
+        for (EC ec : edgeConfigArray) {
+            if (visitedNodeSet.contains(ec.getFromNodeId()) || visitedNodeSet.contains(ec.getToNodeId())) {
+                newLength++;
+            }
+        }
+        EC[] newEdgeConfigArray = pc.createEdgeConfigArray(newLength);
+        int index = 0;
+        for (EC ec : edgeConfigArray) {
+            if (visitedNodeSet.contains(ec.getId())) {
+                newEdgeConfigArray[index++] = ec;
+            }
+        }
+        return newEdgeConfigArray;
     }
 
 }

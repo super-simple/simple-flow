@@ -25,6 +25,16 @@ public class CollectionUtils {
         return result;
     }
 
+    public static <T> List<T> collect(T[] originalList, Predicate<T> predicate, int newListSize) {
+        List<T> result = new ArrayList<>(newListSize);
+        for (T item : originalList) {
+            if (predicate.test(item)) {
+                result.add(item);
+            }
+        }
+        return result;
+    }
+
     public static <T> T find(Collection<T> data, Predicate<T> predicate) {
         if (isNullOrEmpty(data)) {
             return null;

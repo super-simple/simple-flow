@@ -31,7 +31,7 @@ public interface SfProcessEngineFactory<NI, EI, PCI,
                         SfAroundIteratorFactory<NI, EI, PCI, NC, EC, PC, NEI, PEI> aroundIteratorFactory,
                         SfComponentExecutionIdGenerator<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> componentExecutionIdGenerator,
                         SfProcessExecutionIdGenerator<NI, EI, PCI, NC, EC, PC, PEI> processExecutionIdGenerator,
-                        SfContextFactory<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> contextFactory,
+                        SfExecutionContextFactory<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> executionContextFactory,
                         List<SfEdgeAspect<NI, EI, PCI, NC, EC, PC, EEI, PEI>> edgeAspectList,
                         List<SfNodeAspect<NI, EI, PCI, NC, EC, PC, NEI, PEI>> nodeAspectList,
                         List<SfProcessAspect<NI, EI, PCI, NC, EC, PC, PEI>> processAspectList);

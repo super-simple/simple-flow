@@ -1,6 +1,5 @@
 package org.ss.simpleflow.core.impl.validate;
 
-import org.ss.simpleflow.common.CollectionUtils;
 import org.ss.simpleflow.core.edge.SfAbstractEdgeConfig;
 import org.ss.simpleflow.core.impl.exceptional.SfProcessConfigException;
 import org.ss.simpleflow.core.impl.exceptional.SfProcessConfigExceptionCode;
@@ -10,7 +9,6 @@ import org.ss.simpleflow.core.processconfig.SfWholeProcessConfig;
 import org.ss.simpleflow.core.processengine.SfProcessEngineConfig;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class SfDefaultProcessConfigValidator
@@ -21,24 +19,15 @@ public class SfDefaultProcessConfigValidator
     public void basicValidate(SfWholeProcessConfig<NI, EI, PCI, NC, EC, PC> wholeProcessConfig,
                               SfProcessEngineConfig processEngineConfig) {
         PC mainProcessConfig = wholeProcessConfig.getMainProcessConfig();
-        PCI processConfigId = mainProcessConfig.getId();
-        if (processConfigId == null) {
-            throw new SfProcessConfigException(SfProcessConfigExceptionCode.NO_PROCESS_ID,
-                                               mainProcessConfig,
-                                               processEngineConfig);
-        }
+        PCI processConfigId = getPci(processEngineConfig, mainProcessConfig);
 
-        List<PC> subProcessConfigList = wholeProcessConfig.getSubProcessConfigList();
-        if (CollectionUtils.isNotEmpty(subProcessConfigList)) {
-            Set<PCI> processConfigIdSet = new HashSet<>(subProcessConfigList.size() + 1);
+        PC[] subProcessConfigArray = wholeProcessConfig.getSubProcessConfigArray();
+        int length = subProcessConfigArray.length;
+        if (length == 0) {
+            Set<PCI> processConfigIdSet = new HashSet<>(length + 1);
             processConfigIdSet.add(processConfigId);
-            for (PC subProcessConfig : subProcessConfigList) {
-                PCI subProcessConfigId = subProcessConfig.getId();
-                if (subProcessConfigId == null) {
-                    throw new SfProcessConfigException(SfProcessConfigExceptionCode.NO_PROCESS_ID,
-                                                       subProcessConfig,
-                                                       processEngineConfig);
-                }
+            for (PC subProcessConfig : subProcessConfigArray) {
+                PCI subProcessConfigId = getPci(processEngineConfig, subProcessConfig);
                 if (processConfigIdSet.contains(subProcessConfigId)) {
                     throw new SfProcessConfigException(SfProcessConfigExceptionCode.ID_REPEAT,
                                                        subProcessConfig,
@@ -48,6 +37,18 @@ public class SfDefaultProcessConfigValidator
                 }
             }
         }
+    }
+
+    private PCI getPci(
+            SfProcessEngineConfig processEngineConfig,
+            PC mainProcessConfig) {
+        PCI processConfigId = mainProcessConfig.getId();
+        if (processConfigId == null) {
+            throw new SfProcessConfigException(SfProcessConfigExceptionCode.NO_PROCESS_ID,
+                                               mainProcessConfig,
+                                               processEngineConfig);
+        }
+        return processConfigId;
     }
 
 

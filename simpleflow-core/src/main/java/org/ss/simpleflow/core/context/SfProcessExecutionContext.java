@@ -5,31 +5,29 @@ import org.ss.simpleflow.core.edge.SfAbstractEdgeConfig;
 import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
 import org.ss.simpleflow.core.processconfig.SfAbstractProcessConfig;
 
-import java.util.List;
-
 public interface SfProcessExecutionContext<NI, EI, PCI,
         NC extends SfAbstractNodeConfig<NI, PCI>,
         EC extends SfAbstractEdgeConfig<EI, NI>,
         PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC>,
         NEI, EEI, PEI> {
 
-    void setParamList(List<ListMap<String, Object>> paramList);
+    void setParamArray(ListMap<String, Object>[] paramArray);
 
-    List<ListMap<String, Object>> getParamList();
+    ListMap<String, Object>[] getParamArray();
 
-    void setResultList(List<ListMap<String, Object>> paramList);
+    void setResultArray(ListMap<String, Object>[] paramArray);
 
-    List<ListMap<String, Object>> getResultList();
+    ListMap<String, Object>[] getResultArray();
 
     void setProcessContext(SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> processContext);
 
     SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> getProcessContext();
 
-    void setNodeContextList(List<SfNodeContext<NI, PCI, NEI, NC>> nodeContextList);
+    void setNodeContextArray(SfNodeContext<NI, PCI, NEI, NC>[] nodeContextArray);
 
-    List<SfNodeContext<NI, PCI, NEI, NC>> getNodeContextList();
+    SfNodeContext<NI, PCI, NEI, NC>[] getNodeContextArray();
 
-    void setEdgeContextList(List<SfEdgeContext<NI, EI, EEI, EC>> edgeContextList);
+    void setEdgeContextArray(SfEdgeContext<NI, EI, EEI, EC>[] edgeContextArray);
 
-    List<SfEdgeContext<NI, EI, EEI, EC>> getEdgeContextList();
+    SfEdgeContext<NI, EI, EEI, EC>[] getEdgeContextArray();
 }

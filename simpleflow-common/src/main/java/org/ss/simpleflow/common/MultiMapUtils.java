@@ -18,4 +18,18 @@ public class MultiMapUtils {
         return result;
     }
 
+    public static <K, V> Map<K, List<V>> index(V[] values, Function<? super V, K> keyFunction) {
+        int length = values.length;
+        if (length == 0) {
+            return Collections.emptyMap();
+        }
+        Map<K, List<V>> result = new HashMap<>(values.length);
+        for (V value : values) {
+            K apply = keyFunction.apply(value);
+            List<V> vs = result.computeIfAbsent(apply, k -> new ArrayList<>());
+            vs.add(value);
+        }
+        return result;
+    }
+
 }

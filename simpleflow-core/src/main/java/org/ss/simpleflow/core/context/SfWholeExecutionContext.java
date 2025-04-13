@@ -4,8 +4,6 @@ import org.ss.simpleflow.core.edge.SfAbstractEdgeConfig;
 import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
 import org.ss.simpleflow.core.processconfig.SfAbstractProcessConfig;
 
-import java.util.List;
-
 public interface SfWholeExecutionContext<NI, EI, PCI,
         NC extends SfAbstractNodeConfig<NI, PCI>,
         EC extends SfAbstractEdgeConfig<EI, NI>,
@@ -16,7 +14,7 @@ public interface SfWholeExecutionContext<NI, EI, PCI,
 
     SfProcessExecutionContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> getMainProcessExecuteContext();
 
-    void setSubProcessExecutionContextList(List<SfProcessExecutionContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI>> processExecutionContextList);
+    void setSubProcessExecutionContextArray(SfProcessExecutionContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI>[] processExecutionContextArray);
 
-    List<SfProcessExecutionContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI>> getSubProcessExecutionContextList();
+    SfProcessExecutionContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI>[] getSubProcessExecutionContextArray();
 }

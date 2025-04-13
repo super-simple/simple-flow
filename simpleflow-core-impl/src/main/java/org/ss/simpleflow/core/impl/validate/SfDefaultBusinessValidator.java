@@ -34,15 +34,13 @@ public class SfDefaultBusinessValidator<NI, EI, PCI,
                         validationWholeContext.getMainValidationProcessContext(),
                         processEngineConfig);
 
-        List<PC> subProcessConfigList = wholeProcessConfig.getSubProcessConfigList();
-
-        if (CollectionUtils.isNotEmpty(subProcessConfigList)) {
-            int size = subProcessConfigList.size();
-            List<SfValidationProcessContext<NI, EI, PCI, NC, EC, PC>> subValidationProcessContextList = validationWholeContext.getSubValidationProcessContextList();
-            for (int i = 0; i < size; i++) {
-                PC subProcessConfig = subProcessConfigList.get(i);
-                SfValidationProcessContext<NI, EI, PCI, NC, EC, PC> validationProcessContext = subValidationProcessContextList.get(
-                        i);
+        PC[] subProcessConfigArray = wholeProcessConfig.getSubProcessConfigArray();
+        int length = subProcessConfigArray.length;
+        if (length > 0) {
+            SfValidationProcessContext<NI, EI, PCI, NC, EC, PC>[] subValidationProcessContextArray = validationWholeContext.getSubValidationProcessContextArray();
+            for (int i = 0; i < length; i++) {
+                PC subProcessConfig = subProcessConfigArray[i];
+                SfValidationProcessContext<NI, EI, PCI, NC, EC, PC> validationProcessContext = subValidationProcessContextArray[i];
                 validateProcess(subProcessConfig, validationProcessContext, processEngineConfig);
             }
         }
@@ -52,15 +50,15 @@ public class SfDefaultBusinessValidator<NI, EI, PCI,
     private void validateProcess(PC processConfig,
                                  SfValidationProcessContext<NI, EI, PCI, NC, EC, PC> validationProcessContext,
                                  SfProcessEngineConfig processEngineConfig) {
-        List<NC> nodeConfigList = processConfig.getNodeConfigList();
-        List<EC> edgeConfigList = processConfig.getEdgeConfigList();
+        NC[] nodeConfigArray = processConfig.getNodeConfigArray();
+        EC[] edgeConfigArray = processConfig.getEdgeConfigArray();
 
-        generateIndex(nodeConfigList, edgeConfigList, validationProcessContext);
+        generateIndex(nodeConfigArray, edgeConfigArray, validationProcessContext);
 
-        int nodeConfigListSize = nodeConfigList.size();
+        int nodeConfigListLength = nodeConfigArray.length;
         List<SfIndexEntry> controlLineList = validationProcessContext.getControlEdgeIndexEntryList();
-        List<List<SfIndexEntry>> allOutgoingControlEdgeList = new ArrayList<>(nodeConfigListSize);
-        for (int i = 0; i < nodeConfigListSize; i++) {
+        List<List<SfIndexEntry>> allOutgoingControlEdgeList = new ArrayList<>(nodeConfigListLength);
+        for (int i = 0; i < nodeConfigListLength; i++) {
             allOutgoingControlEdgeList.add(new ArrayList<>());
         }
         for (SfIndexEntry edgeIndexEntry : controlLineList) {
@@ -105,18 +103,18 @@ public class SfDefaultBusinessValidator<NI, EI, PCI,
     }
 
     private void generateIndex(
-            List<NC> nodeConfigList,
-            List<EC> edgeConfigList,
+            NC[] nodeConfigArray,
+            EC[] edgeConfigArray,
             SfValidationProcessContext<NI, EI, PCI, NC, EC, PC> validationProcessContext) {
-        int nodeConfigListSize = nodeConfigList.size();
-        List<SfIndexEntry> nodeIndexEntryList = new ArrayList<>(nodeConfigListSize);
-        Map<NI, Integer> nodeConfigIndexMap = new HashMap<>(nodeConfigListSize);
-        for (int i = 0; i < nodeConfigListSize; i++) {
+        int nodeConfigArrayLength = nodeConfigArray.length;
+        List<SfIndexEntry> nodeIndexEntryList = new ArrayList<>(nodeConfigArrayLength);
+        Map<NI, Integer> nodeConfigIndexMap = new HashMap<>(nodeConfigArrayLength);
+        for (int i = 0; i < nodeConfigArrayLength; i++) {
             SfIndexEntry nodeIndexEntry = new SfIndexEntry();
             nodeIndexEntry.setIndexTypeNode();
             nodeIndexEntry.setSelfIndex(i);
             nodeIndexEntryList.add(nodeIndexEntry);
-            NC nodeConfig = nodeConfigList.get(i);
+            NC nodeConfig = nodeConfigArray[i];
             if (nodeConfig.isStartNode()) {
                 validationProcessContext.setStartNodeConfigIndex(i);
             }
@@ -125,15 +123,15 @@ public class SfDefaultBusinessValidator<NI, EI, PCI,
 
         validationProcessContext.setNodeIndexEntryList(nodeIndexEntryList);
 
-        if (CollectionUtils.isNullOrEmpty(edgeConfigList)) {
+        int edgeConfigListLength = edgeConfigArray.length;
+        if (edgeConfigListLength == 0) {
             return;
         }
 
-        int edgeConfigListSize = edgeConfigList.size();
-        List<SfIndexEntry> edgeIndexEntryList = new ArrayList<>(edgeConfigListSize);
+        List<SfIndexEntry> edgeIndexEntryList = new ArrayList<>(edgeConfigListLength);
         List<SfIndexEntry> controlEdgeIndexEntryList = new ArrayList<>(validationProcessContext.getControlEdgeCount());
-        for (int i = 0; i < edgeConfigListSize; i++) {
-            EC edgeConfig = edgeConfigList.get(i);
+        for (int i = 0; i < edgeConfigListLength; i++) {
+            EC edgeConfig = edgeConfigArray[i];
             SfIndexEntry edgeIndexEntry = new SfIndexEntry();
             edgeIndexEntry.setIndexTypeEdge();
 

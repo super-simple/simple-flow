@@ -4,7 +4,6 @@ import org.ss.simpleflow.core.edge.SfAbstractEdgeConfig;
 import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
 import org.ss.simpleflow.core.processconfig.SfAbstractProcessConfig;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -19,7 +18,7 @@ public abstract class SfValidationWholeContext<NI, EI, PCI,
 
     protected SfValidationProcessContext<NI, EI, PCI, NC, EC, PC> mainValidationProcessContext;
 
-    protected List<SfValidationProcessContext<NI, EI, PCI, NC, EC, PC>> subValidationProcessContextList;
+    protected SfValidationProcessContext<NI, EI, PCI, NC, EC, PC>[] subValidationProcessContextArray;
 
     public Set<PCI> getReferencedSubProcessConfigIdSet() {
         return referencedSubProcessConfigIdSet;
@@ -45,11 +44,11 @@ public abstract class SfValidationWholeContext<NI, EI, PCI,
         this.mainValidationProcessContext = mainValidationProcessContext;
     }
 
-    public List<SfValidationProcessContext<NI, EI, PCI, NC, EC, PC>> getSubValidationProcessContextList() {
-        return subValidationProcessContextList;
+    public SfValidationProcessContext<NI, EI, PCI, NC, EC, PC>[] getSubValidationProcessContextArray() {
+        return subValidationProcessContextArray;
     }
 
-    public void setSubValidationProcessContextList(List<SfValidationProcessContext<NI, EI, PCI, NC, EC, PC>> subValidationProcessContextList) {
-        this.subValidationProcessContextList = subValidationProcessContextList;
+    public void setSubValidationProcessContextArray(SfValidationProcessContext<NI, EI, PCI, NC, EC, PC>[] subValidationProcessContextArray) {
+        this.subValidationProcessContextArray = subValidationProcessContextArray;
     }
 }

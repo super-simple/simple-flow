@@ -27,4 +27,16 @@ public class MapUtils {
         return result;
     }
 
+    public static <K, V> Map<K, V> uniqueIndex(V[] values, Function<? super V, K> keyFunction) {
+        int length = values.length;
+        if (length == 0) {
+            return Collections.emptyMap();
+        }
+        Map<K, V> result = new HashMap<>(length);
+        for (V value : values) {
+            result.put(keyFunction.apply(value), value);
+        }
+        return result;
+    }
+
 }
