@@ -12,7 +12,7 @@ import org.ss.simpleflow.core.factory.SfProcessValidateAndPreprocessDataFactory;
 import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
 import org.ss.simpleflow.core.processconfig.SfAbstractProcessConfig;
 import org.ss.simpleflow.core.processconfig.SfWholeProcessConfig;
-import org.ss.simpleflow.core.processengine.SfProcessEngineConfig;
+import org.ss.simpleflow.core.processengine.SfProcessPreprocessConfig;
 import org.ss.simpleflow.core.processengine.SfProcessValidateAndPreprocess;
 import org.ss.simpleflow.core.validate.SfValidateManager;
 
@@ -23,14 +23,14 @@ public class SfDefaultProcessValidateAndPreprocess<NI, EI, PCI,
         implements SfProcessValidateAndPreprocess<NI, EI, PCI, NC, EC, PC> {
 
     private static final Logger LOG = LoggerFactory.getLogger(SfDefaultProcessValidateAndPreprocess.class);
-    private final SfProcessEngineConfig processEngineConfig;
+    private final SfProcessPreprocessConfig processPreprocessConfig;
     private final SfValidateManager<NI, EI, PCI, NC, EC, PC> validateManager;
     private final SfProcessValidateAndPreprocessDataFactory<NI, EI, PCI, NC, EC, PC> dataFactory;
 
-    SfDefaultProcessValidateAndPreprocess(SfProcessEngineConfig processEngineConfig,
-                                          SfValidateManager<NI, EI, PCI, NC, EC, PC> validateManager,
-                                          SfProcessValidateAndPreprocessDataFactory<NI, EI, PCI, NC, EC, PC> dataFactory) {
-        this.processEngineConfig = processEngineConfig;
+    public SfDefaultProcessValidateAndPreprocess(SfProcessPreprocessConfig processPreprocessConfig,
+                                                 SfValidateManager<NI, EI, PCI, NC, EC, PC> validateManager,
+                                                 SfProcessValidateAndPreprocessDataFactory<NI, EI, PCI, NC, EC, PC> dataFactory) {
+        this.processPreprocessConfig = processPreprocessConfig;
         this.validateManager = validateManager;
         this.dataFactory = dataFactory;
     }
@@ -54,7 +54,7 @@ public class SfDefaultProcessValidateAndPreprocess<NI, EI, PCI,
         SfValidationWholeContext<NI, EI, PCI, NC, EC, PC> validationWholeContext =
                 createValidationWholeContext(wholeProcessConfig, dataFactory);
 
-        validateManager.validate(wholeProcessConfig, validationWholeContext, processEngineConfig);
+        validateManager.validate(wholeProcessConfig, validationWholeContext, processPreprocessConfig);
 
         return createExecutionGlobalContext(wholeProcessConfig, validationWholeContext, dataFactory);
     }

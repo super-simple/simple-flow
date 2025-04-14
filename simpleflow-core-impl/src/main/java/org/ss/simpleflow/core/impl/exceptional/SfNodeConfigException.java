@@ -2,34 +2,34 @@ package org.ss.simpleflow.core.impl.exceptional;
 
 import org.ss.simpleflow.core.node.SfNodeConfig;
 import org.ss.simpleflow.core.processconfig.SfProcessConfig;
-import org.ss.simpleflow.core.processengine.SfProcessEngineConfig;
+import org.ss.simpleflow.core.processengine.SfProcessPreprocessConfig;
 
 public class SfNodeConfigException extends RuntimeException {
     private final SfNodeConfigExceptionCode exceptionCode;
     private final SfNodeConfig nodeConfig;
     private final SfProcessConfig processConfig;
-    private final SfProcessEngineConfig processEngineConfig;
+    private final SfProcessPreprocessConfig processPreprocessConfig;
 
     public SfNodeConfigException(SfNodeConfigExceptionCode exceptionCode,
                                  SfNodeConfig nodeConfig,
                                  SfProcessConfig processConfig,
-                                 SfProcessEngineConfig processEngineConfig) {
+                                 SfProcessPreprocessConfig processPreprocessConfig) {
         this.exceptionCode = exceptionCode;
         this.nodeConfig = nodeConfig;
         this.processConfig = processConfig;
-        this.processEngineConfig = processEngineConfig;
+        this.processPreprocessConfig = processPreprocessConfig;
     }
 
     public SfNodeConfigException(String message,
                                  SfNodeConfigExceptionCode exceptionCode,
                                  SfNodeConfig nodeConfig,
                                  SfProcessConfig processConfig,
-                                 SfProcessEngineConfig processEngineConfig) {
+                                 SfProcessPreprocessConfig processPreprocessConfig) {
         super(message);
         this.exceptionCode = exceptionCode;
         this.nodeConfig = nodeConfig;
         this.processConfig = processConfig;
-        this.processEngineConfig = processEngineConfig;
+        this.processPreprocessConfig = processPreprocessConfig;
     }
 
     public SfNodeConfigException(String message,
@@ -37,24 +37,24 @@ public class SfNodeConfigException extends RuntimeException {
                                  SfNodeConfigExceptionCode exceptionCode,
                                  SfNodeConfig nodeConfig,
                                  SfProcessConfig processConfig,
-                                 SfProcessEngineConfig processEngineConfig) {
+                                 SfProcessPreprocessConfig processPreprocessConfig) {
         super(message, cause);
         this.exceptionCode = exceptionCode;
         this.nodeConfig = nodeConfig;
         this.processConfig = processConfig;
-        this.processEngineConfig = processEngineConfig;
+        this.processPreprocessConfig = processPreprocessConfig;
     }
 
     public SfNodeConfigException(Throwable cause,
                                  SfNodeConfigExceptionCode exceptionCode,
                                  SfNodeConfig nodeConfig,
                                  SfProcessConfig processConfig,
-                                 SfProcessEngineConfig processEngineConfig) {
+                                 SfProcessPreprocessConfig processPreprocessConfig) {
         super(cause);
         this.exceptionCode = exceptionCode;
         this.nodeConfig = nodeConfig;
         this.processConfig = processConfig;
-        this.processEngineConfig = processEngineConfig;
+        this.processPreprocessConfig = processPreprocessConfig;
     }
 
     public SfNodeConfigException(String message,
@@ -64,12 +64,12 @@ public class SfNodeConfigException extends RuntimeException {
                                  SfNodeConfigExceptionCode exceptionCode,
                                  SfNodeConfig nodeConfig,
                                  SfProcessConfig processConfig,
-                                 SfProcessEngineConfig processEngineConfig) {
+                                 SfProcessPreprocessConfig processPreprocessConfig) {
         super(message, cause, enableSuppression, writableStackTrace);
         this.exceptionCode = exceptionCode;
         this.nodeConfig = nodeConfig;
         this.processConfig = processConfig;
-        this.processEngineConfig = processEngineConfig;
+        this.processPreprocessConfig = processPreprocessConfig;
     }
 
 }

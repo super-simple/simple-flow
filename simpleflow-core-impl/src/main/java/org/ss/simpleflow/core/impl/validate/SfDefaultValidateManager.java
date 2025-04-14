@@ -5,7 +5,7 @@ import org.ss.simpleflow.core.edge.SfAbstractEdgeConfig;
 import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
 import org.ss.simpleflow.core.processconfig.SfAbstractProcessConfig;
 import org.ss.simpleflow.core.processconfig.SfWholeProcessConfig;
-import org.ss.simpleflow.core.processengine.SfProcessEngineConfig;
+import org.ss.simpleflow.core.processengine.SfProcessPreprocessConfig;
 import org.ss.simpleflow.core.validate.SfEdgeConfigCustomValidator;
 import org.ss.simpleflow.core.validate.SfNodeConfigCustomValidator;
 import org.ss.simpleflow.core.validate.SfProcessConfigCustomValidate;
@@ -32,11 +32,11 @@ public class SfDefaultValidateManager<NI, EI, PCI,
     @Override
     public void validate(SfWholeProcessConfig<NI, EI, PCI, NC, EC, PC> wholeProcessConfig,
                          SfValidationWholeContext<NI, EI, PCI, NC, EC, PC> validationWholeContext,
-                         SfProcessEngineConfig processEngineConfig) {
-        basicValidator.basicValidate(wholeProcessConfig, validationWholeContext, processEngineConfig);
+                         SfProcessPreprocessConfig processPreprocessConfig) {
+        basicValidator.basicValidate(wholeProcessConfig, validationWholeContext, processPreprocessConfig);
         businessValidator.businessValidate(wholeProcessConfig,
                                            validationWholeContext,
-                                           processEngineConfig);
+                                           processPreprocessConfig);
     }
 
 }

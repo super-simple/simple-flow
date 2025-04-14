@@ -8,7 +8,7 @@ import org.ss.simpleflow.core.impl.exceptional.SfNodeConfigException;
 import org.ss.simpleflow.core.impl.exceptional.SfNodeConfigExceptionCode;
 import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
 import org.ss.simpleflow.core.processconfig.SfAbstractProcessConfig;
-import org.ss.simpleflow.core.processengine.SfProcessEngineConfig;
+import org.ss.simpleflow.core.processengine.SfProcessPreprocessConfig;
 
 import java.util.Set;
 
@@ -19,13 +19,13 @@ public class SfDefaultNodeConfigValidator<NI, EI, PCI,
 
     public void basicValidate(NC nodeConfig,
                               PC processConfig,
-                              SfProcessEngineConfig processEngineConfig) {
+                              SfProcessPreprocessConfig processPreprocessConfig) {
         NI nodeId = nodeConfig.getId();
         if (nodeId == null) {
             throw new SfNodeConfigException(SfNodeConfigExceptionCode.NO_ID,
                                             nodeConfig,
                                             processConfig,
-                                            processEngineConfig);
+                                            processPreprocessConfig);
         }
 
         String nodeType = nodeConfig.getNodeType();
@@ -33,7 +33,7 @@ public class SfDefaultNodeConfigValidator<NI, EI, PCI,
             throw new SfNodeConfigException(SfNodeConfigExceptionCode.NO_NODE_TYPE,
                                             nodeConfig,
                                             processConfig,
-                                            processEngineConfig);
+                                            processPreprocessConfig);
         }
 
         String nodeTypeUpperCase = nodeType.toUpperCase();
@@ -44,13 +44,13 @@ public class SfDefaultNodeConfigValidator<NI, EI, PCI,
                     throw new SfNodeConfigException(SfNodeConfigExceptionCode.NO_EVENT_CODE,
                                                     nodeConfig,
                                                     processConfig,
-                                                    processEngineConfig);
+                                                    processPreprocessConfig);
                 }
                 if (nodeConfig.isLegalEventType()) {
                     throw new SfNodeConfigException(SfNodeConfigExceptionCode.NO_EVENT_TYPE,
                                                     nodeConfig,
                                                     processConfig,
-                                                    processEngineConfig);
+                                                    processPreprocessConfig);
                 }
                 break;
             }
@@ -60,7 +60,7 @@ public class SfDefaultNodeConfigValidator<NI, EI, PCI,
                     throw new SfNodeConfigException(SfNodeConfigExceptionCode.NO_GATEWAY_ENUM_SET,
                                                     nodeConfig,
                                                     processConfig,
-                                                    processEngineConfig);
+                                                    processPreprocessConfig);
                 }
                 break;
             }
@@ -70,7 +70,7 @@ public class SfDefaultNodeConfigValidator<NI, EI, PCI,
                     throw new SfNodeConfigException(SfNodeConfigExceptionCode.NO_PROCESS_ID,
                                                     nodeConfig,
                                                     processConfig,
-                                                    processEngineConfig);
+                                                    processPreprocessConfig);
                 }
                 break;
             }
@@ -85,7 +85,7 @@ public class SfDefaultNodeConfigValidator<NI, EI, PCI,
                                                 SfNodeConfigExceptionCode.WRONG_NODE_TYPE,
                                                 nodeConfig,
                                                 processConfig,
-                                                processEngineConfig);
+                                                processPreprocessConfig);
             }
         }
     }

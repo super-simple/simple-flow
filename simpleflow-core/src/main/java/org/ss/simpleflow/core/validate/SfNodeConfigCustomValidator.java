@@ -3,7 +3,7 @@ package org.ss.simpleflow.core.validate;
 import org.ss.simpleflow.core.edge.SfAbstractEdgeConfig;
 import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
 import org.ss.simpleflow.core.processconfig.SfAbstractProcessConfig;
-import org.ss.simpleflow.core.processengine.SfProcessEngineConfig;
+import org.ss.simpleflow.core.processengine.SfProcessPreprocessConfig;
 
 public interface SfNodeConfigCustomValidator<NI, EI, PCI,
         NC extends SfAbstractNodeConfig<NI, PCI>,
@@ -11,5 +11,5 @@ public interface SfNodeConfigCustomValidator<NI, EI, PCI,
         PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC>> {
     void customValidate(NC nodeConfig,
                         PC processConfig,
-                        SfProcessEngineConfig processEngineConfig);
+                        SfProcessPreprocessConfig processPreprocessConfig);
 }

@@ -2,7 +2,6 @@ package org.ss.simpleflow.core.impl.processengine;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.ss.simpleflow.core.aspect.SfEdgeAspect;
 import org.ss.simpleflow.core.aspect.SfNodeAspect;
 import org.ss.simpleflow.core.aspect.SfProcessAspect;
@@ -50,64 +49,34 @@ public class SfDefaultProcessEngine<NI, EI, PCI, NC extends SfAbstractNodeConfig
     private final List<SfNodeAspect<NI, EI, PCI, NC, EC, PC, NEI, PEI>> nodeAspectList;
     private final List<SfProcessAspect<NI, EI, PCI, NC, EC, PC, PEI>> processAspectList;
 
-    SfDefaultProcessEngine(SfProcessEngineConfig processEngineConfig,
-                           SfControlEdgeFactory<NI, EI, PCI, NC, EC, PC, EEI, PEI> controlEdgeFactory,
-                           SfDataEdgeFactory<NI, EI, PCI, NC, EC, PC, EEI, PEI> dataEdgeFactory,
-                           SfEventFactory<NI, EI, PCI, NC, EC, PC, NEI, PEI> eventFactory,
-                           SfNodeFactory<NI, EI, PCI, NC, EC, PC, NEI, PEI> nodeFactory,
-                           SfEnumGatewayFactory<NI, EI, PCI, NC, EC, PC, NEI, PEI> enumGatewayFactory,
-                           SfStreamIteratorFactory<NI, EI, PCI, NC, EC, PC, NEI, PEI> streamIteratorFactory,
-                           SfGatewayFactory<NI, EI, PCI, NC, EC, PC, NEI, PEI> gatewayFactory,
-                           SfAroundIteratorFactory<NI, EI, PCI, NC, EC, PC, NEI, PEI> aroundIteratorFactory,
-                           SfComponentExecutionIdGenerator<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> componentExecutionIdGenerator,
-                           SfProcessExecutionIdGenerator<NI, EI, PCI, NC, EC, PC, PEI> processExecutionIdGenerator,
-                           SfExecutionContextFactory<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> executionContextFactory,
-                           List<SfEdgeAspect<NI, EI, PCI, NC, EC, PC, EEI, PEI>> edgeAspectList,
-                           List<SfNodeAspect<NI, EI, PCI, NC, EC, PC, NEI, PEI>> nodeAspectList,
-                           List<SfProcessAspect<NI, EI, PCI, NC, EC, PC, PEI>> processAspectList) {
+    public SfDefaultProcessEngine(SfProcessEngineConfig processEngineConfig,
+                                  SfControlEdgeFactory<NI, EI, PCI, NC, EC, PC, EEI, PEI> controlEdgeFactory,
+                                  SfDataEdgeFactory<NI, EI, PCI, NC, EC, PC, EEI, PEI> dataEdgeFactory,
+                                  SfEventFactory<NI, EI, PCI, NC, EC, PC, NEI, PEI> eventFactory,
+                                  SfNodeFactory<NI, EI, PCI, NC, EC, PC, NEI, PEI> nodeFactory,
+                                  SfEnumGatewayFactory<NI, EI, PCI, NC, EC, PC, NEI, PEI> enumGatewayFactory,
+                                  SfStreamIteratorFactory<NI, EI, PCI, NC, EC, PC, NEI, PEI> streamIteratorFactory,
+                                  SfGatewayFactory<NI, EI, PCI, NC, EC, PC, NEI, PEI> gatewayFactory,
+                                  SfAroundIteratorFactory<NI, EI, PCI, NC, EC, PC, NEI, PEI> aroundIteratorFactory,
+                                  SfComponentExecutionIdGenerator<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> componentExecutionIdGenerator,
+                                  SfProcessExecutionIdGenerator<NI, EI, PCI, NC, EC, PC, PEI> processExecutionIdGenerator,
+                                  SfExecutionContextFactory<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> executionContextFactory,
+                                  List<SfEdgeAspect<NI, EI, PCI, NC, EC, PC, EEI, PEI>> edgeAspectList,
+                                  List<SfNodeAspect<NI, EI, PCI, NC, EC, PC, NEI, PEI>> nodeAspectList,
+                                  List<SfProcessAspect<NI, EI, PCI, NC, EC, PC, PEI>> processAspectList) {
         if (processEngineConfig == null) {
             throw new IllegalArgumentException("SfProcessEngineConfig can not be null");
         }
         this.processEngineConfig = processEngineConfig;
 
-        if (controlEdgeFactory == null) {
-            throw new IllegalArgumentException("SfControlEdgeFactory can not be null");
-        }
         this.controlEdgeFactory = controlEdgeFactory;
-
-        if (dataEdgeFactory == null) {
-            throw new IllegalArgumentException("SfDataEdgeFactory can not be null");
-        }
         this.dataEdgeFactory = dataEdgeFactory;
 
-        if (eventFactory == null) {
-            throw new IllegalArgumentException("SfEventFactory can not be null");
-        }
         this.eventFactory = eventFactory;
-
-        if (nodeFactory == null) {
-            throw new IllegalArgumentException("SfNodeFactory can not be null");
-        }
         this.nodeFactory = nodeFactory;
-
-        if (enumGatewayFactory == null) {
-            throw new IllegalArgumentException("SfEnumGatewayFactory can not be null");
-        }
         this.enumGatewayFactory = enumGatewayFactory;
-
-        if (streamIteratorFactory == null) {
-            throw new IllegalArgumentException("SfStreamIteratorFactory can not be null");
-        }
         this.streamIteratorFactory = streamIteratorFactory;
-
-        if (gatewayFactory == null) {
-            throw new IllegalArgumentException("SfGatewayFactory can not be null");
-        }
         this.gatewayFactory = gatewayFactory;
-
-        if (aroundIteratorFactory == null) {
-            throw new IllegalArgumentException("SfAroundIteratorFactory can not be null");
-        }
         this.aroundIteratorFactory = aroundIteratorFactory;
 
         if (componentExecutionIdGenerator == null) {
@@ -241,6 +210,8 @@ public class SfDefaultProcessEngine<NI, EI, PCI, NC extends SfAbstractNodeConfig
                                 Deque<Deque<SfIndexEntry>> processStack) {
         List<SfIndexEntry> nodeIndexEntryList = processPreprocessData.getNodeIndexEntryList();
         List<SfIndexEntry> edgeIndexEntryList = processPreprocessData.getEdgeIndexEntryList();
+        List<List<SfIndexEntry>> allOutgoingControlEdgeList = processPreprocessData.getAllOutgoingControlEdgeList();
+
         PC processConfig = processPreprocessData.getProcessConfig();
         NC[] nodeConfigArray = processConfig.getNodeConfigArray();
         EC[] edgeConfigArray = processConfig.getEdgeConfigArray();
@@ -260,12 +231,18 @@ public class SfDefaultProcessEngine<NI, EI, PCI, NC extends SfAbstractNodeConfig
                     SfNodeContext<NI, PCI, NEI, NC> nodeContext = nodeContextArray[selfIndex];
                     Map<String, Object> paramMap = paramArray[selfIndex];
                     Map<String, Object> resultMap = executeNode(paramMap,
-                                                                    nc,
-                                                                    nodeContext,
-                                                                    processConfig,
-                                                                    processContext);
+                                                                nc,
+                                                                nodeContext,
+                                                                processConfig,
+                                                                processContext);
 
                     resultArray[selfIndex] = resultMap;
+                    List<SfIndexEntry> indexEntryList = allOutgoingControlEdgeList.get(selfIndex);
+                    if (!indexEntryList.isEmpty()) {
+                        for (SfIndexEntry indexEntry : indexEntryList) {
+                            eventStack.push(indexEntry);
+                        }
+                    }
                 } else {
                     EC ec = edgeConfigArray[selfIndex];
                     SfEdgeContext<NI, EI, EEI, EC> edgeContext = edgeContextArray[selfIndex];
@@ -289,8 +266,8 @@ public class SfDefaultProcessEngine<NI, EI, PCI, NC extends SfAbstractNodeConfig
                                                                             processContext);
                             if (result) {
                                 int toNodeConfigIndex = currentIndexEntry.getToNodeConfigIndex();
-                                SfIndexEntry sfIndexEntry = nodeIndexEntryList.get(toNodeConfigIndex);
-
+                                SfIndexEntry toNodeIndexEntry = nodeIndexEntryList.get(toNodeConfigIndex);
+                                eventStack.push(toNodeIndexEntry);
                             }
                         } catch (Exception e) {
                             throw new RuntimeException(e);
@@ -309,10 +286,10 @@ public class SfDefaultProcessEngine<NI, EI, PCI, NC extends SfAbstractNodeConfig
     }
 
     private Map<String, Object> executeNode(Map<String, Object> paramMap,
-                                                NC nc,
-                                                SfNodeContext<NI, PCI, NEI, NC> nodeContext,
-                                                PC pc,
-                                                SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> processContext) {
+                                            NC nc,
+                                            SfNodeContext<NI, PCI, NEI, NC> nodeContext,
+                                            PC pc,
+                                            SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> processContext) {
         String nodeType = nc.getNodeType();
         Map<String, Object> resultMap;
         switch (nodeType) {

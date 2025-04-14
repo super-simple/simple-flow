@@ -12,7 +12,7 @@ import org.ss.simpleflow.core.index.SfIndexEntry;
 import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
 import org.ss.simpleflow.core.processconfig.SfAbstractProcessConfig;
 import org.ss.simpleflow.core.processconfig.SfWholeProcessConfig;
-import org.ss.simpleflow.core.processengine.SfProcessEngineConfig;
+import org.ss.simpleflow.core.processengine.SfProcessPreprocessConfig;
 
 import java.util.*;
 
@@ -23,16 +23,16 @@ public class SfDefaultBusinessValidator<NI, EI, PCI,
 
     public void businessValidate(SfWholeProcessConfig<NI, EI, PCI, NC, EC, PC> wholeProcessConfig,
                                  SfValidationWholeContext<NI, EI, PCI, NC, EC, PC> validationWholeContext,
-                                 SfProcessEngineConfig processEngineConfig) {
+                                 SfProcessPreprocessConfig processPreprocessConfig) {
 
         validateProcessCircularReference(validationWholeContext,
-                                         processEngineConfig);
+                                         processPreprocessConfig);
 
         PC mainProcessConfig = wholeProcessConfig.getMainProcessConfig();
 
         validateProcess(mainProcessConfig,
                         validationWholeContext.getMainValidationProcessContext(),
-                        processEngineConfig);
+                        processPreprocessConfig);
 
         PC[] subProcessConfigArray = wholeProcessConfig.getSubProcessConfigArray();
         int length = subProcessConfigArray.length;
@@ -41,7 +41,7 @@ public class SfDefaultBusinessValidator<NI, EI, PCI,
             for (int i = 0; i < length; i++) {
                 PC subProcessConfig = subProcessConfigArray[i];
                 SfValidationProcessContext<NI, EI, PCI, NC, EC, PC> validationProcessContext = subValidationProcessContextArray[i];
-                validateProcess(subProcessConfig, validationProcessContext, processEngineConfig);
+                validateProcess(subProcessConfig, validationProcessContext, processPreprocessConfig);
             }
         }
     }
@@ -49,7 +49,7 @@ public class SfDefaultBusinessValidator<NI, EI, PCI,
 
     private void validateProcess(PC processConfig,
                                  SfValidationProcessContext<NI, EI, PCI, NC, EC, PC> validationProcessContext,
-                                 SfProcessEngineConfig processEngineConfig) {
+                                 SfProcessPreprocessConfig processPreprocessConfig) {
         NC[] nodeConfigArray = processConfig.getNodeConfigArray();
         EC[] edgeConfigArray = processConfig.getEdgeConfigArray();
 
@@ -156,7 +156,7 @@ public class SfDefaultBusinessValidator<NI, EI, PCI,
 
     private void validateProcessCircularReference(
             SfValidationWholeContext<NI, EI, PCI, NC, EC, PC> validationWholeContext,
-            SfProcessEngineConfig processEngineConfig) {
+            SfProcessPreprocessConfig processPreprocessConfig) {
         SfValidationProcessContext<NI, EI, PCI, NC, EC, PC> mainProcessValidationContext = validationWholeContext.getMainValidationProcessContext();
         Set<PCI> mainSubProcessConfigIdSet = mainProcessValidationContext.getSubProcessConfigIdSet();
         if (CollectionUtils.isNotEmpty(mainSubProcessConfigIdSet)) {
@@ -175,7 +175,7 @@ public class SfDefaultBusinessValidator<NI, EI, PCI,
                                                                            referencedProcessConfigId + "] exist circular reference",
                                                                    SfProcessConfigExceptionCode.CIRCULAR_REFERENCE,
                                                                    null,
-                                                                   processEngineConfig);
+                                                                   processPreprocessConfig);
                             }
                         }
                     }
