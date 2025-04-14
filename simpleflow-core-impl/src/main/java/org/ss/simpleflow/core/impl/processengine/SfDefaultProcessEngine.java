@@ -2,7 +2,7 @@ package org.ss.simpleflow.core.impl.processengine;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.ss.simpleflow.common.ListMap;
+
 import org.ss.simpleflow.core.aspect.SfEdgeAspect;
 import org.ss.simpleflow.core.aspect.SfNodeAspect;
 import org.ss.simpleflow.core.aspect.SfProcessAspect;
@@ -132,20 +132,20 @@ public class SfDefaultProcessEngine<NI, EI, PCI, NC extends SfAbstractNodeConfig
 
     @Override
     public final SfProcessExecutionResult<PEI> runProcess(SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> wholePreprocessData,
-                                                          ListMap<String, Object> params) {
+                                                          Map<String, Object> params) {
         return runProcess(wholePreprocessData, params, null, null);
     }
 
     @Override
     public final SfProcessExecutionResult<PEI> runProcess(SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> wholePreprocessData,
-                                                          ListMap<String, Object> params,
+                                                          Map<String, Object> params,
                                                           Map<String, Object> processVariable) {
         return runProcess(wholePreprocessData, params, processVariable, null);
     }
 
     @Override
     public final SfProcessExecutionResult<PEI> runProcess(SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> wholePreprocessData,
-                                                          ListMap<String, Object> params,
+                                                          Map<String, Object> params,
                                                           Map<String, Object> processVariable,
                                                           PEI processExecutionId) {
         SfProcessPreprocessData<NI, EI, PCI, NC, EC, PC> mainProcessPreprocessData = wholePreprocessData.getMainProcessPreprocessData();
@@ -205,9 +205,9 @@ public class SfDefaultProcessEngine<NI, EI, PCI, NC extends SfAbstractNodeConfig
         int nodeConfigListSize = processPreprocessData.getNodeConfigListSize();
 
         //noinspection unchecked
-        processExecutionContext.setParamArray(new ListMap[nodeConfigListSize]);
+        processExecutionContext.setParamArray(new Map[nodeConfigListSize]);
         //noinspection unchecked
-        processExecutionContext.setResultArray(new ListMap[nodeConfigListSize]);
+        processExecutionContext.setResultArray(new Map[nodeConfigListSize]);
         //noinspection unchecked
         processExecutionContext.setNodeContextArray(new SfNodeContext[nodeConfigListSize]);
 
@@ -248,8 +248,8 @@ public class SfDefaultProcessEngine<NI, EI, PCI, NC extends SfAbstractNodeConfig
         SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> processContext = processExecutionContext.getProcessContext();
         SfNodeContext<NI, PCI, NEI, NC>[] nodeContextArray = processExecutionContext.getNodeContextArray();
         SfEdgeContext<NI, EI, EEI, EC>[] edgeContextArray = processExecutionContext.getEdgeContextArray();
-        ListMap<String, Object>[] paramArray = processExecutionContext.getParamArray();
-        ListMap<String, Object>[] resultArray = processExecutionContext.getResultArray();
+        Map<String, Object>[] paramArray = processExecutionContext.getParamArray();
+        Map<String, Object>[] resultArray = processExecutionContext.getResultArray();
         while (!processStack.isEmpty()) {
             Deque<SfIndexEntry> eventStack = processStack.pop();
             while (!eventStack.isEmpty()) {
@@ -258,8 +258,8 @@ public class SfDefaultProcessEngine<NI, EI, PCI, NC extends SfAbstractNodeConfig
                 if (currentIndexEntry.isNode()) {
                     NC nc = nodeConfigArray[selfIndex];
                     SfNodeContext<NI, PCI, NEI, NC> nodeContext = nodeContextArray[selfIndex];
-                    ListMap<String, Object> paramMap = paramArray[selfIndex];
-                    ListMap<String, Object> resultMap = executeNode(paramMap,
+                    Map<String, Object> paramMap = paramArray[selfIndex];
+                    Map<String, Object> resultMap = executeNode(paramMap,
                                                                     nc,
                                                                     nodeContext,
                                                                     processConfig,
@@ -280,7 +280,7 @@ public class SfDefaultProcessEngine<NI, EI, PCI, NC extends SfAbstractNodeConfig
                                 processConfig,
                                 processContext);
                         int fromNodeConfigIndex = currentIndexEntry.getFromNodeConfigIndex();
-                        ListMap<String, Object> fromNodeResultMap = resultArray[fromNodeConfigIndex];
+                        Map<String, Object> fromNodeResultMap = resultArray[fromNodeConfigIndex];
                         try {
                             boolean result = controlEdge.executeControlEdge(fromNodeResultMap,
                                                                             ec,
@@ -308,13 +308,13 @@ public class SfDefaultProcessEngine<NI, EI, PCI, NC extends SfAbstractNodeConfig
         }
     }
 
-    private ListMap<String, Object> executeNode(ListMap<String, Object> paramMap,
+    private Map<String, Object> executeNode(Map<String, Object> paramMap,
                                                 NC nc,
                                                 SfNodeContext<NI, PCI, NEI, NC> nodeContext,
                                                 PC pc,
                                                 SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> processContext) {
         String nodeType = nc.getNodeType();
-        ListMap<String, Object> resultMap;
+        Map<String, Object> resultMap;
         switch (nodeType) {
             case SfNodeTypeConstant.EVENT: {
                 SfEvent<NI, EI, PCI, NC, EC, PC, NEI, PEI> event = eventFactory.createEvent(nc,

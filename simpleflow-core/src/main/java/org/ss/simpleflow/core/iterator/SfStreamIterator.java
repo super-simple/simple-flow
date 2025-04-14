@@ -1,6 +1,6 @@
 package org.ss.simpleflow.core.iterator;
 
-import org.ss.simpleflow.common.ListMap;
+
 import org.ss.simpleflow.core.component.SfComponent;
 import org.ss.simpleflow.core.context.SfNodeContext;
 import org.ss.simpleflow.core.context.SfProcessContext;
@@ -16,15 +16,15 @@ public interface SfStreamIterator<NI, EI, PCI,
         EC extends SfAbstractEdgeConfig<EI, NI>,
         PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC>, NEI, PEI> extends SfComponent {
 
-    List<Map<String, Object>> map(ListMap<String, Object> params,
+    List<Map<String, Object>> map(Map<String, Object> params,
                                   NC nc,
                                   SfNodeContext<NI, PCI, NEI, NC> nodeContext,
                                   PC pc,
                                   SfProcessContext<NI, EI, PCI, NC,
                                           EC, PC, PEI> processContext) throws Exception;
 
-    default void collect(ListMap<String, Object> params,
-                         ListMap<String, Object> resultMap,
+    default void collect(Map<String, Object> params,
+                         Map<String, Object> resultMap,
                          NC nc,
                          SfNodeContext<NI, PCI, NEI, NC> nodeContext,
                          PC pc,

@@ -1,9 +1,11 @@
 package org.ss.simpleflow.core.context;
 
-import org.ss.simpleflow.common.ListMap;
+
 import org.ss.simpleflow.core.edge.SfAbstractEdgeConfig;
 import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
 import org.ss.simpleflow.core.processconfig.SfAbstractProcessConfig;
+
+import java.util.Map;
 
 public interface SfProcessExecutionContext<NI, EI, PCI,
         NC extends SfAbstractNodeConfig<NI, PCI>,
@@ -11,13 +13,13 @@ public interface SfProcessExecutionContext<NI, EI, PCI,
         PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC>,
         NEI, EEI, PEI> {
 
-    void setParamArray(ListMap<String, Object>[] paramArray);
+    void setParamArray(Map<String, Object>[] paramArray);
 
-    ListMap<String, Object>[] getParamArray();
+    Map<String, Object>[] getParamArray();
 
-    void setResultArray(ListMap<String, Object>[] paramArray);
+    void setResultArray(Map<String, Object>[] paramArray);
 
-    ListMap<String, Object>[] getResultArray();
+    Map<String, Object>[] getResultArray();
 
     void setProcessContext(SfProcessContext<NI, EI, PCI, NC, EC, PC, PEI> processContext);
 

@@ -1,11 +1,13 @@
 package org.ss.simpleflow.core.edge;
 
-import org.ss.simpleflow.common.ListMap;
+
 import org.ss.simpleflow.core.component.SfComponent;
 import org.ss.simpleflow.core.context.SfEdgeContext;
 import org.ss.simpleflow.core.context.SfProcessContext;
 import org.ss.simpleflow.core.node.SfAbstractNodeConfig;
 import org.ss.simpleflow.core.processconfig.SfAbstractProcessConfig;
+
+import java.util.Map;
 
 public interface SfControlEdge<NI, EI, PCI,
         NC extends SfAbstractNodeConfig<NI, PCI>,
@@ -13,7 +15,7 @@ public interface SfControlEdge<NI, EI, PCI,
         PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC>,
         EEI, PEI> extends SfComponent {
 
-    boolean executeControlEdge(ListMap<String, Object> params,
+    boolean executeControlEdge(Map<String, Object> params,
                                EC ec,
                                SfEdgeContext<NI, EI, EEI, EC> edgeContext,
                                PC pc,

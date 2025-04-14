@@ -1,6 +1,6 @@
 package org.ss.simpleflow.core.processengine;
 
-import org.ss.simpleflow.common.ListMap;
+
 import org.ss.simpleflow.core.context.SfProcessExecutionResult;
 import org.ss.simpleflow.core.context.SfWholePreprocessData;
 import org.ss.simpleflow.core.edge.SfAbstractEdgeConfig;
@@ -16,14 +16,14 @@ public interface SfProcessEngine<NI, EI, PCI,
         NEI, EEI, PEI> {
 
     SfProcessExecutionResult<PEI> runProcess(SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> wholePreprocessData,
-                                             ListMap<String, Object> params);
+                                             Map<String, Object> params);
 
     SfProcessExecutionResult<PEI> runProcess(SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> wholePreprocessData,
-                                             ListMap<String, Object> params,
+                                             Map<String, Object> params,
                                              Map<String, Object> processVariable);
 
     SfProcessExecutionResult<PEI> runProcess(SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> wholePreprocessData,
-                                             ListMap<String, Object> params,
+                                             Map<String, Object> params,
                                              Map<String, Object> processVariable,
                                              PEI processExecutionId);
 
