@@ -10,8 +10,4 @@ public interface SfNodeContext<NI, PCI, NEI,
 
     NEI getNodeExecutionId();
 
-    void setNodeConfig(NC nodeConfig);
-
-    NC getNodeConfig();
-
 }

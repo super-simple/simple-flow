@@ -17,7 +17,7 @@ public interface SfProcessExecutionContext<NI, EI, PCI,
 
     Map<String, Object>[] getParamArray();
 
-    void setResultArray(Map<String, Object>[] paramArray);
+    void setResultArray(Map<String, Object>[] resultArray);
 
     Map<String, Object>[] getResultArray();
 

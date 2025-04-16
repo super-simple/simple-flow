@@ -10,11 +10,11 @@ public interface SfWholeExecutionContext<NI, EI, PCI,
         PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC>,
         NEI, EEI, PEI> {
 
-    void setMainProcessExecuteContext(SfProcessExecutionContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> processExecutionContext);
+    void setMainProcessExecuteContext(SfProcessExecutionContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> mainProcessExecuteContext);
 
     SfProcessExecutionContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> getMainProcessExecuteContext();
 
-    void setSubProcessExecutionContextArray(SfProcessExecutionContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI>[] processExecutionContextArray);
+    void setSubProcessExecutionContextArray(SfProcessExecutionContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI>[] subProcessExecutionContextArray);
 
     SfProcessExecutionContext<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI>[] getSubProcessExecutionContextArray();
 }

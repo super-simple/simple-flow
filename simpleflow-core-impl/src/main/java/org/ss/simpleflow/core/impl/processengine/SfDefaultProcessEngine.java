@@ -58,8 +58,8 @@ public class SfDefaultProcessEngine<NI, EI, PCI, NC extends SfAbstractNodeConfig
                                   SfStreamIteratorFactory<NI, EI, PCI, NC, EC, PC, NEI, PEI> streamIteratorFactory,
                                   SfGatewayFactory<NI, EI, PCI, NC, EC, PC, NEI, PEI> gatewayFactory,
                                   SfAroundIteratorFactory<NI, EI, PCI, NC, EC, PC, NEI, PEI> aroundIteratorFactory,
-                                  SfComponentExecutionIdGenerator<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> componentExecutionIdGenerator,
                                   SfProcessExecutionIdGenerator<NI, EI, PCI, NC, EC, PC, PEI> processExecutionIdGenerator,
+                                  SfComponentExecutionIdGenerator<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> componentExecutionIdGenerator,
                                   SfExecutionContextFactory<NI, EI, PCI, NC, EC, PC, NEI, EEI, PEI> executionContextFactory,
                                   List<SfEdgeAspect<NI, EI, PCI, NC, EC, PC, EEI, PEI>> edgeAspectList,
                                   List<SfNodeAspect<NI, EI, PCI, NC, EC, PC, NEI, PEI>> nodeAspectList,
@@ -79,15 +79,15 @@ public class SfDefaultProcessEngine<NI, EI, PCI, NC extends SfAbstractNodeConfig
         this.gatewayFactory = gatewayFactory;
         this.aroundIteratorFactory = aroundIteratorFactory;
 
-        if (componentExecutionIdGenerator == null) {
-            throw new IllegalArgumentException("SfComponentExecutionIdGenerator can not be null");
-        }
-        this.componentExecutionIdGenerator = componentExecutionIdGenerator;
-
         if (processExecutionIdGenerator == null) {
             throw new IllegalArgumentException("SfProcessExecutionIdGenerator can not be null");
         }
         this.processExecutionIdGenerator = processExecutionIdGenerator;
+
+        if (componentExecutionIdGenerator == null) {
+            throw new IllegalArgumentException("SfComponentExecutionIdGenerator can not be null");
+        }
+        this.componentExecutionIdGenerator = componentExecutionIdGenerator;
 
         if (executionContextFactory == null) {
             throw new IllegalArgumentException("SfContextFactory can not be null");
@@ -144,7 +144,9 @@ public class SfDefaultProcessEngine<NI, EI, PCI, NC extends SfAbstractNodeConfig
         mainProcessContext.setRootProcessContext(mainProcessContext);
         mainProcessContext.setRoot(true);
         if (processExecutionId != null) {
-            PEI generateProcessExecutionId = processExecutionIdGenerator.generateProcessExecutionId(mainProcessContext);
+            PEI generateProcessExecutionId = processExecutionIdGenerator.generateProcessExecutionId(
+                    mainProcessPreprocessData.getProcessConfig(),
+                    mainProcessContext);
             mainProcessContext.setProcessExecutionId(generateProcessExecutionId);
         }
         return mainProcessContext;

@@ -10,8 +10,4 @@ public interface SfEdgeContext<NI, EI, EEI,
 
     EEI getEdgeExecutionId();
 
-    void setEdgeConfig(EC edgeConfig);
-
-    EC getEdgeConfig();
-
 }

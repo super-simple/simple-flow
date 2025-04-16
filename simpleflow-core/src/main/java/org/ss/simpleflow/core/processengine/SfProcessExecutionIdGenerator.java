@@ -12,6 +12,7 @@ public interface SfProcessExecutionIdGenerator<NI, EI, PCI,
         PEI> {
 
     PEI generateProcessExecutionId(
+            PC pc,
             SfProcessContext<NI, EI, PCI, NC,
                     EC, PC, PEI> processContext);
 

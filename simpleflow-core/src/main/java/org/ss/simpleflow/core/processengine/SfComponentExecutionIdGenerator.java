@@ -14,12 +14,16 @@ public interface SfComponentExecutionIdGenerator<NI, EI, PCI,
         NEI, EEI, PEI> {
 
     NEI generateNodeExecutionId(
+            EC ec,
             SfNodeContext<NI, PCI, NEI, NC> nodeContext,
+            PC pc,
             SfProcessContext<NI, EI, PCI, NC,
                     EC, PC, PEI> processContext);
 
     EEI generateEdgeExecutionId(
+            EC ec,
             SfEdgeContext<NI, EI, EEI, EC> edgeContext,
+            PC pc,
             SfProcessContext<NI, EI, PCI, NC,
                     EC, PC, PEI> processContext);
 }
