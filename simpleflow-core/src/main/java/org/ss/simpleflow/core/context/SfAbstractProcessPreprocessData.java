@@ -7,7 +7,7 @@ import org.ss.simpleflow.core.processconfig.SfAbstractProcessConfig;
 
 import java.util.List;
 
-public abstract class SfProcessPreprocessData<NI, EI, PCI,
+public abstract class SfAbstractProcessPreprocessData<NI, EI, PCI,
         NC extends SfAbstractNodeConfig<NI, PCI>,
         EC extends SfAbstractEdgeConfig<EI, NI>,
         PC extends SfAbstractProcessConfig<NI, EI, PCI, NC, EC>> {

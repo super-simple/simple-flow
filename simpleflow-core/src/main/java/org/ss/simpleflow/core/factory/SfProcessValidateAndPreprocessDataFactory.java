@@ -1,6 +1,6 @@
 package org.ss.simpleflow.core.factory;
 
-import org.ss.simpleflow.core.context.SfProcessPreprocessData;
+import org.ss.simpleflow.core.context.SfAbstractProcessPreprocessData;
 import org.ss.simpleflow.core.context.SfValidationProcessContext;
 import org.ss.simpleflow.core.context.SfValidationWholeContext;
 import org.ss.simpleflow.core.context.SfWholePreprocessData;
@@ -15,7 +15,7 @@ public interface SfProcessValidateAndPreprocessDataFactory<NI, EI, PCI,
 
     SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> createWholePreprocessData();
 
-    SfProcessPreprocessData<NI, EI, PCI, NC, EC, PC> createProcessPreprocessData();
+    SfAbstractProcessPreprocessData<NI, EI, PCI, NC, EC, PC> createProcessPreprocessData();
 
     SfValidationWholeContext<NI, EI, PCI, NC, EC, PC> createValidationWholeContext();
 

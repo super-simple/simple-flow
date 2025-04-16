@@ -20,9 +20,9 @@ public class SfDefaultValidateManager<NI, EI, PCI,
     private final SfDefaultBasicValidator<NI, EI, PCI, NC, EC, PC> basicValidator;
     private final SfDefaultBusinessValidator<NI, EI, PCI, NC, EC, PC> businessValidator;
 
-    SfDefaultValidateManager(SfNodeConfigCustomValidator<NI, EI, PCI, NC, EC, PC> nodeConfigCustomValidator,
-                             SfEdgeConfigCustomValidator<NI, EI, PCI, NC, EC, PC> edgeConfigCustomValidator,
-                             SfProcessConfigCustomValidate<NI, EI, PCI, NC, EC, PC> processConfigCustomValidate) {
+    public SfDefaultValidateManager(SfNodeConfigCustomValidator<NI, EI, PCI, NC, EC, PC> nodeConfigCustomValidator,
+                                    SfEdgeConfigCustomValidator<NI, EI, PCI, NC, EC, PC> edgeConfigCustomValidator,
+                                    SfProcessConfigCustomValidate<NI, EI, PCI, NC, EC, PC> processConfigCustomValidate) {
         this.basicValidator = new SfDefaultBasicValidator<>(nodeConfigCustomValidator,
                                                             edgeConfigCustomValidator,
                                                             processConfigCustomValidate);

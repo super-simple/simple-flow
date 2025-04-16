@@ -5,17 +5,18 @@ import org.ss.simpleflow.core.processengine.SfProcessEngineConfig;
 import org.ss.simpleflow.example.config.SimpleEdgeConfig;
 import org.ss.simpleflow.example.config.SimpleNodeConfig;
 import org.ss.simpleflow.example.config.SimpleProcessConfig;
+import org.ss.simpleflow.example.context.SimpleExecutionContextFactory;
 import org.ss.simpleflow.example.factory.SimpleControlEdgeFactory;
 import org.ss.simpleflow.example.factory.SimpleEventFactory;
 import org.ss.simpleflow.example.factory.SimpleNodeFactory;
 
 import java.util.Collections;
 
-public class SimpleProcessEngineFactory {
+public class SimpleProcessEngineInstance {
 
     private final SfDefaultProcessEngine<Long, Long, Long, SimpleNodeConfig, SimpleEdgeConfig, SimpleProcessConfig, Long, Long, Long> processEngine;
 
-    public SimpleProcessEngineFactory() {
+    public SimpleProcessEngineInstance() {
         SimpleControlEdgeFactory controlEdgeFactory = new SimpleControlEdgeFactory();
         SimpleEventFactory eventFactory = new SimpleEventFactory();
         SimpleNodeFactory nodeFactory = new SimpleNodeFactory();

@@ -1,4 +1,4 @@
-package org.ss.simpleflow.example.context;
+package org.ss.simpleflow.example.context.execution;
 
 import org.ss.simpleflow.core.context.SfAbstractProcessContext;
 import org.ss.simpleflow.example.config.SimpleEdgeConfig;

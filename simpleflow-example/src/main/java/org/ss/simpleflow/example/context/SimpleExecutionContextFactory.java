@@ -1,11 +1,11 @@
-package org.ss.simpleflow.example;
+package org.ss.simpleflow.example.context;
 
 import org.ss.simpleflow.core.context.*;
 import org.ss.simpleflow.core.factory.SfExecutionContextFactory;
 import org.ss.simpleflow.example.config.SimpleEdgeConfig;
 import org.ss.simpleflow.example.config.SimpleNodeConfig;
 import org.ss.simpleflow.example.config.SimpleProcessConfig;
-import org.ss.simpleflow.example.context.*;
+import org.ss.simpleflow.example.context.execution.*;
 
 public class SimpleExecutionContextFactory
         implements SfExecutionContextFactory<Long, Long, Long, SimpleNodeConfig, SimpleEdgeConfig, SimpleProcessConfig, Long, Long, Long> {

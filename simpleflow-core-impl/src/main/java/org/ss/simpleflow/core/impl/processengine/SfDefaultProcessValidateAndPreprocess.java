@@ -3,7 +3,7 @@ package org.ss.simpleflow.core.impl.processengine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.ss.simpleflow.core.constant.SfProcessConfigIndexConstant;
-import org.ss.simpleflow.core.context.SfProcessPreprocessData;
+import org.ss.simpleflow.core.context.SfAbstractProcessPreprocessData;
 import org.ss.simpleflow.core.context.SfValidationProcessContext;
 import org.ss.simpleflow.core.context.SfValidationWholeContext;
 import org.ss.simpleflow.core.context.SfWholePreprocessData;
@@ -84,7 +84,7 @@ public class SfDefaultProcessValidateAndPreprocess<NI, EI, PCI,
         SfWholePreprocessData<NI, EI, PCI, NC, EC, PC> wholePreprocessData = dataFactory.createWholePreprocessData();
 
         SfValidationProcessContext<NI, EI, PCI, NC, EC, PC> mainProcessValidationContext = validationWholeContext.getMainValidationProcessContext();
-        SfProcessPreprocessData<NI, EI, PCI, NC, EC, PC> mainExecutionProcessContext = dataFactory.createProcessPreprocessData();
+        SfAbstractProcessPreprocessData<NI, EI, PCI, NC, EC, PC> mainExecutionProcessContext = dataFactory.createProcessPreprocessData();
         assignProcessPreprocessData(mainProcessValidationContext, mainExecutionProcessContext);
         wholePreprocessData.setMainProcessPreprocessData(mainExecutionProcessContext);
         mainExecutionProcessContext.setProcessConfigIndex(SfProcessConfigIndexConstant.MAIN_PROCESS_CONFIG_INDEX);
@@ -93,11 +93,11 @@ public class SfDefaultProcessValidateAndPreprocess<NI, EI, PCI,
         int length = subProcessConfigArray.length;
         SfValidationProcessContext<NI, EI, PCI, NC, EC, PC>[] subValidationProcessContextArray = validationWholeContext.getSubValidationProcessContextArray();
         @SuppressWarnings("unchecked")
-        SfProcessPreprocessData<NI, EI, PCI, NC, EC, PC>[] subExecutionProcessContextArray = new SfProcessPreprocessData[length];
+        SfAbstractProcessPreprocessData<NI, EI, PCI, NC, EC, PC>[] subExecutionProcessContextArray = new SfAbstractProcessPreprocessData[length];
         wholePreprocessData.setSubProcessPreprocessDataArray(subExecutionProcessContextArray);
         for (int i = 0; i < length; i++) {
             SfValidationProcessContext<NI, EI, PCI, NC, EC, PC> subValidationProcessContext = subValidationProcessContextArray[i];
-            SfProcessPreprocessData<NI, EI, PCI, NC, EC, PC> subExecutionProcessContext = dataFactory.createProcessPreprocessData();
+            SfAbstractProcessPreprocessData<NI, EI, PCI, NC, EC, PC> subExecutionProcessContext = dataFactory.createProcessPreprocessData();
             assignProcessPreprocessData(subValidationProcessContext, subExecutionProcessContext);
             subExecutionProcessContextArray[i] = subExecutionProcessContext;
         }
@@ -105,7 +105,7 @@ public class SfDefaultProcessValidateAndPreprocess<NI, EI, PCI,
     }
 
     private void assignProcessPreprocessData(SfValidationProcessContext<NI, EI, PCI, NC, EC, PC> validationProcessContext,
-                                             SfProcessPreprocessData<NI, EI, PCI, NC, EC, PC> processPreprocessData) {
+                                             SfAbstractProcessPreprocessData<NI, EI, PCI, NC, EC, PC> processPreprocessData) {
         processPreprocessData.setStartNodeConfigIndex(validationProcessContext.getStartNodeConfigIndex());
     }
 
